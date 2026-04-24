@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Studio — 3D Environment Art</title>
+
+<!-- Typography: Instrument Serif for titles, IBM Plex Sans for UI -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=IBM+Plex+Sans:wght@300;400;500&family=IBM+Plex+Mono:wght@300;400&display=swap" rel="stylesheet">
+
+<style>
+  /* =========================================
+     DESIGN TOKENS — tweak these to reskin
+     ========================================= */
+  :root {
+    --bg: #0c0c0d;
+    --bg-elevated: #141415;
+    --text: #e8e4dc;
+    --text-dim: #7a7670;
+    --text-faint: #4a4844;
+    --accent: #d4a574;
+    --border: #222;
+
+    --font-display: 'Instrument Serif', Georgia, serif;
+    --font-sans: 'IBM Plex Sans', system-ui, sans-serif;
+    --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+
+    --page-padding: clamp(24px, 4vw, 64px);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-sans);
+    font-weight: 300;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  body { min-height: 100vh; }
+
+  a { color: inherit; text-decoration: none; }
+  button { background: none; border: none; color: inherit; font: inherit; cursor: pointer; }
+
+  /* =========================================
+     VIEW SWITCHING
+     ========================================= */
+  .view { display: none; animation: fadeIn 0.4s ease; }
+  .view.active { display: block; }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* =========================================
+     HOME — header + project grid
+     ========================================= */
+  .site-header {
+    padding: var(--page-padding);
+    padding-bottom: clamp(20px, 2.5vw, 32px);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 32px;
+    flex-wrap: wrap;
+  }
+
+  .site-title {
+    font-family: var(--font-display);
+    font-size: clamp(28px, 3vw, 40px);
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    line-height: 1.1;
+  }
+  .site-title em {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  .identity {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .avatar {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    overflow: hidden;
+    flex-shrink: 0;
+    border: 1px solid var(--border);
+    background: var(--bg-elevated);
+    position: relative;
+  }
+  .avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    filter: saturate(0.95);
+    transition: filter 0.3s ease, transform 0.6s ease;
+  }
+  .avatar:hover img {
+    filter: saturate(1.1);
+    transform: scale(1.06);
+  }
+
+  .site-tagline {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--text-dim);
+    margin-top: 12px;
+  }
+
+  .site-nav {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--text-dim);
+    display: flex;
+    gap: 24px;
+  }
+  .site-nav a { transition: color 0.2s; }
+  .site-nav a:hover { color: var(--text); }
+
+  .section-label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--text-dim);
+    padding: 0 var(--page-padding);
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .project-grid {
+    padding: 0 0 16px;
+    display: flex;
+    gap: 0;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-behavior: smooth;
+    scrollbar-width: thin;
+    scrollbar-color: var(--text-faint) transparent;
+    cursor: grab;
+    user-select: none;
+    margin-bottom: 32px;
+  }
+  .project-grid.dragging { cursor: grabbing; scroll-behavior: auto; }
+  .project-grid.dragging .project-card { pointer-events: none; }
+  .project-grid::-webkit-scrollbar { height: 8px; }
+  .project-grid::-webkit-scrollbar-track { background: var(--bg-elevated); }
+  .project-grid::-webkit-scrollbar-thumb { background: var(--text-dim); border-radius: 4px; }
+  .project-grid::-webkit-scrollbar-thumb:hover { background: var(--text); }
+
+  .project-card {
+    cursor: pointer;
+    display: block;
+    text-align: left;
+    position: relative;
+    overflow: hidden;
+    flex-shrink: 0;
+    height: min(75vh, 680px);
+    aspect-ratio: 4 / 3;
+  }
+
+  .project-thumb {
+    width: 100%;
+    height: 100%;
+    background: var(--bg-elevated);
+    overflow: hidden;
+    position: relative;
+  }
+  .project-thumb img,
+  .project-thumb video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s ease, filter 0.4s ease;
+    filter: saturate(0.9);
+    display: block;
+  }
+  .project-card:hover .project-thumb img,
+  .project-card:hover .project-thumb video {
+    transform: scale(1.03);
+    filter: saturate(1);
+  }
+
+  /* Meta now sits as an overlay so thumbnails stay edge-to-edge */
+  .project-meta {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 24px 24px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 16px;
+    background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.4) 60%, rgba(0,0,0,0) 100%);
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    pointer-events: none;
+  }
+  .project-card:hover .project-meta {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .project-name {
+    font-family: var(--font-display);
+    font-size: 24px;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    color: var(--text);
+  }
+  .project-tag {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--text-dim);
+    white-space: nowrap;
+  }
+  .project-tag.wip { color: var(--accent); }
+
+  /* =========================================
+     SCROLL ARROWS — overlay buttons on horizontal galleries
+     ========================================= */
+  .scroll-wrapper { position: relative; }
+
+  .scroll-arrow {
+    position: absolute;
+    top: calc(50% - 28px);
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: rgba(20, 20, 21, 0.65);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.35s ease, background 0.2s ease, border-color 0.2s ease;
+    cursor: pointer;
+  }
+  .scroll-arrow.visible {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .scroll-arrow:hover {
+    background: rgba(40, 40, 42, 0.85);
+    border-color: var(--accent);
+  }
+  .scroll-arrow svg {
+    width: 22px;
+    height: 22px;
+    stroke: currentColor;
+    stroke-width: 1.5;
+    fill: none;
+    transition: transform 0.25s ease;
+  }
+
+  .scroll-arrow-left { left: 24px; }
+  .scroll-arrow-right { right: 24px; }
+
+  /* Gentle nudge on the right arrow to draw the eye */
+  @keyframes nudge-right {
+    0%, 70%, 100% { transform: translateX(0); }
+    80%          { transform: translateX(5px); }
+    90%          { transform: translateX(0); }
+  }
+  @keyframes nudge-left {
+    0%, 70%, 100% { transform: translateX(0); }
+    80%          { transform: translateX(-5px); }
+    90%          { transform: translateX(0); }
+  }
+  .scroll-arrow-right.visible svg { animation: nudge-right 2.4s ease-in-out infinite; }
+  .scroll-arrow-left.visible  svg { animation: nudge-left  2.4s ease-in-out infinite; }
+  .scroll-arrow:hover svg { animation: none; }
+  .scroll-arrow-right:hover svg { transform: translateX(3px); }
+  .scroll-arrow-left:hover svg  { transform: translateX(-3px); }
+
+  /* =========================================
+     PROJECT DETAIL — horizontal scroll
+     ========================================= */
+  .project-header {
+    padding: var(--page-padding);
+    padding-bottom: 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 32px;
+    flex-wrap: wrap;
+  }
+
+  .back-btn {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--text-dim);
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    transition: color 0.2s;
+  }
+  .back-btn:hover { color: var(--text); }
+  .back-btn .arrow {
+    display: inline-block;
+    transition: transform 0.2s;
+  }
+  .back-btn:hover .arrow { transform: translateX(-4px); }
+
+  .project-title-block { flex: 1; min-width: 260px; }
+  .project-title {
+    font-family: var(--font-display);
+    font-size: clamp(32px, 4vw, 56px);
+    font-weight: 400;
+    line-height: 1.05;
+    letter-spacing: -0.015em;
+  }
+  .project-description {
+    margin-top: 16px;
+    max-width: 52ch;
+    color: var(--text-dim);
+    font-size: 15px;
+    line-height: 1.6;
+  }
+  .project-specs {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--text-dim);
+    text-align: right;
+    line-height: 2;
+  }
+  .project-specs span { color: var(--text); }
+
+  /* Vertical gallery (project sub-pages) — ArtStation-style stacked layout */
+  .gallery-wrapper {
+    position: relative;
+    padding: 0 var(--page-padding);
+    margin-bottom: 32px;
+  }
+
+  .gallery {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  .gallery-item {
+    width: 100%;
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+  }
+  .gallery-item img,
+  .gallery-item video {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: contain;
+  }
+  .gallery-item .caption {
+    position: absolute;
+    bottom: 16px;
+    left: 16px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--text);
+    background: rgba(0,0,0,0.6);
+    backdrop-filter: blur(8px);
+    padding: 6px 10px;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .gallery-item:hover .caption { opacity: 1; }
+
+  .scroll-hint {
+    padding: 0 var(--page-padding) 64px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--text-faint);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .scroll-hint .line {
+    flex: 1;
+    max-width: 80px;
+    height: 1px;
+    background: var(--text-faint);
+  }
+
+  /* =========================================
+     ABOUT PAGE
+     ========================================= */
+  .about-page {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: clamp(24px, 4vw, 64px) var(--page-padding) 96px;
+    text-align: center;
+  }
+  .about-label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--text-dim);
+    margin-bottom: 24px;
+  }
+  .about-heading {
+    font-family: var(--font-display);
+    font-size: clamp(40px, 5vw, 72px);
+    font-weight: 400;
+    letter-spacing: -0.015em;
+    line-height: 1;
+    margin-bottom: 40px;
+  }
+  .about-heading em {
+    font-style: italic;
+    color: var(--accent);
+  }
+  .about-avatar {
+    width: 128px;
+    height: 128px;
+    margin: 0 auto 40px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    background: var(--bg-elevated);
+  }
+  .about-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: saturate(0.95);
+  }
+  .about-intro {
+    font-size: clamp(16px, 1.2vw, 18px);
+    line-height: 1.75;
+    color: var(--text);
+    text-align: left;
+    max-width: 56ch;
+    margin: 0 auto;
+  }
+  footer {
+    padding: 48px var(--page-padding);
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    gap: 24px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--text-dim);
+    flex-wrap: wrap;
+  }
+
+  /* =========================================
+     RESPONSIVE
+     ========================================= */
+  @media (max-width: 640px) {
+    .project-grid { grid-template-columns: 1fr; }
+    .project-specs { text-align: left; }
+    .gallery-item { height: 60vh; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ========================================
+     HOME VIEW
+     ======================================== -->
+<div id="view-home" class="view active">
+
+  <header class="site-header">
+    <div class="identity">
+      <div class="avatar">
+        <img src="profile.jpg" alt="Doyeon Kim portrait" />
+      </div>
+      <div>
+        <h1 class="site-title">Doyeon Kim <em>—</em> 3D Artist</h1>
+        <div class="site-tagline">3D Worlds · Props · Work in Progress</div>
+      </div>
+    </div>
+    <nav class="site-nav">
+      <a href="#about" onclick="event.preventDefault(); goAbout();">About</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </header>
+
+  <div class="section-label">Selected Work · 2026</div>
+
+  <div class="scroll-wrapper">
+    <main class="project-grid" id="project-grid">
+      <!-- Projects populated by JS from the data array below -->
+    </main>
+    <button class="scroll-arrow scroll-arrow-left" id="grid-arrow-left" aria-label="Scroll left">
+      <svg viewBox="0 0 24 24"><polyline points="15 6 9 12 15 18"></polyline></svg>
+    </button>
+    <button class="scroll-arrow scroll-arrow-right" id="grid-arrow-right" aria-label="Scroll right">
+      <svg viewBox="0 0 24 24"><polyline points="9 6 15 12 9 18"></polyline></svg>
+    </button>
+  </div>
+
+  <div class="scroll-hint">
+    <span class="line"></span>
+    Scroll horizontally to see more work
+    <span class="line"></span>
+  </div>
+
+  <footer>
+    <div>© 2026 Doyeon Kim</div>
+    <div>hello@yoursite.com</div>
+  </footer>
+</div>
+
+
+<!-- ========================================
+     PROJECT DETAIL VIEW
+     ======================================== -->
+<div id="view-project" class="view">
+
+  <header class="project-header">
+    <button class="back-btn" onclick="goHome()">
+      <span class="arrow">←</span> Back to work
+    </button>
+  </header>
+
+  <div class="project-header" style="padding-top: 0;">
+    <div class="project-title-block">
+      <h2 class="project-title" id="detail-title">Project Title</h2>
+      <p class="project-description" id="detail-description">Description.</p>
+    </div>
+    <div class="project-specs" id="detail-specs"></div>
+  </div>
+
+  <div class="gallery-wrapper">
+    <div class="gallery" id="gallery">
+      <!-- Images populated by JS -->
+    </div>
+  </div>
+
+  <footer>
+    <div>© 2026 Doyeon Kim</div>
+    <button class="back-btn" onclick="goHome()">
+      All projects <span class="arrow" style="transform: rotate(180deg)">←</span>
+    </button>
+  </footer>
+</div>
+
+
+<!-- ========================================
+     ABOUT VIEW
+     ======================================== -->
+<div id="view-about" class="view">
+
+  <header class="project-header">
+    <button class="back-btn" onclick="goHome()">
+      <span class="arrow">←</span> Back to work
+    </button>
+  </header>
+
+  <main class="about-page">
+    <div class="about-label">About</div>
+    <h2 class="about-heading">Doyeon Kim <em>—</em> 3D Artist</h2>
+    <div class="about-avatar">
+      <img src="profile.jpg" alt="Doyeon Kim portrait" />
+    </div>
+    <p class="about-intro">Hi, thanks for visiting my website! I&rsquo;m a 3D artist and college lecturer who loves blending technical workflows with a dash of creative storytelling. This is a collection of my past, recent, and ongoing projects, ranging from single assets to full environments. Whether I&rsquo;m sculpting in ZBrush or modeling in Maya, I focus on crafting diverse subjects&mdash;from peaceful gardens to space colonies&mdash;with an eye for realistic and grounded design. I&rsquo;m always looking for ways to make digital worlds feel inviting, so I hope you enjoy seeing how it all comes together!</p>
+  </main>
+
+  <footer>
+    <div>© 2026 Doyeon Kim</div>
+    <button class="back-btn" onclick="goHome()">
+      All projects <span class="arrow" style="transform: rotate(180deg)">←</span>
+    </button>
+  </footer>
+</div>
+
+
+<script>
+/* ================================================
+   PROJECT DATA — edit this array to add/remove work
+   Each project needs:
+     - id: unique slug
+     - name, tag, wip (boolean)
+     - description, year, software, role
+     - thumb: main image shown on home
+     - images: array of { src, caption } for the detail gallery
+   ================================================ */
+const PROJECTS = [
+  {
+    id: "secret-garden",
+    name: "Secret Garden",
+    tag: "Environment",
+    wip: false,
+    description: "A gothic cloister reclaimed by nature, built around a photogrammetry-scanned cupid fountain. Combines modular architecture with hand-scanned statuary, wrought-iron lighting, and a procedural floor material.",
+    year: "2025",
+    software: "Unreal 5 · Blender · ZBrush · Substance · RealityScan",
+    role: "Full Environment — Modelling, Materials, Lighting",
+    thumb: "sg-03.jpg",
+    images: [
+      { src: "sg-01.jpg", caption: "Establishing shot — fountain and cloister" },
+      { src: "sg-02.jpg", caption: "Cupid statue — hero closeup" },
+      { src: "sg-03.jpg", caption: "Cloister interior — overgrown arches" },
+      { src: "sg-04.jpg", caption: "Vaulted ceiling and wrought-iron chandelier" },
+      { src: "sg-05.jpg", caption: "Chandelier detail" },
+      { src: "sg-06.jpg", caption: "Light rays through gothic tracery" },
+      { src: "sg-07.jpg", caption: "Stone planter and fallen leaves" },
+      { src: "sg-08.jpg", caption: "Cloister hallway" },
+      { src: "sg-09.jpg", caption: "Modular asset kit" },
+      { src: "sg-10.jpg", caption: "Fountain — isolated render" },
+      { src: "sg-11.jpg", caption: "Photogrammetry workflow — capture to sculpt" },
+      { src: "sg-12.jpg", caption: "Cupid statue — textured and wireframe" },
+      { src: "sg-13.jpg", caption: "Cupid statue — rear view and topology" },
+      { src: "sg-14.jpg", caption: "Iron wall torches — variants and wireframe" },
+      { src: "sg-15.jpg", caption: "Chandelier closeup" },
+      { src: "sg-16.jpg", caption: "Chandelier — wireframe breakdown" },
+      { src: "sg-17.jpg", caption: "Floor material — graph, vertex paint, lighting" },
+      { video: "sg-18.mp4", src: "sg-18-poster.jpg", caption: "Camera flythrough" },
+      { video: "sg-19.mp4", src: "sg-19-poster.jpg", caption: "Scene reveal sequence" },
+    ]
+  },
+  {
+    id: "sienar-chall-utilipede",
+    name: "Star Wars: Sienar-Chall Utilipede Transport",
+    tag: "Star Wars, Vehicle",
+    wip: false,
+    description: "A hard-surface study of the Sienar-Chall Utilipede Transport — a Star Wars canon utility freighter. Focus on mechanical paneling, weathered industrial metal, and faithful silhouette work from reference.",
+    year: "2026",
+    software: "Maya · Substance 3D Painter · Substance 3D Designer · Marmoset",
+    role: "Modelling, Texturing",
+    thumb: "sn-01.png",
+    images: [
+      { src: "sn-01.png", caption: "Hero render — Sienar-Chall Utilipede Transport" },
+    ]
+  },
+  {
+    id: "vintage-telephone",
+    name: "Vintage Telephone",
+    tag: "Prop",
+    wip: false,
+    description: "A mid-century German industrial wall telephone — Fernsig-branded, cast housing, bakelite handset. Modelled and textured with a focus on worn paint, tarnished metal, and the brass nameplate.",
+    year: "2025",
+    software: "Blender · ZBrush · Substance · Marmoset",
+    role: "Modelling + Texturing",
+    thumb: "vt-04.jpg",
+    images: [
+      { src: "vt-01.jpg", caption: "Front hero shot" },
+      { src: "vt-02.jpg", caption: "Three-quarter view" },
+      { src: "vt-03.jpg", caption: "Side profile" },
+      { src: "vt-04.jpg", caption: "Dial and nameplate — hero closeup" },
+      { src: "vt-05.jpg", caption: "Dial detail — light backdrop" },
+      { src: "vt-06.jpg", caption: "Environment context — factory window" },
+      { src: "vt-07.jpg", caption: "Earpiece detail" },
+      { src: "vt-08.jpg", caption: "Mouthpiece detail" },
+      { src: "vt-09.jpg", caption: "Handset — front, side, back" },
+      { src: "vt-10.jpg", caption: "Handset — three-quarter views" },
+      { src: "vt-11.jpg", caption: "Wireframe — three-quarter" },
+      { src: "vt-12.jpg", caption: "Wireframe — angled" },
+      { src: "vt-13.jpg", caption: "Handset — wireframe breakdown" },
+      { src: "vt-14.jpg", caption: "Texture map — Base Color" },
+      { src: "vt-15.jpg", caption: "Texture map — Roughness" },
+      { src: "vt-16.jpg", caption: "Texture map — Normal" },
+      { src: "vt-17.jpg", caption: "Texture map — Metallic" },
+      { src: "vt-18.jpg", caption: "Texture map — Ambient Occlusion" },
+    ]
+  },
+  {
+    id: "japanese-izakaya",
+    name: "Japanese Izakaya",
+    tag: "Environment",
+    wip: false,
+    description: "A late-night Tokyo izakaya — red leather stools, brass trim, paper lanterns, exposed ductwork. Focus on warm practical lighting, densely-dressed shelves of sake and whisky, and the interplay between industrial ceiling and traditional decor.",
+    year: "2025",
+    software: "Unreal 5 · Blender · Substance",
+    role: "Full Environment — Modelling, Materials, Lighting",
+    thumb: "jb-01.jpg",
+    images: [
+      { src: "jb-01.jpg", caption: "Establishing shot — bar interior" },
+      { src: "jb-02.jpg", caption: "Espresso machine and tap handles" },
+      { src: "jb-03.jpg", caption: "Shelf dressing — top-down detail" },
+      { src: "jb-04.jpg", caption: "Paper lanterns and ductwork" },
+      { src: "jb-05.jpg", caption: "Bar counter — wide angle" },
+      { src: "jb-06.jpg", caption: "Stools and back bar — atmospheric shot" },
+      { src: "jb-07.jpg", caption: "Beer tap + CRT monitor — wireframe breakdown" },
+      { src: "jb-08.jpg", caption: "Wall fan + bar stool — wireframe breakdown" },
+      { video: "jb-09.mp4", src: "jb-09-poster.jpg", caption: "Camera flythrough" },
+    ]
+  },
+  {
+    id: "espresso-machine",
+    name: "Espresso Machine",
+    tag: "Prop",
+    wip: false,
+    description: "A Dalla Corte EVO2 commercial espresso machine, dressed with travel stickers, a sticky note, and years of cafe wear. Modelled and textured as a hero prop for the Japanese Izakaya scene — the red anchor piece behind the bar.",
+    year: "2025",
+    software: "Blender · Substance · Marmoset",
+    role: "Modelling + Texturing",
+    thumb: "em-02.jpg",
+    images: [
+      { src: "em-01.jpg", caption: "Three-quarter hero render" },
+      { src: "em-02.jpg", caption: "Opposite side — California stickers" },
+      { src: "em-03.jpg", caption: "Wireframe overlay on grid" },
+      { video: "em-04.mp4", src: "em-04-poster.jpg", caption: "Turntable" },
+      { src: "em-05.jpg", caption: "Texture map — Base Color" },
+      { src: "em-06.jpg", caption: "Texture map — Roughness" },
+      { src: "em-07.jpg", caption: "Texture map — Normal" },
+      { src: "em-08.jpg", caption: "Texture map — Metallic" },
+      { src: "em-09.jpg", caption: "Texture map — Ambient Occlusion" },
+    ]
+  },
+  {
+    id: "cyberpunk-seoul",
+    name: "A.D. 2077 Seoul — Riders",
+    tag: "Environment",
+    wip: false,
+    description: "Cyberpunk Seoul — an alley lined with neon signage in Korean, Japanese, Russian, and Arabic, volumetric holograms drifting overhead, and a sunset haze. Title graphics for a fictional short, 'Riders: Deliver for Future.'",
+    year: "2025",
+    software: "Unreal 5 · Blender · Substance",
+    role: "Full Environment — Modelling, Materials, Lighting",
+    thumb: "cp-01.jpg",
+    images: [
+      { src: "cp-01.jpg", caption: "Key art — A.D. 2077 Seoul" },
+      { video: "cp-02.mp4", src: "cp-02-poster.jpg", caption: "Camera flythrough" },
+      { video: "cp-03.mp4", src: "cp-03-poster.jpg", caption: "Alternate angle / cut" },
+    ]
+  },
+];
+
+/* ================================================
+   RENDER HOME GRID
+   ================================================ */
+function renderHome() {
+  const grid = document.getElementById('project-grid');
+  grid.innerHTML = PROJECTS.map(p => {
+    // Use a video thumbnail if provided, otherwise fall back to image.
+    // Poster (p.thumb) shows instantly while the video loads.
+    const media = p.thumbVideo
+      ? `<video src="${p.thumbVideo}" poster="${p.thumb}" autoplay muted loop playsinline preload="metadata"></video>`
+      : `<img src="${p.thumb}" alt="${p.name}" loading="lazy" />`;
+    return `
+      <button class="project-card" onclick="openProject('${p.id}')" aria-label="Open ${p.name}">
+        <div class="project-thumb">${media}</div>
+        <div class="project-meta">
+          <div class="project-name">${p.name}</div>
+          <div class="project-tag ${p.wip ? 'wip' : ''}">${p.tag}</div>
+        </div>
+      </button>`;
+  }).join('');
+}
+
+/* ================================================
+   OPEN / CLOSE PROJECT
+   ================================================ */
+function openProject(id) {
+  const p = PROJECTS.find(x => x.id === id);
+  if (!p) return;
+
+  document.getElementById('detail-title').textContent = p.name;
+  document.getElementById('detail-description').textContent = p.description;
+  document.getElementById('detail-specs').innerHTML = `
+    <div>Year / <span>${p.year}</span></div>
+    <div>Software / <span>${p.software}</span></div>
+    <div>Role / <span>${p.role}</span></div>
+  `;
+
+  const gallery = document.getElementById('gallery');
+  gallery.innerHTML = p.images.map(item => {
+    // Each gallery item can be an image OR a video. Videos autoplay muted & loop.
+    const media = item.video
+      ? `<video src="${item.video}" poster="${item.src || ''}" autoplay muted loop playsinline preload="metadata"></video>`
+      : `<img src="${item.src}" alt="${item.caption}" loading="lazy" />`;
+    return `
+      <div class="gallery-item">
+        ${media}
+        <div class="caption">${item.caption}</div>
+      </div>`;
+  }).join('');
+
+  // Switch views
+  document.getElementById('view-home').classList.remove('active');
+  document.getElementById('view-project').classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'instant' });
+
+  // URL hash for shareable links & back-button support
+  history.pushState({ view: 'project', id }, '', `#${id}`);
+}
+
+function goHome() {
+  document.getElementById('view-project').classList.remove('active');
+  document.getElementById('view-about').classList.remove('active');
+  document.getElementById('view-home').classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'instant' });
+  history.pushState({ view: 'home' }, '', '#');
+}
+
+function goAbout() {
+  document.getElementById('view-home').classList.remove('active');
+  document.getElementById('view-project').classList.remove('active');
+  document.getElementById('view-about').classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'instant' });
+  history.pushState({ view: 'about' }, '', '#about');
+}
+
+/* ================================================
+   HORIZONTAL SCROLL: drag + arrow keys
+   (Mouse wheel is intentionally NOT hijacked — vertical wheel
+   scrolling stays on the page where users expect it.)
+   ================================================ */
+function attachHorizontalScroll(el) {
+  // --- Click-and-drag to scroll ---
+  let isDown = false;
+  let startX = 0;
+  let startScroll = 0;
+  let moved = 0;          // total pixels moved during this drag
+  const DRAG_THRESHOLD = 5; // px before we call it a drag (vs. a click)
+
+  el.addEventListener('mousedown', (e) => {
+    // Only left mouse button
+    if (e.button !== 0) return;
+    isDown = true;
+    moved = 0;
+    startX = e.pageX;
+    startScroll = el.scrollLeft;
+  });
+
+  el.addEventListener('mousemove', (e) => {
+    if (!isDown) return;
+    const dx = e.pageX - startX;
+    moved = Math.max(moved, Math.abs(dx));
+    if (moved > DRAG_THRESHOLD) {
+      el.classList.add('dragging');
+      e.preventDefault();
+      el.scrollLeft = startScroll - dx;
+    }
+  });
+
+  const endDrag = () => {
+    if (!isDown) return;
+    isDown = false;
+    // Small timeout so the click event that fires right after mouseup
+    // still sees the 'dragging' state and can be suppressed below.
+    setTimeout(() => el.classList.remove('dragging'), 0);
+  };
+  el.addEventListener('mouseup', endDrag);
+  el.addEventListener('mouseleave', endDrag);
+
+  // Suppress the click on a card/image if the user was actually dragging.
+  // Uses capture phase so it runs before the card's own onclick.
+  el.addEventListener('click', (e) => {
+    if (moved > DRAG_THRESHOLD) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+  }, true);
+
+  // Prevent native image-drag ghost (uses delegation so it catches
+  // images added later, e.g. when a project gallery is populated)
+  el.addEventListener('dragstart', (e) => {
+    if (e.target.tagName === 'IMG') e.preventDefault();
+  });
+}
+
+function setupHorizontalScroll() {
+  // Home grid keeps horizontal scroll behaviors.
+  // Project galleries now stack vertically, so they use normal page scroll.
+  const grid = document.getElementById('project-grid');
+  attachHorizontalScroll(grid);
+
+  // Arrow keys scroll the home grid (only when home view is active).
+  // Escape returns to home from a project detail view.
+  document.addEventListener('keydown', (e) => {
+    const homeActive    = document.getElementById('view-home').classList.contains('active');
+    const projectActive = document.getElementById('view-project').classList.contains('active');
+    if (e.key === 'Escape' && (projectActive || document.getElementById('view-about').classList.contains('active'))) { goHome(); return; }
+    if (!homeActive) return;
+    const step = 400;
+    if (e.key === 'ArrowRight') { grid.scrollLeft += step; }
+    if (e.key === 'ArrowLeft')  { grid.scrollLeft -= step; }
+  });
+}
+
+/* ================================================
+   SCROLL ARROWS: show/hide based on scroll position,
+   clickable to step through the gallery.
+   Returns an update() function the caller can invoke
+   after content changes (e.g. loading a new project).
+   ================================================ */
+function setupScrollArrows(scrollEl, leftBtn, rightBtn) {
+  const update = () => {
+    const max = scrollEl.scrollWidth - scrollEl.clientWidth;
+    const isScrollable = max > 4;
+    const atStart = scrollEl.scrollLeft <= 4;
+    const atEnd   = scrollEl.scrollLeft >= max - 4;
+
+    leftBtn.classList.toggle('visible', isScrollable && !atStart);
+    rightBtn.classList.toggle('visible', isScrollable && !atEnd);
+  };
+
+  scrollEl.addEventListener('scroll', update, { passive: true });
+  window.addEventListener('resize', update);
+
+  const stepFor = () => Math.round(scrollEl.clientWidth * 0.8);
+  leftBtn.addEventListener('click',  () => scrollEl.scrollBy({ left: -stepFor(), behavior: 'smooth' }));
+  rightBtn.addEventListener('click', () => scrollEl.scrollBy({ left:  stepFor(), behavior: 'smooth' }));
+
+  // Recalculate as images load (scrollWidth is only accurate once images size themselves)
+  const watchImages = () => {
+    scrollEl.querySelectorAll('img').forEach(img => {
+      if (!img.complete) img.addEventListener('load', update, { once: true });
+    });
+  };
+  watchImages();
+
+  update();
+  return { update, watchImages };
+}
+
+let galleryArrows = null;
+function setupAllScrollArrows() {
+  setupScrollArrows(
+    document.getElementById('project-grid'),
+    document.getElementById('grid-arrow-left'),
+    document.getElementById('grid-arrow-right')
+  );
+  // Gallery is now vertical; no scroll arrows needed there.
+}
+
+/* ================================================
+   ROUTING (hash-based, supports reload/share)
+   ================================================ */
+function handleRoute() {
+  const hash = window.location.hash.replace('#', '');
+  if (hash === 'about') {
+    goAbout();
+  } else if (hash && PROJECTS.find(p => p.id === hash)) {
+    openProject(hash);
+  } else {
+    goHome();
+  }
+}
+
+window.addEventListener('popstate', handleRoute);
+
+/* ================================================
+   INIT
+   ================================================ */
+renderHome();
+setupHorizontalScroll();
+setupAllScrollArrows();
+handleRoute();
+</script>
+
+</body>
+</html>
