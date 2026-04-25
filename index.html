@@ -144,6 +144,10 @@
     align-items: center;
     gap: 16px;
   }
+  .section-label + .section-label,
+  .scroll-hint + .section-label {
+    margin-top: 32px;
+  }
   .section-label::after {
     content: '';
     flex: 1;
@@ -544,6 +548,20 @@
     <span class="line"></span>
   </div>
 
+  <div class="section-label">Selected Projects</div>
+
+  <div class="scroll-wrapper">
+    <main class="project-grid" id="project-grid-2">
+      <!-- Secondary projects populated by JS -->
+    </main>
+    <button class="scroll-arrow scroll-arrow-left" id="grid2-arrow-left" aria-label="Scroll left">
+      <svg viewBox="0 0 24 24"><polyline points="15 6 9 12 15 18"></polyline></svg>
+    </button>
+    <button class="scroll-arrow scroll-arrow-right" id="grid2-arrow-right" aria-label="Scroll right">
+      <svg viewBox="0 0 24 24"><polyline points="9 6 15 12 9 18"></polyline></svg>
+    </button>
+  </div>
+
   <footer>
     <div>© 2026 Doyeon Kim</div>
     <div>hello@yoursite.com</div>
@@ -666,9 +684,9 @@ const PROJECTS = [
     year: "2026",
     software: "Maya · Substance 3D Painter · Substance 3D Designer · Marmoset",
     role: "Modelling, Texturing",
-    thumb: "sn-01.png",
+    thumb: "sn-01.jpg",
     images: [
-      { src: "sn-01.png", caption: "Hero render — Sienar-Chall Utilipede Transport" },
+      { src: "sn-01.jpg", caption: "Hero render — Sienar-Chall Utilipede Transport" },
     ]
   },
   {
@@ -764,14 +782,80 @@ const PROJECTS = [
   },
 ];
 
+/* Secondary section — "Selected Projects" row.
+   Uses a separate id namespace so URL hashes can't collide with PROJECTS. */
+const PROJECTS_SECONDARY = [
+  {
+    id: "wizard-of-oz-sphere",
+    name: "Wizard of OZ at Sphere Las Vegas, Magnopus",
+    tag: "TBD",
+    wip: false,
+    description: "Description coming soon.",
+    year: "2026",
+    software: "",
+    role: "",
+    thumb: "spwz-01.jpg",
+    images: [
+      { src: "spwz-04.webp", caption: "" },
+      { src: "spwz-03.jpg", caption: "" },
+      { src: "spwz-02.jpg", caption: "" },
+      { video: "spwz-video-01.mp4", src: "sspwz-video-01-poster.jpg", caption: "" },
+      { video: "spwz-video-02.mp4", src: "sspwz-video-02-poster.jpg", caption: "" },
+    ]
+  },
+  {
+    id: "la-2028-olympics",
+    name: "LA 2028 Olympics Experience Center's Cross-reality Space Design, Magnopus",
+    tag: "TBD",
+    wip: false,
+    description: "Description coming soon.",
+    year: "2026",
+    software: "",
+    role: "",
+    thumb: "laoly-01.jpg",
+    images: [
+      { video: "LA28_video_FINAL-crop.mp4", src: "LA28_video_FINAL-crop-poster.jpg", caption: "" },
+    ]
+  },
+  {
+    id: "welcome-to-oko",
+    name: "Cross-reality Platform Space Design—Welcome to OKO, Magnopus",
+    tag: "TBD",
+    wip: false,
+    description: "Description coming soon.",
+    year: "2026",
+    software: "",
+    role: "",
+    thumb: "welcomeoko-01.jpg",
+    images: [
+      { src: "welcomeoko-01.jpg", caption: "" },
+    ]
+  },
+  {
+    id: "fallout-vault-33",
+    name: "The World of Fallout Sizzle—Vault 33, Magnopus",
+    tag: "TBD",
+    wip: false,
+    description: "Description coming soon.",
+    year: "2026",
+    software: "",
+    role: "",
+    thumb: "flout-01.jpg",
+    images: [
+      { src: "flout-01.jpg", caption: "" },
+    ]
+  },
+];
+
+/* Combined lookup so openProject() can resolve any id from either section. */
+const ALL_PROJECTS = [...PROJECTS, ...PROJECTS_SECONDARY];
+
 /* ================================================
    RENDER HOME GRID
    ================================================ */
-function renderHome() {
-  const grid = document.getElementById('project-grid');
-  grid.innerHTML = PROJECTS.map(p => {
+function renderProjectsInto(grid, list) {
+  grid.innerHTML = list.map(p => {
     // Use a video thumbnail if provided, otherwise fall back to image.
-    // Poster (p.thumb) shows instantly while the video loads.
     const media = p.thumbVideo
       ? `<video src="${p.thumbVideo}" poster="${p.thumb}" autoplay muted loop playsinline preload="metadata"></video>`
       : `<img src="${p.thumb}" alt="${p.name}" loading="lazy" />`;
@@ -786,11 +870,16 @@ function renderHome() {
   }).join('');
 }
 
+function renderHome() {
+  renderProjectsInto(document.getElementById('project-grid'), PROJECTS);
+  renderProjectsInto(document.getElementById('project-grid-2'), PROJECTS_SECONDARY);
+}
+
 /* ================================================
    OPEN / CLOSE PROJECT
    ================================================ */
 function openProject(id) {
-  const p = PROJECTS.find(x => x.id === id);
+  const p = ALL_PROJECTS.find(x => x.id === id);
   if (!p) return;
 
   document.getElementById('detail-title').textContent = p.name;
@@ -899,21 +988,28 @@ function attachHorizontalScroll(el) {
 }
 
 function setupHorizontalScroll() {
-  // Home grid keeps horizontal scroll behaviors.
+  // Home grids keep horizontal scroll behaviors.
   // Project galleries now stack vertically, so they use normal page scroll.
-  const grid = document.getElementById('project-grid');
+  const grid  = document.getElementById('project-grid');
+  const grid2 = document.getElementById('project-grid-2');
   attachHorizontalScroll(grid);
+  attachHorizontalScroll(grid2);
 
   // Arrow keys scroll the home grid (only when home view is active).
+  // We scroll whichever grid the cursor is currently over; falls back to grid 1.
   // Escape returns to home from a project detail view.
+  let lastHovered = grid;
+  grid.addEventListener('mouseenter',  () => { lastHovered = grid;  });
+  grid2.addEventListener('mouseenter', () => { lastHovered = grid2; });
+
   document.addEventListener('keydown', (e) => {
     const homeActive    = document.getElementById('view-home').classList.contains('active');
     const projectActive = document.getElementById('view-project').classList.contains('active');
     if (e.key === 'Escape' && (projectActive || document.getElementById('view-about').classList.contains('active'))) { goHome(); return; }
     if (!homeActive) return;
     const step = 400;
-    if (e.key === 'ArrowRight') { grid.scrollLeft += step; }
-    if (e.key === 'ArrowLeft')  { grid.scrollLeft -= step; }
+    if (e.key === 'ArrowRight') { lastHovered.scrollLeft += step; }
+    if (e.key === 'ArrowLeft')  { lastHovered.scrollLeft -= step; }
   });
 }
 
@@ -960,6 +1056,11 @@ function setupAllScrollArrows() {
     document.getElementById('grid-arrow-left'),
     document.getElementById('grid-arrow-right')
   );
+  setupScrollArrows(
+    document.getElementById('project-grid-2'),
+    document.getElementById('grid2-arrow-left'),
+    document.getElementById('grid2-arrow-right')
+  );
   // Gallery is now vertical; no scroll arrows needed there.
 }
 
@@ -970,7 +1071,7 @@ function handleRoute() {
   const hash = window.location.hash.replace('#', '');
   if (hash === 'about') {
     goAbout();
-  } else if (hash && PROJECTS.find(p => p.id === hash)) {
+  } else if (hash && ALL_PROJECTS.find(p => p.id === hash)) {
     openProject(hash);
   } else {
     goHome();
