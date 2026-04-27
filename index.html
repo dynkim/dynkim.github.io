@@ -411,6 +411,25 @@
   }
   .gallery-item:hover .caption { opacity: 1; }
 
+  /* Text blocks interleaved with images in a project gallery */
+  .gallery-text {
+    max-width: 64ch;
+    margin: 24px auto;
+    padding: clamp(16px, 3vw, 40px) clamp(16px, 3vw, 32px);
+    color: var(--text);
+    font-size: clamp(15px, 1.05vw, 17px);
+    line-height: 1.8;
+  }
+  .gallery-text p + p { margin-top: 1.25em; }
+  .gallery-text p:first-child::first-letter {
+    font-family: var(--font-display);
+    font-size: 2.4em;
+    line-height: 1;
+    float: left;
+    padding: 0.05em 0.12em 0 0;
+    color: var(--accent);
+  }
+
   .scroll-hint {
     padding: 0 var(--page-padding) 64px;
     font-family: var(--font-mono);
@@ -496,6 +515,48 @@
   }
 
   /* =========================================
+     CONTACT PAGE
+     ========================================= */
+  .contact-links {
+    margin-top: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    max-width: 56ch;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: left;
+  }
+  .contact-link {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 24px;
+    padding: 24px 0;
+    border-bottom: 1px solid var(--border);
+    transition: padding 0.25s ease;
+  }
+  .contact-link:first-of-type { border-top: 1px solid var(--border); }
+  .contact-link:hover { padding-left: 8px; }
+  .contact-link .label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--text-dim);
+    flex-shrink: 0;
+  }
+  .contact-link .value {
+    font-family: var(--font-display);
+    font-size: clamp(18px, 1.6vw, 22px);
+    color: var(--text);
+    transition: color 0.2s ease;
+    text-align: right;
+    word-break: break-all;
+  }
+  .contact-link:hover .value { color: var(--accent); }
+
+  /* =========================================
      RESPONSIVE
      ========================================= */
   @media (max-width: 640px) {
@@ -524,7 +585,7 @@
     </div>
     <nav class="site-nav">
       <a href="#about" onclick="event.preventDefault(); goAbout();">About</a>
-      <a href="#contact">Contact</a>
+      <a href="#contact" onclick="event.preventDefault(); goContact();">Contact</a>
     </nav>
   </header>
 
@@ -564,7 +625,7 @@
 
   <footer>
     <div>© 2026 Doyeon Kim</div>
-    <div>hello@yoursite.com</div>
+    <div><a href="mailto:doyeangkim@gmail.com" style="transition: color 0.2s;" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color=''">doyeangkim@gmail.com</a></div>
   </footer>
 </div>
 
@@ -621,6 +682,43 @@
       <img src="profile.jpg" alt="Doyeon Kim portrait" />
     </div>
     <p class="about-intro">Hi, thanks for visiting my website! I&rsquo;m a 3D artist and college lecturer who loves blending technical workflows with a dash of creative storytelling. This is a collection of my past, recent, and ongoing projects, ranging from single assets to full environments. Whether I&rsquo;m sculpting in ZBrush or modeling in Maya, I focus on crafting diverse subjects&mdash;from peaceful gardens to space colonies&mdash;with an eye for realistic and grounded design. I&rsquo;m always looking for ways to make digital worlds feel inviting, so I hope you enjoy seeing how it all comes together!</p>
+  </main>
+
+  <footer>
+    <div>© 2026 Doyeon Kim</div>
+    <button class="back-btn" onclick="goHome()">
+      All projects <span class="arrow" style="transform: rotate(180deg)">←</span>
+    </button>
+  </footer>
+</div>
+
+
+<!-- ========================================
+     CONTACT VIEW
+     ======================================== -->
+<div id="view-contact" class="view">
+
+  <header class="project-header">
+    <button class="back-btn" onclick="goHome()">
+      <span class="arrow">←</span> Back to work
+    </button>
+  </header>
+
+  <main class="about-page">
+    <div class="about-label">Contact</div>
+    <h2 class="about-heading">Let&rsquo;s <em>talk</em></h2>
+    <p class="about-intro" style="text-align: center; margin-bottom: 48px;">Open to freelance projects, studio roles, and collaborations. Feel free to reach out via email or LinkedIn.</p>
+
+    <div class="contact-links">
+      <a class="contact-link" href="mailto:doyeangkim@gmail.com">
+        <span class="label">Email</span>
+        <span class="value">doyeangkim@gmail.com</span>
+      </a>
+      <a class="contact-link" href="https://www.linkedin.com/in/doyeon-kim-271299210" target="_blank" rel="noopener noreferrer">
+        <span class="label">LinkedIn</span>
+        <span class="value">linkedin.com/in/doyeon-kim-271299210</span>
+      </a>
+    </div>
   </main>
 
   <footer>
@@ -797,9 +895,17 @@ const PROJECTS_SECONDARY = [
     thumb: "spwz-01.jpg",
     images: [
       { src: "spwz-04.webp", caption: "" },
+      { text: "In a groundbreaking collaboration with Sphere Entertainment, Google, and Warner Bros., Magnopus successfully delivered an immersive Wizard of Oz experience for the 16K-resolution Las Vegas Sphere. As a key 3D artist on the project, I optimized a massive physical venue model into an accessible digital twin using the proprietary OKO cross-reality platform." },
       { src: "spwz-03.jpg", caption: "" },
+      { text: "In August 2025, Sphere Entertainment presented an immersive version of the classic film The Wizard of Oz at the 366-foot-tall, 16K-resolution grand-size Sphere. In collaboration with Google, Warner Bros., and Magnopus, the world-leading entertainment venue brought the 1939 film into the present, expanding the frames of the original movie to completely enclose the audience in a marvelous, interactive experience of its magical world." },
       { src: "spwz-02.jpg", caption: "" },
+      { text: "The Wizard of Oz at Sphere was realized through a joint effort between Sphere Entertainment, Magnopus, Warner Bros., and Google. As a 3D artist brought onto the project at Magnopus, I supported the team in making our artists\u2019 imagination and creativity tangible. Magnopus\u2019 proprietary cross-reality platform, OKO, played a crucial role in making this possible. Serving as our main tool, OKO allowed our team to craft a digital-twin simulated space of the Las Vegas Sphere, where all work was pre-rendered, tested, examined, and rehearsed before being put on the physical stage." },
       { video: "spwz-video-01.mp4", src: "sspwz-video-01-poster.jpg", caption: "" },
+      { text: [
+        "We began with the fundamental step of digital construction: examining the BIM model of the Sphere, which was incredibly heavy at around 6 GB. Even after cropping the sections we needed for real-time simulation, half the size remained\u2014still far too heavy for cross-reality workflows. This required a dedicated team effort to reduce the size and optimize the environment, making it accessible across all client devices\u2014such as web, iOS, and Android\u2014while establishing the theme of the Wizard of Oz show in the digital space. This optimization opened up vast potential for testing and sharing among studio teams, on-site teams, and clients.",
+        "After optimizing the Sphere\u2019s interior, we were left with its integral framework, allowing us to dive into the artistic tasks alongside other artists from Magnopus and Sphere Entertainment. We anchored the experience around two distinct visual moments from the movie: the prevailing sepia tones representing Kansas at the beginning, and the vibrant emerald tones of the Emerald City later on. Through numerous iterations, the optimized space gained color and was prepared for additional visual, architectural, and even pyrotechnic tests.",
+        "Building a digital-twin space of the Sphere in a cross-reality platform eliminated the distance between the actual venue, the studio, and all involved teams, regardless of their physical location. This was made possible entirely by the platform\u2019s real-time interoperability, which allowed simulations to be conducted and shared with anyone, whether they were using a PC, Mac, mobile phone, or VR headset. To fully harness this magical technology, the 3D art team was essential in logically and artistically optimizing the data to minimize potential bottlenecks while connecting teams. Beyond technical optimization, we meticulously conveyed the design, feel, and mood of The Wizard of Oz, ensuring its original theme blended seamlessly into the digital space, and ultimately, the physical venue. The Wizard of Oz at Sphere was a mind-boggling project in terms of both technology and art, and at this intersection, Magnopus\u2019 solutions team and 3D artists pioneered one of the most advanced methods in creating an immersive experience."
+      ] },
       { video: "spwz-video-02.mp4", src: "sspwz-video-02-poster.jpg", caption: "" },
     ]
   },
@@ -892,6 +998,11 @@ function openProject(id) {
 
   const gallery = document.getElementById('gallery');
   gallery.innerHTML = p.images.map(item => {
+    // Text block — one or multiple paragraphs interleaved with media
+    if (item.text) {
+      const paras = Array.isArray(item.text) ? item.text : [item.text];
+      return `<div class="gallery-text">${paras.map(t => `<p>${t}</p>`).join('')}</div>`;
+    }
     // Each gallery item can be an image OR a video. Videos autoplay muted & loop.
     const media = item.video
       ? `<video src="${item.video}" poster="${item.src || ''}" autoplay muted loop playsinline preload="metadata"></video>`
@@ -915,6 +1026,7 @@ function openProject(id) {
 function goHome() {
   document.getElementById('view-project').classList.remove('active');
   document.getElementById('view-about').classList.remove('active');
+  document.getElementById('view-contact').classList.remove('active');
   document.getElementById('view-home').classList.add('active');
   window.scrollTo({ top: 0, behavior: 'instant' });
   history.pushState({ view: 'home' }, '', '#');
@@ -923,9 +1035,19 @@ function goHome() {
 function goAbout() {
   document.getElementById('view-home').classList.remove('active');
   document.getElementById('view-project').classList.remove('active');
+  document.getElementById('view-contact').classList.remove('active');
   document.getElementById('view-about').classList.add('active');
   window.scrollTo({ top: 0, behavior: 'instant' });
   history.pushState({ view: 'about' }, '', '#about');
+}
+
+function goContact() {
+  document.getElementById('view-home').classList.remove('active');
+  document.getElementById('view-project').classList.remove('active');
+  document.getElementById('view-about').classList.remove('active');
+  document.getElementById('view-contact').classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'instant' });
+  history.pushState({ view: 'contact' }, '', '#contact');
 }
 
 /* ================================================
@@ -1005,7 +1127,7 @@ function setupHorizontalScroll() {
   document.addEventListener('keydown', (e) => {
     const homeActive    = document.getElementById('view-home').classList.contains('active');
     const projectActive = document.getElementById('view-project').classList.contains('active');
-    if (e.key === 'Escape' && (projectActive || document.getElementById('view-about').classList.contains('active'))) { goHome(); return; }
+    if (e.key === 'Escape' && (projectActive || document.getElementById('view-about').classList.contains('active') || document.getElementById('view-contact').classList.contains('active'))) { goHome(); return; }
     if (!homeActive) return;
     const step = 400;
     if (e.key === 'ArrowRight') { lastHovered.scrollLeft += step; }
@@ -1071,6 +1193,8 @@ function handleRoute() {
   const hash = window.location.hash.replace('#', '');
   if (hash === 'about') {
     goAbout();
+  } else if (hash === 'contact') {
+    goContact();
   } else if (hash && ALL_PROJECTS.find(p => p.id === hash)) {
     openProject(hash);
   } else {
