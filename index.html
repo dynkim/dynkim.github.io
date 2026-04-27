@@ -430,6 +430,50 @@
     color: var(--accent);
   }
 
+  /* Summary variant — framed by oversized serif quotation marks */
+  .gallery-text.summary {
+    text-align: center;
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: clamp(20px, 1.8vw, 26px);
+    line-height: 1.5;
+    color: var(--text);
+    max-width: 56ch;
+    padding-top: clamp(40px, 5vw, 64px);
+    padding-bottom: clamp(40px, 5vw, 64px);
+    position: relative;
+  }
+  .gallery-text.summary::before,
+  .gallery-text.summary::after {
+    font-family: var(--font-display);
+    color: var(--accent);
+    font-size: clamp(96px, 10vw, 160px);
+    line-height: 0;
+    display: block;
+    font-style: normal;
+  }
+  .gallery-text.summary::before {
+    content: '\201C';
+    text-align: left;
+    margin-bottom: 0.32em;
+    margin-left: -0.12em;
+  }
+  .gallery-text.summary::after {
+    content: '\201D';
+    text-align: right;
+    margin-top: 0.5em;
+    margin-right: -0.12em;
+  }
+  /* Disable drop-cap inside summary so it doesn't fight the quote marks */
+  .gallery-text.summary p:first-child::first-letter {
+    font-family: inherit;
+    font-size: inherit;
+    line-height: inherit;
+    float: none;
+    padding: 0;
+    color: inherit;
+  }
+
   .scroll-hint {
     padding: 0 var(--page-padding) 64px;
     font-family: var(--font-mono);
@@ -894,16 +938,19 @@ const PROJECTS_SECONDARY = [
     role: "",
     thumb: "spwz-01.jpg",
     images: [
+      { summary: true, text: "In a groundbreaking collaboration with Sphere Entertainment, Google, and Warner Bros., Magnopus successfully delivered an immersive Wizard of Oz experience for the 16K-resolution Las Vegas Sphere. As a key 3D artist on the project, I optimized a massive physical venue model into an accessible digital twin using the proprietary OKO cross-reality platform." },
       { src: "spwz-04.webp", caption: "" },
-      { text: "In a groundbreaking collaboration with Sphere Entertainment, Google, and Warner Bros., Magnopus successfully delivered an immersive Wizard of Oz experience for the 16K-resolution Las Vegas Sphere. As a key 3D artist on the project, I optimized a massive physical venue model into an accessible digital twin using the proprietary OKO cross-reality platform." },
-      { src: "spwz-03.jpg", caption: "" },
       { text: "In August 2025, Sphere Entertainment presented an immersive version of the classic film The Wizard of Oz at the 366-foot-tall, 16K-resolution grand-size Sphere. In collaboration with Google, Warner Bros., and Magnopus, the world-leading entertainment venue brought the 1939 film into the present, expanding the frames of the original movie to completely enclose the audience in a marvelous, interactive experience of its magical world." },
+      { src: "spwz-03.jpg", caption: "" },
       { src: "spwz-02.jpg", caption: "" },
       { text: "The Wizard of Oz at Sphere was realized through a joint effort between Sphere Entertainment, Magnopus, Warner Bros., and Google. As a 3D artist brought onto the project at Magnopus, I supported the team in making our artists\u2019 imagination and creativity tangible. Magnopus\u2019 proprietary cross-reality platform, OKO, played a crucial role in making this possible. Serving as our main tool, OKO allowed our team to craft a digital-twin simulated space of the Las Vegas Sphere, where all work was pre-rendered, tested, examined, and rehearsed before being put on the physical stage." },
-      { video: "spwz-video-01.mp4", src: "sspwz-video-01-poster.jpg", caption: "" },
-      { text: [
+      { src: "spwz-05.png", caption: "" },
+       { text: [
         "We began with the fundamental step of digital construction: examining the BIM model of the Sphere, which was incredibly heavy at around 6 GB. Even after cropping the sections we needed for real-time simulation, half the size remained\u2014still far too heavy for cross-reality workflows. This required a dedicated team effort to reduce the size and optimize the environment, making it accessible across all client devices\u2014such as web, iOS, and Android\u2014while establishing the theme of the Wizard of Oz show in the digital space. This optimization opened up vast potential for testing and sharing among studio teams, on-site teams, and clients.",
         "After optimizing the Sphere\u2019s interior, we were left with its integral framework, allowing us to dive into the artistic tasks alongside other artists from Magnopus and Sphere Entertainment. We anchored the experience around two distinct visual moments from the movie: the prevailing sepia tones representing Kansas at the beginning, and the vibrant emerald tones of the Emerald City later on. Through numerous iterations, the optimized space gained color and was prepared for additional visual, architectural, and even pyrotechnic tests.",
+      ] },
+      { video: "spwz-video-01.mp4", src: "sspwz-video-01-poster.jpg", caption: "" },
+      { text: [
         "Building a digital-twin space of the Sphere in a cross-reality platform eliminated the distance between the actual venue, the studio, and all involved teams, regardless of their physical location. This was made possible entirely by the platform\u2019s real-time interoperability, which allowed simulations to be conducted and shared with anyone, whether they were using a PC, Mac, mobile phone, or VR headset. To fully harness this magical technology, the 3D art team was essential in logically and artistically optimizing the data to minimize potential bottlenecks while connecting teams. Beyond technical optimization, we meticulously conveyed the design, feel, and mood of The Wizard of Oz, ensuring its original theme blended seamlessly into the digital space, and ultimately, the physical venue. The Wizard of Oz at Sphere was a mind-boggling project in terms of both technology and art, and at this intersection, Magnopus\u2019 solutions team and 3D artists pioneered one of the most advanced methods in creating an immersive experience."
       ] },
       { video: "spwz-video-02.mp4", src: "sspwz-video-02-poster.jpg", caption: "" },
@@ -1001,7 +1048,8 @@ function openProject(id) {
     // Text block — one or multiple paragraphs interleaved with media
     if (item.text) {
       const paras = Array.isArray(item.text) ? item.text : [item.text];
-      return `<div class="gallery-text">${paras.map(t => `<p>${t}</p>`).join('')}</div>`;
+      const cls = item.summary ? 'gallery-text summary' : 'gallery-text';
+      return `<div class="${cls}">${paras.map(t => `<p>${t}</p>`).join('')}</div>`;
     }
     // Each gallery item can be an image OR a video. Videos autoplay muted & loop.
     const media = item.video
