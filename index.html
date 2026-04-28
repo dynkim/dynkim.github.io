@@ -411,6 +411,25 @@
   }
   .gallery-item:hover .caption { opacity: 1; }
 
+  /* Side-by-side pair — two media items with zero gap between them */
+  .gallery-pair {
+    display: flex;
+    gap: 0;
+    width: 100%;
+    align-items: stretch;
+  }
+  .gallery-pair .gallery-item {
+    flex: 1 1 0;
+    min-width: 0;
+    margin: 0;
+  }
+  .gallery-pair .gallery-item img,
+  .gallery-pair .gallery-item video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
   /* Text blocks interleaved with images in a project gallery */
   .gallery-text {
     max-width: 64ch;
@@ -967,7 +986,22 @@ const PROJECTS_SECONDARY = [
     role: "",
     thumb: "laoly-01.jpg",
     images: [
+      { summary: true, text: "Ahead of the 2028 Los Angeles Olympic Games, Magnopus received an RFP from the LA28 Organizing Committee to design an immersive Olympics Experience Center. As a 3D Artist at Magnopus, I developed a digital twin of SoFi Stadium within the OKO cross-reality platform, serving as the centerpiece of the pitch that won the commission." },
       { video: "LA28_video_FINAL-crop.mp4", src: "LA28_video_FINAL-crop-poster.jpg", caption: "" },
+      { src: "LAConventionCenter_Solar.webp", caption: "" },
+      { text: "The Olympics Experience Center is a 14,000-square-foot(1,300-square-meter) immersive venue planned near the Los Angeles Convention Center, designed to give visitors a behind-the-scenes look at the upcoming Olympic Games. To secure the project, Magnopus partnered with Gensler to demonstrate how integrating digital entertainment with architectural design can elevate the visitor experience. We anchored our pitch around a virtual replica of SoFi Stadium, building it as a fully navigable digital environment." },
+      { pair: [
+        { src: "InglewoodStadiumDesktop.webp", caption: "" },
+        { src: "sofi_fly_over.gif", caption: "" }
+      ] },
+      { text: "I was responsible for establishing the visual direction and coordinating a team of five artists to build the stadium\u2019s architecture, including the swimming venue, broadcasting area, and surrounding plaza. The environment was heavily optimized to run seamlessly across web, mobile, and VR, allowing the LA28 committee to explore the proposed space from any device. Through rigorous iteration, we balanced performance and atmosphere, cutting load times in half and improving runtime performance by 60%, all while preserving the grand scale of an Olympic venue." },
+      { pair: [
+        { src: "laoly_06.jpg", caption: "" },
+        { src: "laoly_07.jpg", caption: "" }
+      ] },
+      { text: "Our visual goal was to capture the immense scale and openness of SoFi Stadium converted into an Olympic aquatic center. Given the stadium\u2019s massive interior volume, we developed a comprehensive set design to seamlessly connect the competition area with the spectator experience. Leveraging our team\u2019s firsthand experience visiting the physical venue, we efficiently blocked out the foundational layouts for key areas, including the competition and practice pools, broadcasting zones, camera rails, and referee stations. We also drew inspiration from the Paris Olympic swimming facilities and the Lucas Oil Stadium, which served as an excellent real-world precedent for transforming a large arena into a swimming venue. Because our baseline requirement was to enable full interactivity within the OKO platform, we actively utilized its native VR and AR features to review and iterate our designs in a true spatial context." },
+      { src: "laoly_15.png", caption: "" },
+      { text: "The demo successfully illustrated how visitors would interact with the future Experience Center, helping Magnopus win the bid over ten competing studios. For our team, the project was an opportunity to realize the full potential of cross-reality technology: collaborative iteration across geographies, simulation prior to construction, and the creation of a digital space that goes beyond previewing a physical venue. We built an interactive Olympic stadium where users can experience the space not just as visitors, but through a variety of engaging roles." },
     ]
   },
   {
@@ -1051,15 +1085,19 @@ function openProject(id) {
       const cls = item.summary ? 'gallery-text summary' : 'gallery-text';
       return `<div class="${cls}">${paras.map(t => `<p>${t}</p>`).join('')}</div>`;
     }
-    // Each gallery item can be an image OR a video. Videos autoplay muted & loop.
-    const media = item.video
-      ? `<video src="${item.video}" poster="${item.src || ''}" autoplay muted loop playsinline preload="metadata"></video>`
-      : `<img src="${item.src}" alt="${item.caption}" loading="lazy" />`;
-    return `
-      <div class="gallery-item">
-        ${media}
-        <div class="caption">${item.caption}</div>
-      </div>`;
+    // Helper that renders a single image/video item
+    const renderMediaItem = m => {
+      const media = m.video
+        ? `<video src="${m.video}" poster="${m.src || ''}" autoplay muted loop playsinline preload="metadata"></video>`
+        : `<img src="${m.src}" alt="${m.caption || ''}" loading="lazy" />`;
+      return `<div class="gallery-item">${media}<div class="caption">${m.caption || ''}</div></div>`;
+    };
+    // Side-by-side pair — two media items rendered with zero gap
+    if (item.pair) {
+      return `<div class="gallery-pair">${item.pair.map(renderMediaItem).join('')}</div>`;
+    }
+    // Single image or video
+    return renderMediaItem(item);
   }).join('');
 
   // Switch views

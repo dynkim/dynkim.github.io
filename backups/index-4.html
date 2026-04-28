@@ -1,0 +1,1273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Studio — 3D Environment Art</title>
+
+<!-- Typography: Instrument Serif for titles, IBM Plex Sans for UI -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=IBM+Plex+Sans:wght@300;400;500&family=IBM+Plex+Mono:wght@300;400&display=swap" rel="stylesheet">
+
+<style>
+  /* =========================================
+     DESIGN TOKENS — tweak these to reskin
+     ========================================= */
+  :root {
+    --bg: #0c0c0d;
+    --bg-elevated: #141415;
+    --text: #e8e4dc;
+    --text-dim: #7a7670;
+    --text-faint: #4a4844;
+    --accent: #d4a574;
+    --border: #222;
+
+    --font-display: 'Instrument Serif', Georgia, serif;
+    --font-sans: 'IBM Plex Sans', system-ui, sans-serif;
+    --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+
+    --page-padding: clamp(24px, 4vw, 64px);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-sans);
+    font-weight: 300;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  body { min-height: 100vh; }
+
+  a { color: inherit; text-decoration: none; }
+  button { background: none; border: none; color: inherit; font: inherit; cursor: pointer; }
+
+  /* =========================================
+     VIEW SWITCHING
+     ========================================= */
+  .view { display: none; animation: fadeIn 0.4s ease; }
+  .view.active { display: block; }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* =========================================
+     HOME — header + project grid
+     ========================================= */
+  .site-header {
+    padding: var(--page-padding);
+    padding-bottom: clamp(20px, 2.5vw, 32px);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 32px;
+    flex-wrap: wrap;
+  }
+
+  .site-title {
+    font-family: var(--font-display);
+    font-size: clamp(28px, 3vw, 40px);
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    line-height: 1.1;
+  }
+  .site-title em {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  .identity {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .avatar {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    overflow: hidden;
+    flex-shrink: 0;
+    border: 1px solid var(--border);
+    background: var(--bg-elevated);
+    position: relative;
+  }
+  .avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    filter: saturate(0.95);
+    transition: filter 0.3s ease, transform 0.6s ease;
+  }
+  .avatar:hover img {
+    filter: saturate(1.1);
+    transform: scale(1.06);
+  }
+
+  .site-tagline {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--text-dim);
+    margin-top: 12px;
+  }
+
+  .site-nav {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--text-dim);
+    display: flex;
+    gap: 24px;
+  }
+  .site-nav a { transition: color 0.2s; }
+  .site-nav a:hover { color: var(--text); }
+
+  .section-label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--text-dim);
+    padding: 0 var(--page-padding);
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .section-label + .section-label,
+  .scroll-hint + .section-label {
+    margin-top: 32px;
+  }
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .project-grid {
+    padding: 0 0 16px;
+    display: flex;
+    gap: 0;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-behavior: smooth;
+    scrollbar-width: thin;
+    scrollbar-color: var(--text-faint) transparent;
+    cursor: grab;
+    user-select: none;
+    margin-bottom: 32px;
+  }
+  .project-grid.dragging { cursor: grabbing; scroll-behavior: auto; }
+  .project-grid.dragging .project-card { pointer-events: none; }
+  .project-grid::-webkit-scrollbar { height: 8px; }
+  .project-grid::-webkit-scrollbar-track { background: var(--bg-elevated); }
+  .project-grid::-webkit-scrollbar-thumb { background: var(--text-dim); border-radius: 4px; }
+  .project-grid::-webkit-scrollbar-thumb:hover { background: var(--text); }
+
+  .project-card {
+    cursor: pointer;
+    display: block;
+    text-align: left;
+    position: relative;
+    overflow: hidden;
+    flex-shrink: 0;
+    height: min(75vh, 680px);
+    aspect-ratio: 4 / 3;
+  }
+
+  .project-thumb {
+    width: 100%;
+    height: 100%;
+    background: var(--bg-elevated);
+    overflow: hidden;
+    position: relative;
+  }
+  .project-thumb img,
+  .project-thumb video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s ease, filter 0.4s ease;
+    filter: saturate(0.9);
+    display: block;
+  }
+  .project-card:hover .project-thumb img,
+  .project-card:hover .project-thumb video {
+    transform: scale(1.03);
+    filter: saturate(1);
+  }
+
+  /* Meta now sits as an overlay so thumbnails stay edge-to-edge */
+  .project-meta {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 24px 24px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 16px;
+    background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.4) 60%, rgba(0,0,0,0) 100%);
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    pointer-events: none;
+  }
+  .project-card:hover .project-meta {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .project-name {
+    font-family: var(--font-display);
+    font-size: 24px;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    color: var(--text);
+  }
+  .project-tag {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--text-dim);
+    white-space: nowrap;
+  }
+  .project-tag.wip { color: var(--accent); }
+
+  /* =========================================
+     SCROLL ARROWS — overlay buttons on horizontal galleries
+     ========================================= */
+  .scroll-wrapper { position: relative; }
+
+  .scroll-arrow {
+    position: absolute;
+    top: calc(50% - 28px);
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: rgba(20, 20, 21, 0.65);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.35s ease, background 0.2s ease, border-color 0.2s ease;
+    cursor: pointer;
+  }
+  .scroll-arrow.visible {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .scroll-arrow:hover {
+    background: rgba(40, 40, 42, 0.85);
+    border-color: var(--accent);
+  }
+  .scroll-arrow svg {
+    width: 22px;
+    height: 22px;
+    stroke: currentColor;
+    stroke-width: 1.5;
+    fill: none;
+    transition: transform 0.25s ease;
+  }
+
+  .scroll-arrow-left { left: 24px; }
+  .scroll-arrow-right { right: 24px; }
+
+  /* Gentle nudge on the right arrow to draw the eye */
+  @keyframes nudge-right {
+    0%, 70%, 100% { transform: translateX(0); }
+    80%          { transform: translateX(5px); }
+    90%          { transform: translateX(0); }
+  }
+  @keyframes nudge-left {
+    0%, 70%, 100% { transform: translateX(0); }
+    80%          { transform: translateX(-5px); }
+    90%          { transform: translateX(0); }
+  }
+  .scroll-arrow-right.visible svg { animation: nudge-right 2.4s ease-in-out infinite; }
+  .scroll-arrow-left.visible  svg { animation: nudge-left  2.4s ease-in-out infinite; }
+  .scroll-arrow:hover svg { animation: none; }
+  .scroll-arrow-right:hover svg { transform: translateX(3px); }
+  .scroll-arrow-left:hover svg  { transform: translateX(-3px); }
+
+  /* =========================================
+     PROJECT DETAIL — horizontal scroll
+     ========================================= */
+  .project-header {
+    padding: var(--page-padding);
+    padding-bottom: 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 32px;
+    flex-wrap: wrap;
+  }
+
+  .back-btn {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--text-dim);
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    transition: color 0.2s;
+  }
+  .back-btn:hover { color: var(--text); }
+  .back-btn .arrow {
+    display: inline-block;
+    transition: transform 0.2s;
+  }
+  .back-btn:hover .arrow { transform: translateX(-4px); }
+
+  .project-title-block { flex: 1; min-width: 260px; }
+  .project-title {
+    font-family: var(--font-display);
+    font-size: clamp(32px, 4vw, 56px);
+    font-weight: 400;
+    line-height: 1.05;
+    letter-spacing: -0.015em;
+  }
+  .project-description {
+    margin-top: 16px;
+    max-width: 52ch;
+    color: var(--text-dim);
+    font-size: 15px;
+    line-height: 1.6;
+  }
+  .project-specs {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--text-dim);
+    text-align: right;
+    line-height: 2;
+  }
+  .project-specs span { color: var(--text); }
+
+  /* Vertical gallery (project sub-pages) — ArtStation-style stacked layout */
+  .gallery-wrapper {
+    position: relative;
+    padding: 0 var(--page-padding);
+    margin-bottom: 32px;
+  }
+
+  .gallery {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  .gallery-item {
+    width: 100%;
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+  }
+  .gallery-item img,
+  .gallery-item video {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: contain;
+  }
+  .gallery-item .caption {
+    position: absolute;
+    bottom: 16px;
+    left: 16px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--text);
+    background: rgba(0,0,0,0.6);
+    backdrop-filter: blur(8px);
+    padding: 6px 10px;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .gallery-item:hover .caption { opacity: 1; }
+
+  /* Text blocks interleaved with images in a project gallery */
+  .gallery-text {
+    max-width: 64ch;
+    margin: 24px auto;
+    padding: clamp(16px, 3vw, 40px) clamp(16px, 3vw, 32px);
+    color: var(--text);
+    font-size: clamp(15px, 1.05vw, 17px);
+    line-height: 1.8;
+  }
+  .gallery-text p + p { margin-top: 1.25em; }
+  .gallery-text p:first-child::first-letter {
+    font-family: var(--font-display);
+    font-size: 2.4em;
+    line-height: 1;
+    float: left;
+    padding: 0.05em 0.12em 0 0;
+    color: var(--accent);
+  }
+
+  /* Summary variant — framed by oversized serif quotation marks */
+  .gallery-text.summary {
+    text-align: center;
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: clamp(20px, 1.8vw, 26px);
+    line-height: 1.5;
+    color: var(--text);
+    max-width: 56ch;
+    padding-top: clamp(40px, 5vw, 64px);
+    padding-bottom: clamp(40px, 5vw, 64px);
+    position: relative;
+  }
+  .gallery-text.summary::before,
+  .gallery-text.summary::after {
+    font-family: var(--font-display);
+    color: var(--accent);
+    font-size: clamp(96px, 10vw, 160px);
+    line-height: 0;
+    display: block;
+    font-style: normal;
+  }
+  .gallery-text.summary::before {
+    content: '\201C';
+    text-align: left;
+    margin-bottom: 0.32em;
+    margin-left: -0.12em;
+  }
+  .gallery-text.summary::after {
+    content: '\201D';
+    text-align: right;
+    margin-top: 0.5em;
+    margin-right: -0.12em;
+  }
+  /* Disable drop-cap inside summary so it doesn't fight the quote marks */
+  .gallery-text.summary p:first-child::first-letter {
+    font-family: inherit;
+    font-size: inherit;
+    line-height: inherit;
+    float: none;
+    padding: 0;
+    color: inherit;
+  }
+
+  .scroll-hint {
+    padding: 0 var(--page-padding) 64px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--text-faint);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .scroll-hint .line {
+    flex: 1;
+    max-width: 80px;
+    height: 1px;
+    background: var(--text-faint);
+  }
+
+  /* =========================================
+     ABOUT PAGE
+     ========================================= */
+  .about-page {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: clamp(24px, 4vw, 64px) var(--page-padding) 96px;
+    text-align: center;
+  }
+  .about-label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--text-dim);
+    margin-bottom: 24px;
+  }
+  .about-heading {
+    font-family: var(--font-display);
+    font-size: clamp(40px, 5vw, 72px);
+    font-weight: 400;
+    letter-spacing: -0.015em;
+    line-height: 1;
+    margin-bottom: 40px;
+  }
+  .about-heading em {
+    font-style: italic;
+    color: var(--accent);
+  }
+  .about-avatar {
+    width: 128px;
+    height: 128px;
+    margin: 0 auto 40px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    background: var(--bg-elevated);
+  }
+  .about-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: saturate(0.95);
+  }
+  .about-intro {
+    font-size: clamp(16px, 1.2vw, 18px);
+    line-height: 1.75;
+    color: var(--text);
+    text-align: left;
+    max-width: 56ch;
+    margin: 0 auto;
+  }
+  footer {
+    padding: 48px var(--page-padding);
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    gap: 24px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--text-dim);
+    flex-wrap: wrap;
+  }
+
+  /* =========================================
+     CONTACT PAGE
+     ========================================= */
+  .contact-links {
+    margin-top: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    max-width: 56ch;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: left;
+  }
+  .contact-link {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 24px;
+    padding: 24px 0;
+    border-bottom: 1px solid var(--border);
+    transition: padding 0.25s ease;
+  }
+  .contact-link:first-of-type { border-top: 1px solid var(--border); }
+  .contact-link:hover { padding-left: 8px; }
+  .contact-link .label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--text-dim);
+    flex-shrink: 0;
+  }
+  .contact-link .value {
+    font-family: var(--font-display);
+    font-size: clamp(18px, 1.6vw, 22px);
+    color: var(--text);
+    transition: color 0.2s ease;
+    text-align: right;
+    word-break: break-all;
+  }
+  .contact-link:hover .value { color: var(--accent); }
+
+  /* =========================================
+     RESPONSIVE
+     ========================================= */
+  @media (max-width: 640px) {
+    .project-grid { grid-template-columns: 1fr; }
+    .project-specs { text-align: left; }
+    .gallery-item { height: 60vh; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ========================================
+     HOME VIEW
+     ======================================== -->
+<div id="view-home" class="view active">
+
+  <header class="site-header">
+    <div class="identity">
+      <div class="avatar">
+        <img src="profile.jpg" alt="Doyeon Kim portrait" />
+      </div>
+      <div>
+        <h1 class="site-title">Doyeon Kim <em>—</em> 3D Artist</h1>
+        <div class="site-tagline">3D Worlds · Props · Work in Progress</div>
+      </div>
+    </div>
+    <nav class="site-nav">
+      <a href="#about" onclick="event.preventDefault(); goAbout();">About</a>
+      <a href="#contact" onclick="event.preventDefault(); goContact();">Contact</a>
+    </nav>
+  </header>
+
+  <div class="section-label">Selected Work · 2026</div>
+
+  <div class="scroll-wrapper">
+    <main class="project-grid" id="project-grid">
+      <!-- Projects populated by JS from the data array below -->
+    </main>
+    <button class="scroll-arrow scroll-arrow-left" id="grid-arrow-left" aria-label="Scroll left">
+      <svg viewBox="0 0 24 24"><polyline points="15 6 9 12 15 18"></polyline></svg>
+    </button>
+    <button class="scroll-arrow scroll-arrow-right" id="grid-arrow-right" aria-label="Scroll right">
+      <svg viewBox="0 0 24 24"><polyline points="9 6 15 12 9 18"></polyline></svg>
+    </button>
+  </div>
+
+  <div class="scroll-hint">
+    <span class="line"></span>
+    Scroll horizontally to see more work
+    <span class="line"></span>
+  </div>
+
+  <div class="section-label">Selected Projects</div>
+
+  <div class="scroll-wrapper">
+    <main class="project-grid" id="project-grid-2">
+      <!-- Secondary projects populated by JS -->
+    </main>
+    <button class="scroll-arrow scroll-arrow-left" id="grid2-arrow-left" aria-label="Scroll left">
+      <svg viewBox="0 0 24 24"><polyline points="15 6 9 12 15 18"></polyline></svg>
+    </button>
+    <button class="scroll-arrow scroll-arrow-right" id="grid2-arrow-right" aria-label="Scroll right">
+      <svg viewBox="0 0 24 24"><polyline points="9 6 15 12 9 18"></polyline></svg>
+    </button>
+  </div>
+
+  <footer>
+    <div>© 2026 Doyeon Kim</div>
+    <div><a href="mailto:doyeangkim@gmail.com" style="transition: color 0.2s;" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color=''">doyeangkim@gmail.com</a></div>
+  </footer>
+</div>
+
+
+<!-- ========================================
+     PROJECT DETAIL VIEW
+     ======================================== -->
+<div id="view-project" class="view">
+
+  <header class="project-header">
+    <button class="back-btn" onclick="goHome()">
+      <span class="arrow">←</span> Back to work
+    </button>
+  </header>
+
+  <div class="project-header" style="padding-top: 0;">
+    <div class="project-title-block">
+      <h2 class="project-title" id="detail-title">Project Title</h2>
+      <p class="project-description" id="detail-description">Description.</p>
+    </div>
+    <div class="project-specs" id="detail-specs"></div>
+  </div>
+
+  <div class="gallery-wrapper">
+    <div class="gallery" id="gallery">
+      <!-- Images populated by JS -->
+    </div>
+  </div>
+
+  <footer>
+    <div>© 2026 Doyeon Kim</div>
+    <button class="back-btn" onclick="goHome()">
+      All projects <span class="arrow" style="transform: rotate(180deg)">←</span>
+    </button>
+  </footer>
+</div>
+
+
+<!-- ========================================
+     ABOUT VIEW
+     ======================================== -->
+<div id="view-about" class="view">
+
+  <header class="project-header">
+    <button class="back-btn" onclick="goHome()">
+      <span class="arrow">←</span> Back to work
+    </button>
+  </header>
+
+  <main class="about-page">
+    <div class="about-label">About</div>
+    <h2 class="about-heading">Doyeon Kim <em>—</em> 3D Artist</h2>
+    <div class="about-avatar">
+      <img src="profile.jpg" alt="Doyeon Kim portrait" />
+    </div>
+    <p class="about-intro">Hi, thanks for visiting my website! I&rsquo;m a 3D artist and college lecturer who loves blending technical workflows with a dash of creative storytelling. This is a collection of my past, recent, and ongoing projects, ranging from single assets to full environments. Whether I&rsquo;m sculpting in ZBrush or modeling in Maya, I focus on crafting diverse subjects&mdash;from peaceful gardens to space colonies&mdash;with an eye for realistic and grounded design. I&rsquo;m always looking for ways to make digital worlds feel inviting, so I hope you enjoy seeing how it all comes together!</p>
+  </main>
+
+  <footer>
+    <div>© 2026 Doyeon Kim</div>
+    <button class="back-btn" onclick="goHome()">
+      All projects <span class="arrow" style="transform: rotate(180deg)">←</span>
+    </button>
+  </footer>
+</div>
+
+
+<!-- ========================================
+     CONTACT VIEW
+     ======================================== -->
+<div id="view-contact" class="view">
+
+  <header class="project-header">
+    <button class="back-btn" onclick="goHome()">
+      <span class="arrow">←</span> Back to work
+    </button>
+  </header>
+
+  <main class="about-page">
+    <div class="about-label">Contact</div>
+    <h2 class="about-heading">Let&rsquo;s <em>talk</em></h2>
+    <p class="about-intro" style="text-align: center; margin-bottom: 48px;">Open to freelance projects, studio roles, and collaborations. Feel free to reach out via email or LinkedIn.</p>
+
+    <div class="contact-links">
+      <a class="contact-link" href="mailto:doyeangkim@gmail.com">
+        <span class="label">Email</span>
+        <span class="value">doyeangkim@gmail.com</span>
+      </a>
+      <a class="contact-link" href="https://www.linkedin.com/in/doyeon-kim-271299210" target="_blank" rel="noopener noreferrer">
+        <span class="label">LinkedIn</span>
+        <span class="value">linkedin.com/in/doyeon-kim-271299210</span>
+      </a>
+    </div>
+  </main>
+
+  <footer>
+    <div>© 2026 Doyeon Kim</div>
+    <button class="back-btn" onclick="goHome()">
+      All projects <span class="arrow" style="transform: rotate(180deg)">←</span>
+    </button>
+  </footer>
+</div>
+
+
+<script>
+/* ================================================
+   PROJECT DATA — edit this array to add/remove work
+   Each project needs:
+     - id: unique slug
+     - name, tag, wip (boolean)
+     - description, year, software, role
+     - thumb: main image shown on home
+     - images: array of { src, caption } for the detail gallery
+   ================================================ */
+const PROJECTS = [
+  {
+    id: "secret-garden",
+    name: "Secret Garden",
+    tag: "Environment",
+    wip: false,
+    description: "A gothic cloister reclaimed by nature, built around a photogrammetry-scanned cupid fountain. Combines modular architecture with hand-scanned statuary, wrought-iron lighting, and a procedural floor material.",
+    year: "2025",
+    software: "Unreal 5 · Blender · ZBrush · Substance · RealityScan",
+    role: "Full Environment — Modelling, Materials, Lighting",
+    thumb: "sg-03.jpg",
+    images: [
+      { src: "sg-01.jpg", caption: "Establishing shot — fountain and cloister" },
+      { src: "sg-02.jpg", caption: "Cupid statue — hero closeup" },
+      { src: "sg-03.jpg", caption: "Cloister interior — overgrown arches" },
+      { src: "sg-04.jpg", caption: "Vaulted ceiling and wrought-iron chandelier" },
+      { src: "sg-05.jpg", caption: "Chandelier detail" },
+      { src: "sg-06.jpg", caption: "Light rays through gothic tracery" },
+      { src: "sg-07.jpg", caption: "Stone planter and fallen leaves" },
+      { src: "sg-08.jpg", caption: "Cloister hallway" },
+      { src: "sg-09.jpg", caption: "Modular asset kit" },
+      { src: "sg-10.jpg", caption: "Fountain — isolated render" },
+      { src: "sg-11.jpg", caption: "Photogrammetry workflow — capture to sculpt" },
+      { src: "sg-12.jpg", caption: "Cupid statue — textured and wireframe" },
+      { src: "sg-13.jpg", caption: "Cupid statue — rear view and topology" },
+      { src: "sg-14.jpg", caption: "Iron wall torches — variants and wireframe" },
+      { src: "sg-15.jpg", caption: "Chandelier closeup" },
+      { src: "sg-16.jpg", caption: "Chandelier — wireframe breakdown" },
+      { src: "sg-17.jpg", caption: "Floor material — graph, vertex paint, lighting" },
+      { video: "sg-18.mp4", src: "sg-18-poster.jpg", caption: "Camera flythrough" },
+      { video: "sg-19.mp4", src: "sg-19-poster.jpg", caption: "Scene reveal sequence" },
+    ]
+  },
+  {
+    id: "sienar-chall-utilipede",
+    name: "Star Wars: Sienar-Chall Utilipede Transport",
+    tag: "Star Wars, Vehicle",
+    wip: false,
+    description: "A hard-surface study of the Sienar-Chall Utilipede Transport — a Star Wars canon utility freighter. Focus on mechanical paneling, weathered industrial metal, and faithful silhouette work from reference.",
+    year: "2026",
+    software: "Maya · Substance 3D Painter · Substance 3D Designer · Marmoset",
+    role: "Modelling, Texturing",
+    thumb: "sn-01.jpg",
+    images: [
+      { src: "sn-01.jpg", caption: "Hero render — Sienar-Chall Utilipede Transport" },
+    ]
+  },
+  {
+    id: "vintage-telephone",
+    name: "Vintage Telephone",
+    tag: "Prop",
+    wip: false,
+    description: "A mid-century German industrial wall telephone — Fernsig-branded, cast housing, bakelite handset. Modelled and textured with a focus on worn paint, tarnished metal, and the brass nameplate.",
+    year: "2025",
+    software: "Blender · ZBrush · Substance · Marmoset",
+    role: "Modelling + Texturing",
+    thumb: "vt-04.jpg",
+    images: [
+      { src: "vt-01.jpg", caption: "Front hero shot" },
+      { src: "vt-02.jpg", caption: "Three-quarter view" },
+      { src: "vt-03.jpg", caption: "Side profile" },
+      { src: "vt-04.jpg", caption: "Dial and nameplate — hero closeup" },
+      { src: "vt-05.jpg", caption: "Dial detail — light backdrop" },
+      { src: "vt-06.jpg", caption: "Environment context — factory window" },
+      { src: "vt-07.jpg", caption: "Earpiece detail" },
+      { src: "vt-08.jpg", caption: "Mouthpiece detail" },
+      { src: "vt-09.jpg", caption: "Handset — front, side, back" },
+      { src: "vt-10.jpg", caption: "Handset — three-quarter views" },
+      { src: "vt-11.jpg", caption: "Wireframe — three-quarter" },
+      { src: "vt-12.jpg", caption: "Wireframe — angled" },
+      { src: "vt-13.jpg", caption: "Handset — wireframe breakdown" },
+      { src: "vt-14.jpg", caption: "Texture map — Base Color" },
+      { src: "vt-15.jpg", caption: "Texture map — Roughness" },
+      { src: "vt-16.jpg", caption: "Texture map — Normal" },
+      { src: "vt-17.jpg", caption: "Texture map — Metallic" },
+      { src: "vt-18.jpg", caption: "Texture map — Ambient Occlusion" },
+    ]
+  },
+  {
+    id: "japanese-izakaya",
+    name: "Japanese Izakaya",
+    tag: "Environment",
+    wip: false,
+    description: "A late-night Tokyo izakaya — red leather stools, brass trim, paper lanterns, exposed ductwork. Focus on warm practical lighting, densely-dressed shelves of sake and whisky, and the interplay between industrial ceiling and traditional decor.",
+    year: "2025",
+    software: "Unreal 5 · Blender · Substance",
+    role: "Full Environment — Modelling, Materials, Lighting",
+    thumb: "jb-01.jpg",
+    images: [
+      { src: "jb-01.jpg", caption: "Establishing shot — bar interior" },
+      { src: "jb-02.jpg", caption: "Espresso machine and tap handles" },
+      { src: "jb-03.jpg", caption: "Shelf dressing — top-down detail" },
+      { src: "jb-04.jpg", caption: "Paper lanterns and ductwork" },
+      { src: "jb-05.jpg", caption: "Bar counter — wide angle" },
+      { src: "jb-06.jpg", caption: "Stools and back bar — atmospheric shot" },
+      { src: "jb-07.jpg", caption: "Beer tap + CRT monitor — wireframe breakdown" },
+      { src: "jb-08.jpg", caption: "Wall fan + bar stool — wireframe breakdown" },
+      { video: "jb-09.mp4", src: "jb-09-poster.jpg", caption: "Camera flythrough" },
+    ]
+  },
+  {
+    id: "espresso-machine",
+    name: "Espresso Machine",
+    tag: "Prop",
+    wip: false,
+    description: "A Dalla Corte EVO2 commercial espresso machine, dressed with travel stickers, a sticky note, and years of cafe wear. Modelled and textured as a hero prop for the Japanese Izakaya scene — the red anchor piece behind the bar.",
+    year: "2025",
+    software: "Blender · Substance · Marmoset",
+    role: "Modelling + Texturing",
+    thumb: "em-02.jpg",
+    images: [
+      { src: "em-01.jpg", caption: "Three-quarter hero render" },
+      { src: "em-02.jpg", caption: "Opposite side — California stickers" },
+      { src: "em-03.jpg", caption: "Wireframe overlay on grid" },
+      { video: "em-04.mp4", src: "em-04-poster.jpg", caption: "Turntable" },
+      { src: "em-05.jpg", caption: "Texture map — Base Color" },
+      { src: "em-06.jpg", caption: "Texture map — Roughness" },
+      { src: "em-07.jpg", caption: "Texture map — Normal" },
+      { src: "em-08.jpg", caption: "Texture map — Metallic" },
+      { src: "em-09.jpg", caption: "Texture map — Ambient Occlusion" },
+    ]
+  },
+  {
+    id: "cyberpunk-seoul",
+    name: "A.D. 2077 Seoul — Riders",
+    tag: "Environment",
+    wip: false,
+    description: "Cyberpunk Seoul — an alley lined with neon signage in Korean, Japanese, Russian, and Arabic, volumetric holograms drifting overhead, and a sunset haze. Title graphics for a fictional short, 'Riders: Deliver for Future.'",
+    year: "2025",
+    software: "Unreal 5 · Blender · Substance",
+    role: "Full Environment — Modelling, Materials, Lighting",
+    thumb: "cp-01.jpg",
+    images: [
+      { src: "cp-01.jpg", caption: "Key art — A.D. 2077 Seoul" },
+      { video: "cp-02.mp4", src: "cp-02-poster.jpg", caption: "Camera flythrough" },
+      { video: "cp-03.mp4", src: "cp-03-poster.jpg", caption: "Alternate angle / cut" },
+    ]
+  },
+];
+
+/* Secondary section — "Selected Projects" row.
+   Uses a separate id namespace so URL hashes can't collide with PROJECTS. */
+const PROJECTS_SECONDARY = [
+  {
+    id: "wizard-of-oz-sphere",
+    name: "Wizard of OZ at Sphere Las Vegas, Magnopus",
+    tag: "TBD",
+    wip: false,
+    description: "Description coming soon.",
+    year: "2026",
+    software: "",
+    role: "",
+    thumb: "spwz-01.jpg",
+    images: [
+      { summary: true, text: "In a groundbreaking collaboration with Sphere Entertainment, Google, and Warner Bros., Magnopus successfully delivered an immersive Wizard of Oz experience for the 16K-resolution Las Vegas Sphere. As a key 3D artist on the project, I optimized a massive physical venue model into an accessible digital twin using the proprietary OKO cross-reality platform." },
+      { src: "spwz-04.webp", caption: "" },
+      { text: "In August 2025, Sphere Entertainment presented an immersive version of the classic film The Wizard of Oz at the 366-foot-tall, 16K-resolution grand-size Sphere. In collaboration with Google, Warner Bros., and Magnopus, the world-leading entertainment venue brought the 1939 film into the present, expanding the frames of the original movie to completely enclose the audience in a marvelous, interactive experience of its magical world." },
+      { src: "spwz-03.jpg", caption: "" },
+      { src: "spwz-02.jpg", caption: "" },
+      { text: "The Wizard of Oz at Sphere was realized through a joint effort between Sphere Entertainment, Magnopus, Warner Bros., and Google. As a 3D artist brought onto the project at Magnopus, I supported the team in making our artists\u2019 imagination and creativity tangible. Magnopus\u2019 proprietary cross-reality platform, OKO, played a crucial role in making this possible. Serving as our main tool, OKO allowed our team to craft a digital-twin simulated space of the Las Vegas Sphere, where all work was pre-rendered, tested, examined, and rehearsed before being put on the physical stage." },
+      { src: "spwz-05.png", caption: "" },
+       { text: [
+        "We began with the fundamental step of digital construction: examining the BIM model of the Sphere, which was incredibly heavy at around 6 GB. Even after cropping the sections we needed for real-time simulation, half the size remained\u2014still far too heavy for cross-reality workflows. This required a dedicated team effort to reduce the size and optimize the environment, making it accessible across all client devices\u2014such as web, iOS, and Android\u2014while establishing the theme of the Wizard of Oz show in the digital space. This optimization opened up vast potential for testing and sharing among studio teams, on-site teams, and clients.",
+        "After optimizing the Sphere\u2019s interior, we were left with its integral framework, allowing us to dive into the artistic tasks alongside other artists from Magnopus and Sphere Entertainment. We anchored the experience around two distinct visual moments from the movie: the prevailing sepia tones representing Kansas at the beginning, and the vibrant emerald tones of the Emerald City later on. Through numerous iterations, the optimized space gained color and was prepared for additional visual, architectural, and even pyrotechnic tests.",
+      ] },
+      { video: "spwz-video-01.mp4", src: "sspwz-video-01-poster.jpg", caption: "" },
+      { text: [
+        "Building a digital-twin space of the Sphere in a cross-reality platform eliminated the distance between the actual venue, the studio, and all involved teams, regardless of their physical location. This was made possible entirely by the platform\u2019s real-time interoperability, which allowed simulations to be conducted and shared with anyone, whether they were using a PC, Mac, mobile phone, or VR headset. To fully harness this magical technology, the 3D art team was essential in logically and artistically optimizing the data to minimize potential bottlenecks while connecting teams. Beyond technical optimization, we meticulously conveyed the design, feel, and mood of The Wizard of Oz, ensuring its original theme blended seamlessly into the digital space, and ultimately, the physical venue. The Wizard of Oz at Sphere was a mind-boggling project in terms of both technology and art, and at this intersection, Magnopus\u2019 solutions team and 3D artists pioneered one of the most advanced methods in creating an immersive experience."
+      ] },
+      { video: "spwz-video-02.mp4", src: "sspwz-video-02-poster.jpg", caption: "" },
+    ]
+  },
+  {
+    id: "la-2028-olympics",
+    name: "LA 2028 Olympics Experience Center's Cross-reality Space Design, Magnopus",
+    tag: "TBD",
+    wip: false,
+    description: "Description coming soon.",
+    year: "2026",
+    software: "",
+    role: "",
+    thumb: "laoly-01.jpg",
+    images: [
+      { summary: true, text: "Ahead of the 2028 Los Angeles Olympic Games, Magnopus received an RFP from the LA28 Organizing Committee to design an immersive Olympics Experience Center. As a 3D Artist at Magnopus, I developed a digital twin of SoFi Stadium within the OKO cross-reality platform, serving as the centerpiece of the pitch that won the commission." },
+      { video: "LA28_video_FINAL-crop.mp4", src: "LA28_video_FINAL-crop-poster.jpg", caption: "" },
+      { src: "LAConventionCenter_Solar.webp", caption: "" },
+      { text: "The Olympics Experience Center is a 14,000-square-foot(1,300-square-meter) immersive venue planned near the Los Angeles Convention Center, designed to give visitors a behind-the-scenes look at the upcoming Olympic Games. To secure the project, Magnopus partnered with Gensler to demonstrate how integrating digital entertainment with architectural design can elevate the visitor experience. We anchored our pitch around a virtual replica of SoFi Stadium, building it as a fully navigable digital environment." },
+      { src: "sofi_fly_over.gif", caption: "" },
+      { text: "I was responsible for establishing the visual direction and coordinating a team of five artists to build the stadium\u2019s architecture, including the swimming venue, broadcasting area, and surrounding plaza. The environment was heavily optimized to run seamlessly across web, mobile, and VR, allowing the LA28 committee to explore the proposed space from any device. Through rigorous iteration, we balanced performance and atmosphere, cutting load times in half and improving runtime performance by 60%, all while preserving the grand scale of an Olympic venue." },
+      { text: "Our visual goal was to capture the immense scale and openness of SoFi Stadium converted into an Olympic aquatic center. Given the stadium\u2019s massive interior volume, we developed a comprehensive set design to seamlessly connect the competition area with the spectator experience. Leveraging our team\u2019s firsthand experience visiting the physical venue, we efficiently blocked out the foundational layouts for key areas, including the competition and practice pools, broadcasting zones, camera rails, and referee stations. We also drew inspiration from the Paris Olympic swimming facilities and the Lucas Oil Stadium, which served as an excellent real-world precedent for transforming a large arena into a swimming venue. Because our baseline requirement was to enable full interactivity within the OKO platform, we actively utilized its native VR and AR features to review and iterate our designs in a true spatial context." },
+      { src: "InglewoodStadiumDesktop.webp", caption: "" },
+      { text: "The demo successfully illustrated how visitors would interact with the future Experience Center, helping Magnopus win the bid over ten competing studios. For our team, the project was an opportunity to realize the full potential of cross-reality technology: collaborative iteration across geographies, simulation prior to construction, and the creation of a digital space that goes beyond previewing a physical venue. We built an interactive Olympic stadium where users can experience the space not just as visitors, but through a variety of engaging roles." },
+    ]
+  },
+  {
+    id: "welcome-to-oko",
+    name: "Cross-reality Platform Space Design—Welcome to OKO, Magnopus",
+    tag: "TBD",
+    wip: false,
+    description: "Description coming soon.",
+    year: "2026",
+    software: "",
+    role: "",
+    thumb: "welcomeoko-01.jpg",
+    images: [
+      { src: "welcomeoko-01.jpg", caption: "" },
+    ]
+  },
+  {
+    id: "fallout-vault-33",
+    name: "The World of Fallout Sizzle—Vault 33, Magnopus",
+    tag: "TBD",
+    wip: false,
+    description: "Description coming soon.",
+    year: "2026",
+    software: "",
+    role: "",
+    thumb: "flout-01.jpg",
+    images: [
+      { src: "flout-01.jpg", caption: "" },
+    ]
+  },
+];
+
+/* Combined lookup so openProject() can resolve any id from either section. */
+const ALL_PROJECTS = [...PROJECTS, ...PROJECTS_SECONDARY];
+
+/* ================================================
+   RENDER HOME GRID
+   ================================================ */
+function renderProjectsInto(grid, list) {
+  grid.innerHTML = list.map(p => {
+    // Use a video thumbnail if provided, otherwise fall back to image.
+    const media = p.thumbVideo
+      ? `<video src="${p.thumbVideo}" poster="${p.thumb}" autoplay muted loop playsinline preload="metadata"></video>`
+      : `<img src="${p.thumb}" alt="${p.name}" loading="lazy" />`;
+    return `
+      <button class="project-card" onclick="openProject('${p.id}')" aria-label="Open ${p.name}">
+        <div class="project-thumb">${media}</div>
+        <div class="project-meta">
+          <div class="project-name">${p.name}</div>
+          <div class="project-tag ${p.wip ? 'wip' : ''}">${p.tag}</div>
+        </div>
+      </button>`;
+  }).join('');
+}
+
+function renderHome() {
+  renderProjectsInto(document.getElementById('project-grid'), PROJECTS);
+  renderProjectsInto(document.getElementById('project-grid-2'), PROJECTS_SECONDARY);
+}
+
+/* ================================================
+   OPEN / CLOSE PROJECT
+   ================================================ */
+function openProject(id) {
+  const p = ALL_PROJECTS.find(x => x.id === id);
+  if (!p) return;
+
+  document.getElementById('detail-title').textContent = p.name;
+  document.getElementById('detail-description').textContent = p.description;
+  document.getElementById('detail-specs').innerHTML = `
+    <div>Year / <span>${p.year}</span></div>
+    <div>Software / <span>${p.software}</span></div>
+    <div>Role / <span>${p.role}</span></div>
+  `;
+
+  const gallery = document.getElementById('gallery');
+  gallery.innerHTML = p.images.map(item => {
+    // Text block — one or multiple paragraphs interleaved with media
+    if (item.text) {
+      const paras = Array.isArray(item.text) ? item.text : [item.text];
+      const cls = item.summary ? 'gallery-text summary' : 'gallery-text';
+      return `<div class="${cls}">${paras.map(t => `<p>${t}</p>`).join('')}</div>`;
+    }
+    // Each gallery item can be an image OR a video. Videos autoplay muted & loop.
+    const media = item.video
+      ? `<video src="${item.video}" poster="${item.src || ''}" autoplay muted loop playsinline preload="metadata"></video>`
+      : `<img src="${item.src}" alt="${item.caption}" loading="lazy" />`;
+    return `
+      <div class="gallery-item">
+        ${media}
+        <div class="caption">${item.caption}</div>
+      </div>`;
+  }).join('');
+
+  // Switch views
+  document.getElementById('view-home').classList.remove('active');
+  document.getElementById('view-project').classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'instant' });
+
+  // URL hash for shareable links & back-button support
+  history.pushState({ view: 'project', id }, '', `#${id}`);
+}
+
+function goHome() {
+  document.getElementById('view-project').classList.remove('active');
+  document.getElementById('view-about').classList.remove('active');
+  document.getElementById('view-contact').classList.remove('active');
+  document.getElementById('view-home').classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'instant' });
+  history.pushState({ view: 'home' }, '', '#');
+}
+
+function goAbout() {
+  document.getElementById('view-home').classList.remove('active');
+  document.getElementById('view-project').classList.remove('active');
+  document.getElementById('view-contact').classList.remove('active');
+  document.getElementById('view-about').classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'instant' });
+  history.pushState({ view: 'about' }, '', '#about');
+}
+
+function goContact() {
+  document.getElementById('view-home').classList.remove('active');
+  document.getElementById('view-project').classList.remove('active');
+  document.getElementById('view-about').classList.remove('active');
+  document.getElementById('view-contact').classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'instant' });
+  history.pushState({ view: 'contact' }, '', '#contact');
+}
+
+/* ================================================
+   HORIZONTAL SCROLL: drag + arrow keys
+   (Mouse wheel is intentionally NOT hijacked — vertical wheel
+   scrolling stays on the page where users expect it.)
+   ================================================ */
+function attachHorizontalScroll(el) {
+  // --- Click-and-drag to scroll ---
+  let isDown = false;
+  let startX = 0;
+  let startScroll = 0;
+  let moved = 0;          // total pixels moved during this drag
+  const DRAG_THRESHOLD = 5; // px before we call it a drag (vs. a click)
+
+  el.addEventListener('mousedown', (e) => {
+    // Only left mouse button
+    if (e.button !== 0) return;
+    isDown = true;
+    moved = 0;
+    startX = e.pageX;
+    startScroll = el.scrollLeft;
+  });
+
+  el.addEventListener('mousemove', (e) => {
+    if (!isDown) return;
+    const dx = e.pageX - startX;
+    moved = Math.max(moved, Math.abs(dx));
+    if (moved > DRAG_THRESHOLD) {
+      el.classList.add('dragging');
+      e.preventDefault();
+      el.scrollLeft = startScroll - dx;
+    }
+  });
+
+  const endDrag = () => {
+    if (!isDown) return;
+    isDown = false;
+    // Small timeout so the click event that fires right after mouseup
+    // still sees the 'dragging' state and can be suppressed below.
+    setTimeout(() => el.classList.remove('dragging'), 0);
+  };
+  el.addEventListener('mouseup', endDrag);
+  el.addEventListener('mouseleave', endDrag);
+
+  // Suppress the click on a card/image if the user was actually dragging.
+  // Uses capture phase so it runs before the card's own onclick.
+  el.addEventListener('click', (e) => {
+    if (moved > DRAG_THRESHOLD) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+  }, true);
+
+  // Prevent native image-drag ghost (uses delegation so it catches
+  // images added later, e.g. when a project gallery is populated)
+  el.addEventListener('dragstart', (e) => {
+    if (e.target.tagName === 'IMG') e.preventDefault();
+  });
+}
+
+function setupHorizontalScroll() {
+  // Home grids keep horizontal scroll behaviors.
+  // Project galleries now stack vertically, so they use normal page scroll.
+  const grid  = document.getElementById('project-grid');
+  const grid2 = document.getElementById('project-grid-2');
+  attachHorizontalScroll(grid);
+  attachHorizontalScroll(grid2);
+
+  // Arrow keys scroll the home grid (only when home view is active).
+  // We scroll whichever grid the cursor is currently over; falls back to grid 1.
+  // Escape returns to home from a project detail view.
+  let lastHovered = grid;
+  grid.addEventListener('mouseenter',  () => { lastHovered = grid;  });
+  grid2.addEventListener('mouseenter', () => { lastHovered = grid2; });
+
+  document.addEventListener('keydown', (e) => {
+    const homeActive    = document.getElementById('view-home').classList.contains('active');
+    const projectActive = document.getElementById('view-project').classList.contains('active');
+    if (e.key === 'Escape' && (projectActive || document.getElementById('view-about').classList.contains('active') || document.getElementById('view-contact').classList.contains('active'))) { goHome(); return; }
+    if (!homeActive) return;
+    const step = 400;
+    if (e.key === 'ArrowRight') { lastHovered.scrollLeft += step; }
+    if (e.key === 'ArrowLeft')  { lastHovered.scrollLeft -= step; }
+  });
+}
+
+/* ================================================
+   SCROLL ARROWS: show/hide based on scroll position,
+   clickable to step through the gallery.
+   Returns an update() function the caller can invoke
+   after content changes (e.g. loading a new project).
+   ================================================ */
+function setupScrollArrows(scrollEl, leftBtn, rightBtn) {
+  const update = () => {
+    const max = scrollEl.scrollWidth - scrollEl.clientWidth;
+    const isScrollable = max > 4;
+    const atStart = scrollEl.scrollLeft <= 4;
+    const atEnd   = scrollEl.scrollLeft >= max - 4;
+
+    leftBtn.classList.toggle('visible', isScrollable && !atStart);
+    rightBtn.classList.toggle('visible', isScrollable && !atEnd);
+  };
+
+  scrollEl.addEventListener('scroll', update, { passive: true });
+  window.addEventListener('resize', update);
+
+  const stepFor = () => Math.round(scrollEl.clientWidth * 0.8);
+  leftBtn.addEventListener('click',  () => scrollEl.scrollBy({ left: -stepFor(), behavior: 'smooth' }));
+  rightBtn.addEventListener('click', () => scrollEl.scrollBy({ left:  stepFor(), behavior: 'smooth' }));
+
+  // Recalculate as images load (scrollWidth is only accurate once images size themselves)
+  const watchImages = () => {
+    scrollEl.querySelectorAll('img').forEach(img => {
+      if (!img.complete) img.addEventListener('load', update, { once: true });
+    });
+  };
+  watchImages();
+
+  update();
+  return { update, watchImages };
+}
+
+let galleryArrows = null;
+function setupAllScrollArrows() {
+  setupScrollArrows(
+    document.getElementById('project-grid'),
+    document.getElementById('grid-arrow-left'),
+    document.getElementById('grid-arrow-right')
+  );
+  setupScrollArrows(
+    document.getElementById('project-grid-2'),
+    document.getElementById('grid2-arrow-left'),
+    document.getElementById('grid2-arrow-right')
+  );
+  // Gallery is now vertical; no scroll arrows needed there.
+}
+
+/* ================================================
+   ROUTING (hash-based, supports reload/share)
+   ================================================ */
+function handleRoute() {
+  const hash = window.location.hash.replace('#', '');
+  if (hash === 'about') {
+    goAbout();
+  } else if (hash === 'contact') {
+    goContact();
+  } else if (hash && ALL_PROJECTS.find(p => p.id === hash)) {
+    openProject(hash);
+  } else {
+    goHome();
+  }
+}
+
+window.addEventListener('popstate', handleRoute);
+
+/* ================================================
+   INIT
+   ================================================ */
+renderHome();
+setupHorizontalScroll();
+setupAllScrollArrows();
+handleRoute();
+</script>
+
+</body>
+</html>
