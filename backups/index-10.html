@@ -1424,43 +1424,6 @@ const PROJECTS_SECONDARY = [
 const ALL_PROJECTS = [...PROJECTS, ...PROJECTS_SECONDARY];
 
 /* ================================================
-   VARIANT SYSTEM — controls project order per domain
-   Edit the id arrays below to reorder for each audience.
-   ================================================ */
-const VARIANTS = {
-  default: {
-    row1: ['secret-garden', 'sienar-chall-utilipede', 'vintage-telephone', 'japanese-izakaya', 'espresso-machine', 'cyberpunk-seoul'],
-    row2: ['wizard-of-oz-sphere', 'la-2028-olympics', 'welcome-to-oko', 'fallout-vault-33'],
-    label1: { en: 'Selected Work · 2026',              ko: '주요 작업 · 2026' },
-    label2: { en: 'Selected Projects',                  ko: '다른 작업' },
-  },
-  vfx: {
-    // VFX studios: 3D environments & modeling-heavy work first
-    row1: ['secret-garden', 'japanese-izakaya', 'cyberpunk-seoul', 'sienar-chall-utilipede', 'vintage-telephone', 'espresso-machine'],
-    row2: ['wizard-of-oz-sphere', 'la-2028-olympics', 'welcome-to-oko', 'fallout-vault-33'],
-    label1: { en: '3D · Environments & Animation · 2026', ko: '3D · 환경 & 애니메이션 · 2026' },
-    label2: { en: 'Selected Projects',                    ko: '다른 작업' },
-  },
-  lbe: {
-    // Location/XR studios: real-world & location-based projects first
-    row1: ['la-2028-olympics', 'wizard-of-oz-sphere', 'welcome-to-oko', 'fallout-vault-33'],
-    row2: ['secret-garden', 'japanese-izakaya', 'cyberpunk-seoul', 'sienar-chall-utilipede', 'vintage-telephone', 'espresso-machine'],
-    label1: { en: 'Location & Experience Design · 2026',  ko: '공간 & 체험 디자인 · 2026' },
-    label2: { en: '3D Art',                               ko: '3D 아트' },
-  },
-};
-
-/* Returns 'vfx', 'lbe', or 'default' based on the current hostname.
-   Hostname matching is intentionally loose — use substrings that are
-   unique to each domain (e.g. vfx.doyeonkim.com → 'vfx'). */
-function detectVariant() {
-  const host = window.location.hostname;
-  if (host.includes('vfx')) return 'vfx';
-  if (host.includes('lbe')) return 'lbe';
-  return 'default';
-}
-
-/* ================================================
    RENDER HOME GRID
    ================================================ */
 function renderProjectsInto(grid, list) {
@@ -1482,16 +1445,8 @@ function renderProjectsInto(grid, list) {
 }
 
 function renderHome() {
-  const variant = VARIANTS[detectVariant()];
-  const row1 = variant.row1.map(id => ALL_PROJECTS.find(p => p.id === id)).filter(Boolean);
-  const row2 = variant.row2.map(id => ALL_PROJECTS.find(p => p.id === id)).filter(Boolean);
-  renderProjectsInto(document.getElementById('project-grid'),   row1);
-  renderProjectsInto(document.getElementById('project-grid-2'), row2);
-  // Update section labels to match this variant + current language
-  const l1 = document.querySelector('[data-i18n="selectedWork"]');
-  const l2 = document.querySelector('[data-i18n="selectedProjects"]');
-  if (l1) l1.textContent = variant.label1[currentLang] || variant.label1.en;
-  if (l2) l2.textContent = variant.label2[currentLang] || variant.label2.en;
+  renderProjectsInto(document.getElementById('project-grid'), PROJECTS);
+  renderProjectsInto(document.getElementById('project-grid-2'), PROJECTS_SECONDARY);
 }
 
 /* ================================================
