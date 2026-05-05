@@ -129,6 +129,11 @@
     margin-top: 12px;
   }
 
+  /* =========================================
+     TOP NAV CLUSTER — unified button system
+     All items share height (32px), font, and rhythm.
+     Hierarchy: text-link (nav) → divider → accent pill (CTA) → segmented (toggle)
+     ========================================= */
   .site-nav {
     font-family: var(--font-mono);
     font-size: 12px;
@@ -136,27 +141,50 @@
     letter-spacing: 0.15em;
     color: var(--text-dim);
     display: flex;
-    gap: 24px;
+    align-items: center;
+    gap: 4px;
   }
-  .site-nav a { transition: color 0.2s; }
-  .site-nav a:hover { color: var(--text); }
 
-  /* Resume download button — accent-outlined pill */
-  .resume-btn {
+  /* Shared sizing for every interactive item in the nav.
+     Font family/size/case are inherited from .site-nav (lets Korean override work). */
+  .site-nav .nav-link,
+  .site-nav .resume-btn,
+  .site-nav .lang-toggle {
+    height: 32px;
     display: inline-flex;
     align-items: center;
-    gap: 0.5em;
-    padding: 6px 14px;
-    border: 1px solid var(--accent);
     border-radius: 2px;
-    color: var(--accent);
-    font-family: var(--font-mono);
-    font-size: 12px;
-    text-transform: uppercase;
-    letter-spacing: 0.15em;
-    text-decoration: none;
-    transition: background 0.2s ease, color 0.2s ease;
+    transition: color 0.2s ease, background 0.2s ease, border-color 0.2s ease;
     white-space: nowrap;
+  }
+
+  /* About / Contact — text links with hit-target padding so they align with buttons */
+  .site-nav .nav-link {
+    padding: 0 12px;
+    color: var(--text-dim);
+    border: 1px solid transparent;
+  }
+  .site-nav .nav-link:hover {
+    color: var(--text);
+    background: var(--bg-elevated);
+  }
+
+  /* Vertical divider between nav links and action buttons */
+  .nav-divider {
+    width: 1px;
+    height: 16px;
+    background: var(--border);
+    margin: 0 8px;
+    flex-shrink: 0;
+  }
+
+  /* Resume download button — accent-outlined pill (the primary CTA) */
+  .resume-btn {
+    gap: 0.5em;
+    padding: 0 14px;
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    text-decoration: none;
   }
   .resume-btn:hover {
     background: var(--accent);
@@ -212,19 +240,32 @@
     letter-spacing: 0.06em;
   }
 
-  /* Language toggle — sits next to nav links, dims inactive language */
+  /* Language toggle — segmented control echoing the Resume pill shape.
+     Each language is its own clickable segment; the active one fills. */
   .lang-toggle {
-    background: none; border: 0; padding: 0; cursor: pointer;
-    font-family: var(--font-mono); font-size: 12px;
-    text-transform: uppercase; letter-spacing: 0.15em;
+    background: none;
+    padding: 0;
+    cursor: pointer;
+    border: 1px solid var(--border);
+    overflow: hidden;
     color: var(--text-dim);
-    display: inline-flex; align-items: center; gap: 0.5em;
-    transition: color 0.2s;
   }
-  .lang-toggle:hover { color: var(--text); }
-  .lang-toggle [data-lang] { opacity: 0.5; transition: opacity 0.2s; }
-  .lang-toggle [data-lang].active { opacity: 1; color: var(--text); }
-  .lang-toggle .sep { opacity: 0.4; }
+  .lang-toggle:hover { border-color: var(--text-dim); }
+  .lang-toggle [data-lang] {
+    height: 100%;
+    padding: 0 10px;
+    display: inline-flex;
+    align-items: center;
+    color: var(--text-faint);
+    transition: color 0.2s ease, background 0.2s ease;
+  }
+  .lang-toggle [data-lang].active {
+    color: var(--text);
+    background: var(--bg-elevated);
+  }
+  .lang-toggle:hover [data-lang]:not(.active) { color: var(--text-dim); }
+  /* Hide the slash separator — the segmented border tells the story now */
+  .lang-toggle .sep { display: none; }
 
   .section-label {
     font-family: var(--font-mono);
@@ -949,8 +990,9 @@
       </div>
     </div>
     <nav class="site-nav">
-      <a href="#about" onclick="event.preventDefault(); goAbout();" data-i18n="navAbout">About</a>
-      <a href="#contact" onclick="event.preventDefault(); goContact();" data-i18n="navContact">Contact</a>
+      <a class="nav-link" href="#about" onclick="event.preventDefault(); goAbout();" data-i18n="navAbout">About</a>
+      <a class="nav-link" href="#contact" onclick="event.preventDefault(); goContact();" data-i18n="navContact">Contact</a>
+      <span class="nav-divider" aria-hidden="true"></span>
       <a class="resume-btn" href="DOYEON_KIM_3D_Artist.pdf" download="DOYEON_KIM_3D_Artist.pdf" data-i18n-href="resumeBtn">
         <svg viewBox="0 0 24 24"><path d="M12 4v12M8 14l4 4 4-4"/><path d="M4 20h16"/></svg>
         <span data-i18n="resumeBtn">Resume</span>
@@ -1655,31 +1697,24 @@ function openProject(id) {
   history.pushState({ view: 'project', id }, '', `#${id}`);
 }
 
-function goHome() {
-  document.getElementById('view-project').classList.remove('active');
-  document.getElementById('view-about').classList.remove('active');
-  document.getElementById('view-contact').classList.remove('active');
-  document.getElementById('view-home').classList.add('active');
-  window.scrollTo({ top: 0, behavior: 'instant' });
-  history.pushState({ view: 'home' }, '', '#');
-}
-
 function goAbout() {
-  document.getElementById('view-home').classList.remove('active');
-  document.getElementById('view-project').classList.remove('active');
-  document.getElementById('view-contact').classList.remove('active');
-  document.getElementById('view-about').classList.add('active');
-  window.scrollTo({ top: 0, behavior: 'instant' });
-  history.pushState({ view: 'about' }, '', '#about');
+  showView('view-about');
+  history.pushState(null, '', '/about');
 }
 
 function goContact() {
-  document.getElementById('view-home').classList.remove('active');
-  document.getElementById('view-project').classList.remove('active');
-  document.getElementById('view-about').classList.remove('active');
-  document.getElementById('view-contact').classList.add('active');
-  window.scrollTo({ top: 0, behavior: 'instant' });
-  history.pushState({ view: 'contact' }, '', '#contact');
+  showView('view-contact');
+  history.pushState(null, '', '/contact');
+}
+
+function goHome() {
+  showView('view-home');
+  history.pushState(null, '', '/');
+}
+
+function goProject(id) {
+  renderProject(id);
+  history.pushState(null, '', '/project/' + id);
 }
 
 /* ================================================
