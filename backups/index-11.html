@@ -129,11 +129,6 @@
     margin-top: 12px;
   }
 
-  /* =========================================
-     TOP NAV CLUSTER — unified button system
-     All items share height (32px), font, and rhythm.
-     Hierarchy: text-link (nav) → divider → accent pill (CTA) → segmented (toggle)
-     ========================================= */
   .site-nav {
     font-family: var(--font-mono);
     font-size: 12px;
@@ -141,131 +136,24 @@
     letter-spacing: 0.15em;
     color: var(--text-dim);
     display: flex;
-    align-items: center;
-    gap: 4px;
+    gap: 24px;
   }
+  .site-nav a { transition: color 0.2s; }
+  .site-nav a:hover { color: var(--text); }
 
-  /* Shared sizing for every interactive item in the nav.
-     Font family/size/case are inherited from .site-nav (lets Korean override work). */
-  .site-nav .nav-link,
-  .site-nav .resume-btn,
-  .site-nav .lang-toggle {
-    height: 32px;
-    display: inline-flex;
-    align-items: center;
-    border-radius: 2px;
-    transition: color 0.2s ease, background 0.2s ease, border-color 0.2s ease;
-    white-space: nowrap;
-  }
-
-  /* About / Contact — text links with hit-target padding so they align with buttons */
-  .site-nav .nav-link {
-    padding: 0 12px;
-    color: var(--text-dim);
-    border: 1px solid transparent;
-  }
-  .site-nav .nav-link:hover {
-    color: var(--text);
-    background: var(--bg-elevated);
-  }
-
-  /* Vertical divider between nav links and action buttons */
-  .nav-divider {
-    width: 1px;
-    height: 16px;
-    background: var(--border);
-    margin: 0 8px;
-    flex-shrink: 0;
-  }
-
-  /* Resume download button — accent-outlined pill (the primary CTA) */
-  .resume-btn {
-    gap: 0.5em;
-    padding: 0 14px;
-    border: 1px solid var(--accent);
-    color: var(--accent);
-    text-decoration: none;
-  }
-  .resume-btn:hover {
-    background: var(--accent);
-    color: var(--bg);
-  }
-  .resume-btn svg {
-    width: 11px;
-    height: 11px;
-    stroke: currentColor;
-    stroke-width: 2;
-    fill: none;
-    flex-shrink: 0;
-    transition: transform 0.2s ease;
-  }
-  .resume-btn:hover svg { transform: translateY(2px); }
-
-  /* Larger resume CTA inside About page */
-  .resume-cta {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.6em;
-    margin-top: 40px;
-    padding: 12px 28px;
-    border: 1px solid var(--accent);
-    border-radius: 2px;
-    color: var(--accent);
-    font-family: var(--font-mono);
-    font-size: 13px;
-    text-transform: uppercase;
-    letter-spacing: 0.18em;
-    text-decoration: none;
-    transition: background 0.25s ease, color 0.25s ease, transform 0.2s ease;
-  }
-  .resume-cta:hover {
-    background: var(--accent);
-    color: var(--bg);
-    transform: translateY(-1px);
-  }
-  .resume-cta svg {
-    width: 14px;
-    height: 14px;
-    stroke: currentColor;
-    stroke-width: 2;
-    fill: none;
-    transition: transform 0.2s ease;
-  }
-  .resume-cta:hover svg { transform: translateY(2px); }
-
-  html[lang="ko"] .resume-btn,
-  html[lang="ko"] .resume-cta {
-    font-family: var(--font-sans-ko);
-    font-weight: 500;
-    letter-spacing: 0.06em;
-  }
-
-  /* Language toggle — segmented control echoing the Resume pill shape.
-     Each language is its own clickable segment; the active one fills. */
+  /* Language toggle — sits next to nav links, dims inactive language */
   .lang-toggle {
-    background: none;
-    padding: 0;
-    cursor: pointer;
-    border: 1px solid var(--border);
-    overflow: hidden;
+    background: none; border: 0; padding: 0; cursor: pointer;
+    font-family: var(--font-mono); font-size: 12px;
+    text-transform: uppercase; letter-spacing: 0.15em;
     color: var(--text-dim);
+    display: inline-flex; align-items: center; gap: 0.5em;
+    transition: color 0.2s;
   }
-  .lang-toggle:hover { border-color: var(--text-dim); }
-  .lang-toggle [data-lang] {
-    height: 100%;
-    padding: 0 10px;
-    display: inline-flex;
-    align-items: center;
-    color: var(--text-faint);
-    transition: color 0.2s ease, background 0.2s ease;
-  }
-  .lang-toggle [data-lang].active {
-    color: var(--text);
-    background: var(--bg-elevated);
-  }
-  .lang-toggle:hover [data-lang]:not(.active) { color: var(--text-dim); }
-  /* Hide the slash separator — the segmented border tells the story now */
-  .lang-toggle .sep { display: none; }
+  .lang-toggle:hover { color: var(--text); }
+  .lang-toggle [data-lang] { opacity: 0.5; transition: opacity 0.2s; }
+  .lang-toggle [data-lang].active { opacity: 1; color: var(--text); }
+  .lang-toggle .sep { opacity: 0.4; }
 
   .section-label {
     font-family: var(--font-mono);
@@ -990,13 +878,8 @@
       </div>
     </div>
     <nav class="site-nav">
-      <a class="nav-link" href="#about" onclick="event.preventDefault(); goAbout();" data-i18n="navAbout">About</a>
-      <a class="nav-link" href="#contact" onclick="event.preventDefault(); goContact();" data-i18n="navContact">Contact</a>
-      <span class="nav-divider" aria-hidden="true"></span>
-      <a class="resume-btn" href="DOYEON_KIM_3D_Artist.pdf" download="DOYEON_KIM_3D_Artist.pdf" data-i18n-href="resumeBtn">
-        <svg viewBox="0 0 24 24"><path d="M12 4v12M8 14l4 4 4-4"/><path d="M4 20h16"/></svg>
-        <span data-i18n="resumeBtn">Resume</span>
-      </a>
+      <a href="#about" onclick="event.preventDefault(); goAbout();" data-i18n="navAbout">About</a>
+      <a href="#contact" onclick="event.preventDefault(); goContact();" data-i18n="navContact">Contact</a>
       <button class="lang-toggle" onclick="toggleLang()" aria-label="Toggle language">
         <span data-lang="en">EN</span><span class="sep">/</span><span data-lang="ko">KO</span>
       </button>
@@ -1096,11 +979,6 @@
       <img src="profile.jpg" alt="Doyeon Kim portrait" />
     </div>
     <p class="about-intro" data-i18n="aboutIntro">Hi, thanks for visiting my website! I&rsquo;m a 3D artist and college lecturer who loves blending technical workflows with a dash of creative storytelling. This is a collection of my past, recent, and ongoing projects, ranging from single assets to full environments. Whether I&rsquo;m sculpting in ZBrush or modeling in Maya, I focus on crafting diverse subjects&mdash;from peaceful gardens to space colonies&mdash;with an eye for realistic and grounded design. I&rsquo;m always looking for ways to make digital worlds feel inviting, so I hope you enjoy seeing how it all comes together!</p>
-
-    <a class="resume-cta" href="DOYEON_KIM_3D_Artist.pdf" download="DOYEON_KIM_3D_Artist.pdf">
-      <svg viewBox="0 0 24 24"><path d="M12 4v12M8 14l4 4 4-4"/><path d="M4 20h16"/></svg>
-      <span data-i18n="resumeDownload">Download Resume</span>
-    </a>
   </main>
 
   <footer>
@@ -1182,8 +1060,6 @@ const UI_STRINGS = {
     embedFallback:    'Open in a new tab ↗',
     ctaDefault:       'Visit →',
     embedDefault:     'Launch experience',
-    resumeBtn:        'Resume',
-    resumeDownload:   'Download Resume',
   },
   ko: {
     siteTitle:        '김도연 <em>—</em> 3D 아티스트',
@@ -1208,8 +1084,6 @@ const UI_STRINGS = {
     embedFallback:    '새 탭에서 열기 ↗',
     ctaDefault:       '바로가기 →',
     embedDefault:     '체험 시작하기',
-    resumeBtn:        '이력서',
-    resumeDownload:   '이력서 다운로드',
   }
 };
 
