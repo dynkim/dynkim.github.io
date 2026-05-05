@@ -1,87 +1,18 @@
 <!DOCTYPE html>
 <!--
-  dynkim.github.io/LBE
-  ─────────────────────────────────────────────────────────────────────
-  This file is a copy of the root index.html with two differences:
-    1. <base href="/"> — makes all asset paths resolve from the site root
-    2. VARIANT constant — auto-detected from window.location.pathname
-  
-  To update: keep this file in sync with root index.html.
-  The only line that must stay different from the root is <base href="/">.
-  ─────────────────────────────────────────────────────────────────────
+  dynkim.github.io/LBE/  →  redirects to  dynkim.github.io/#lbe
+  All variant logic lives in the root index.html. This file exists only
+  so the path-style URL keeps working. Do not edit project data here.
 -->
 <html lang="en">
 <head>
-  <!-- ⬇ REQUIRED — keeps all images/videos loading from the repo root -->
-  <base href="/">
-
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Doyeon Kim — LBE &amp; Venue Environments</title>
-
-  <!-- ============================================================
-       PASTE THE REST OF YOUR <head> CONTENT FROM index.html HERE
-       (fonts, styles, everything between <head> and </head>)
-       ============================================================ -->
-
+  <meta charset="UTF-8">
+  <title>Doyeon Kim — LBE & Venue Environments</title>
+  <meta http-equiv="refresh" content="0; url=/#lbe">
+  <link rel="canonical" href="/#lbe">
+  <script>window.location.replace('/#lbe');</script>
 </head>
 <body>
-
-  <!-- ============================================================
-       PASTE THE ENTIRE <body> HTML FROM index.html HERE
-       (all the view divs, footer, etc.)
-       ============================================================ -->
-
-  <script>
-  /* ================================================
-     VARIANT DETECTION
-     Reads /LBE from window.location.pathname → sorts
-     LBE-tagged projects to the front of each grid.
-     ================================================ */
-  const VARIANT = (function () {
-    const p = window.location.pathname.replace(/\/$/, '').toLowerCase();
-    if (p === '/lbe')  return 'lbe';
-    if (p === '/game') return 'game';
-    return 'default';
-  })();
-
-  /* Sort so VARIANT-matching projects come first.
-     Projects without a match move to the end — not hidden. */
-  function variantSort(projects) {
-    if (VARIANT === 'default') return projects;
-    return [...projects].sort((a, b) => {
-      const aMatch = (a.tags || []).includes(VARIANT);
-      const bMatch = (b.tags || []).includes(VARIANT);
-      if (aMatch && !bMatch) return -1;
-      if (!aMatch && bMatch) return  1;
-      return 0;
-    });
-  }
-
-  /* Optional: update page title per variant */
-  if (VARIANT === 'lbe') {
-    document.title = 'Doyeon Kim — LBE & Venue Environments';
-  } else if (VARIANT === 'game') {
-    document.title = 'Doyeon Kim — Game Environment Art';
-  }
-
-  /* ============================================================
-     PASTE THE REST OF YOUR <script> CONTENT FROM index.html HERE.
-
-     Then find where you call renderGrid() (or equivalent) and
-     wrap the projects array with variantSort():
-
-       renderGrid(el, variantSort(PROJECTS_PRIMARY));
-       renderGrid(el2, variantSort(PROJECTS_SECONDARY));
-
-     Also add a `tags` field to each project object, e.g.:
-
-       { ..., tags: ['lbe'] }   // LBE venue work
-       { ..., tags: ['game'] }  // Game environment work
-       { ..., tags: ['lbe', 'game'] }  // fits both
-
-     ============================================================ */
-
-  </script>
+  <p>Redirecting to <a href="/#lbe">Doyeon Kim — LBE portfolio</a>…</p>
 </body>
 </html>
