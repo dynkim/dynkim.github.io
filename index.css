@@ -1,0 +1,967 @@
+
+/* =========================================
+    DESIGN TOKENS — tweak these to reskin
+    ========================================= */
+
+@font-face {
+  font-family: 'Pretendard Variable';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 45 920;
+  src: url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/woff2-dynamic-subset/PretendardVariable.subset.0.woff2') format('woff2-variations');
+  unicode-range: U+f9ca-fa0b, U+ff03-ff05, U+ff07, U+ff0a-ff0b, U+ff0d-ff19, U+ff1b, U+ff1d, U+ff20-ff5b, U+ff5d, U+ffe0-ffe3, U+ffe5-ffe6;
+}
+
+:root {
+  --bg: #0c0c0d;
+  --bg-elevated: #141415;
+  --text: #e8e4dc;
+  --text-dim: #7a7670;
+  --text-faint: #4a4844;
+  --accent: #d4a574;
+  --border: #222;
+
+  --font-display: 'Instrument Serif', Georgia, 'Apple SD Gothic Neo', 'Malgun Gothic', serif;
+  --font-sans: 'IBM Plex Sans', system-ui, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, 'Apple SD Gothic Neo', 'Malgun Gothic', monospace;
+
+  /* Korean stack — Pretendard is the modern standard on Korean studio sites.
+      Hangul has no real italic and no uppercase, so we lean on weight + tracking
+      instead of font-style. Used via the html[lang="ko"] overrides below. */
+  --font-display-ko: 'Pretendard Variable', Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', system-ui, sans-serif;
+  --font-sans-ko:    'Pretendard Variable', Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', system-ui, sans-serif;
+
+  --page-padding: clamp(24px, 4vw, 64px);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-weight: 300;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+body { min-height: 100vh; }
+
+a { color: inherit; text-decoration: none; }
+button { background: none; border: none; color: inherit; font: inherit; cursor: pointer; }
+
+/* =========================================
+    VIEW SWITCHING
+    ========================================= */
+.view { display: none; animation: fadeIn 0.4s ease; }
+.view.active { display: block; }
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* =========================================
+    HOME — header + project grid
+    ========================================= */
+.site-header {
+  padding: var(--page-padding);
+  padding-bottom: clamp(20px, 2.5vw, 32px);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 32px;
+  flex-wrap: wrap;
+}
+
+.site-title {
+  font-family: var(--font-display);
+  font-size: clamp(28px, 3vw, 40px);
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  line-height: 1.1;
+}
+.site-title em {
+  font-style: italic;
+  color: var(--accent);
+}
+
+.identity {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.avatar {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+  border: 1px solid var(--border);
+  background: var(--bg-elevated);
+  position: relative;
+}
+.avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  filter: saturate(0.95);
+  transition: filter 0.3s ease, transform 0.6s ease;
+}
+.avatar:hover img {
+  filter: saturate(1.1);
+  transform: scale(1.06);
+}
+
+.site-tagline {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--text-dim);
+  margin-top: 12px;
+}
+
+/* =========================================
+    TOP NAV CLUSTER — unified button system
+    All items share height (32px), font, and rhythm.
+    Hierarchy: text-link (nav) → divider → accent pill (CTA) → segmented (toggle)
+    ========================================= */
+.site-nav {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--text-dim);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Shared sizing for every interactive item in the nav.
+    Font family/size/case are inherited from .site-nav (lets Korean override work). */
+.site-nav .nav-link,
+.site-nav .resume-btn,
+.site-nav .lang-toggle {
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  border-radius: 2px;
+  transition: color 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+  white-space: nowrap;
+}
+
+/* About / Contact — text links with hit-target padding so they align with buttons */
+.site-nav .nav-link {
+  padding: 0 12px;
+  color: var(--text-dim);
+  border: 1px solid transparent;
+}
+.site-nav .nav-link:hover {
+  color: var(--text);
+  background: var(--bg-elevated);
+}
+
+/* Vertical divider between nav links and action buttons */
+.nav-divider {
+  width: 1px;
+  height: 16px;
+  background: var(--border);
+  margin: 0 8px;
+  flex-shrink: 0;
+}
+
+/* Resume download button — accent-outlined pill (the primary CTA) */
+.resume-btn {
+  gap: 0.5em;
+  padding: 0 14px;
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  text-decoration: none;
+}
+.resume-btn:hover {
+  background: var(--accent);
+  color: var(--bg);
+}
+.resume-btn svg {
+  width: 11px;
+  height: 11px;
+  stroke: currentColor;
+  stroke-width: 2;
+  fill: none;
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
+}
+.resume-btn:hover svg { transform: translateY(2px); }
+
+/* Larger resume CTA inside About page */
+.resume-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6em;
+  margin-top: 40px;
+  padding: 12px 28px;
+  border: 1px solid var(--accent);
+  border-radius: 2px;
+  color: var(--accent);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  text-decoration: none;
+  transition: background 0.25s ease, color 0.25s ease, transform 0.2s ease;
+}
+.resume-cta:hover {
+  background: var(--accent);
+  color: var(--bg);
+  transform: translateY(-1px);
+}
+.resume-cta svg {
+  width: 14px;
+  height: 14px;
+  stroke: currentColor;
+  stroke-width: 2;
+  fill: none;
+  transition: transform 0.2s ease;
+}
+.resume-cta:hover svg { transform: translateY(2px); }
+
+html[lang="ko"] .resume-btn,
+html[lang="ko"] .resume-cta {
+  font-family: var(--font-sans-ko);
+  font-weight: 500;
+  letter-spacing: 0.06em;
+}
+
+/* Language toggle — segmented control echoing the Resume pill shape.
+    Each language is its own clickable segment; the active one fills. */
+.lang-toggle {
+  background: none;
+  padding: 0;
+  cursor: pointer;
+  border: 1px solid var(--border);
+  overflow: hidden;
+  color: var(--text-dim);
+}
+.lang-toggle:hover { border-color: var(--text-dim); }
+.lang-toggle [data-lang] {
+  height: 100%;
+  padding: 0 10px;
+  display: inline-flex;
+  align-items: center;
+  color: var(--text-faint);
+  transition: color 0.2s ease, background 0.2s ease;
+}
+.lang-toggle [data-lang].active {
+  color: var(--text);
+  background: var(--bg-elevated);
+}
+.lang-toggle:hover [data-lang]:not(.active) { color: var(--text-dim); }
+/* Hide the slash separator — the segmented border tells the story now */
+.lang-toggle .sep { display: none; }
+
+.section-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--text-dim);
+  padding: 0 var(--page-padding);
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.section-label + .section-label,
+.scroll-hint + .section-label {
+  margin-top: 32px;
+}
+.section-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+.project-grid {
+  padding: 0 0 16px;
+  display: flex;
+  gap: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: var(--text-faint) transparent;
+  cursor: grab;
+  user-select: none;
+  margin-bottom: 32px;
+}
+.project-grid.dragging { cursor: grabbing; scroll-behavior: auto; }
+.project-grid.dragging .project-card { pointer-events: none; }
+.project-grid::-webkit-scrollbar { height: 8px; }
+.project-grid::-webkit-scrollbar-track { background: var(--bg-elevated); }
+.project-grid::-webkit-scrollbar-thumb { background: var(--text-dim); border-radius: 4px; }
+.project-grid::-webkit-scrollbar-thumb:hover { background: var(--text); }
+
+.project-card {
+  cursor: pointer;
+  display: block;
+  text-align: left;
+  position: relative;
+  overflow: hidden;
+  flex-shrink: 0;
+  height: min(75vh, 680px);
+  aspect-ratio: 4 / 3;
+}
+
+.project-thumb {
+  width: 100%;
+  height: 100%;
+  background: var(--bg-elevated);
+  overflow: hidden;
+  position: relative;
+}
+.project-thumb img,
+.project-thumb video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s ease, filter 0.4s ease;
+  filter: saturate(0.9);
+  display: block;
+}
+.project-card:hover .project-thumb img,
+.project-card:hover .project-thumb video {
+  transform: scale(1.03);
+  filter: saturate(1);
+}
+
+/* Meta now sits as an overlay so thumbnails stay edge-to-edge */
+.project-meta {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 24px 24px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 16px;
+  background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.4) 60%, rgba(0,0,0,0) 100%);
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  pointer-events: none;
+}
+.project-card:hover .project-meta {
+  opacity: 1;
+  transform: translateY(0);
+}
+.project-name {
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  color: var(--text);
+}
+.project-tag {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--text-dim);
+  white-space: nowrap;
+}
+.project-tag.wip { color: var(--accent); }
+
+/* =========================================
+    SCROLL ARROWS — overlay buttons on horizontal galleries
+    ========================================= */
+.scroll-wrapper { position: relative; }
+
+.scroll-arrow {
+  position: absolute;
+  top: calc(50% - 28px);
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: rgba(20, 20, 21, 0.65);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.35s ease, background 0.2s ease, border-color 0.2s ease;
+  cursor: pointer;
+}
+.scroll-arrow.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+.scroll-arrow:hover {
+  background: rgba(40, 40, 42, 0.85);
+  border-color: var(--accent);
+}
+.scroll-arrow svg {
+  width: 22px;
+  height: 22px;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  fill: none;
+  transition: transform 0.25s ease;
+}
+
+.scroll-arrow-left { left: 24px; }
+.scroll-arrow-right { right: 24px; }
+
+/* Gentle nudge on the right arrow to draw the eye */
+@keyframes nudge-right {
+  0%, 70%, 100% { transform: translateX(0); }
+  80%          { transform: translateX(5px); }
+  90%          { transform: translateX(0); }
+}
+@keyframes nudge-left {
+  0%, 70%, 100% { transform: translateX(0); }
+  80%          { transform: translateX(-5px); }
+  90%          { transform: translateX(0); }
+}
+.scroll-arrow-right.visible svg { animation: nudge-right 2.4s ease-in-out infinite; }
+.scroll-arrow-left.visible  svg { animation: nudge-left  2.4s ease-in-out infinite; }
+.scroll-arrow:hover svg { animation: none; }
+.scroll-arrow-right:hover svg { transform: translateX(3px); }
+.scroll-arrow-left:hover svg  { transform: translateX(-3px); }
+
+/* =========================================
+    PROJECT DETAIL — horizontal scroll
+    ========================================= */
+.project-header {
+  padding: var(--page-padding);
+  padding-bottom: 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 32px;
+  flex-wrap: wrap;
+}
+
+.back-btn {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--text-dim);
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  transition: color 0.2s;
+}
+.back-btn:hover { color: var(--text); }
+.back-btn .arrow {
+  display: inline-block;
+  transition: transform 0.2s;
+}
+.back-btn:hover .arrow { transform: translateX(-4px); }
+
+.project-title-block { flex: 1; min-width: 260px; }
+.project-title {
+  font-family: var(--font-display);
+  font-size: clamp(32px, 4vw, 56px);
+  font-weight: 400;
+  line-height: 1.05;
+  letter-spacing: -0.015em;
+}
+.project-description {
+  margin-top: 16px;
+  max-width: 52ch;
+  color: var(--text-dim);
+  font-size: 15px;
+  line-height: 1.6;
+}
+.project-specs {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--text-dim);
+  text-align: right;
+  line-height: 2;
+}
+.project-specs span { color: var(--text); }
+
+/* Vertical gallery (project sub-pages) — ArtStation-style stacked layout */
+.gallery-wrapper {
+  position: relative;
+  padding: 0 var(--page-padding);
+  margin-bottom: 32px;
+}
+
+.gallery {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.gallery-item {
+  width: 100%;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  position: relative;
+  overflow: hidden;
+}
+.gallery-item img,
+.gallery-item video {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: contain;
+}
+.gallery-item .caption {
+  position: absolute;
+  bottom: 16px;
+  left: 16px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--text);
+  background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(8px);
+  padding: 6px 10px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.gallery-item:hover .caption { opacity: 1; }
+
+/* Narrow modifier — caps width for media that shouldn't dominate the column
+    (e.g. phone-shot AR captures, portrait video). Sits centered in the gallery. */
+.gallery-item.narrow {
+  max-width: 480px;
+  margin: 24px auto;
+}
+
+/* Side-by-side pair — two media items with zero gap between them */
+.gallery-pair {
+  display: flex;
+  gap: 0;
+  width: 100%;
+  align-items: stretch;
+}
+.gallery-pair .gallery-item {
+  flex: 1 1 0;
+  min-width: 0;
+  margin: 0;
+}
+.gallery-pair .gallery-item img,
+.gallery-pair .gallery-item video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Text blocks interleaved with images in a project gallery */
+.gallery-text {
+  max-width: 64ch;
+  margin: 24px auto;
+  padding: clamp(16px, 3vw, 40px) clamp(16px, 3vw, 32px);
+  color: var(--text);
+  font-size: clamp(15px, 1.05vw, 17px);
+  line-height: 1.8;
+}
+.gallery-text p + p { margin-top: 1.25em; }
+/* Drop-cap is a Latin-typography convention — only apply it when reading English.
+    Korean syllable blocks don't sit as drop-caps, so html[lang="ko"] suppresses this. */
+html[lang="en"] .gallery-text p:first-child::first-letter {
+  font-family: var(--font-display);
+  font-size: 2.4em;
+  line-height: 1;
+  float: left;
+  padding: 0.05em 0.12em 0 0;
+  color: var(--accent);
+}
+
+/* Summary variant — framed by oversized serif quotation marks */
+.gallery-text.summary {
+  text-align: center;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: clamp(20px, 1.8vw, 26px);
+  line-height: 1.5;
+  color: var(--text);
+  max-width: 56ch;
+  padding-top: clamp(40px, 5vw, 64px);
+  padding-bottom: clamp(40px, 5vw, 64px);
+  position: relative;
+}
+.gallery-text.summary::before,
+.gallery-text.summary::after {
+  font-family: var(--font-display);
+  color: var(--accent);
+  font-size: clamp(96px, 10vw, 160px);
+  line-height: 0;
+  display: block;
+  font-style: normal;
+}
+.gallery-text.summary::before {
+  content: '\201C';
+  text-align: left;
+  margin-bottom: 0.32em;
+  margin-left: -0.12em;
+}
+.gallery-text.summary::after {
+  content: '\201D';
+  text-align: right;
+  margin-top: 0.5em;
+  margin-right: -0.12em;
+}
+/* Disable drop-cap inside summary so it doesn't fight the quote marks */
+.gallery-text.summary p:first-child::first-letter {
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  float: none;
+  padding: 0;
+  color: inherit;
+}
+
+/* External CTA — points visitors at a live deliverable */
+.gallery-cta {
+  max-width: 64ch;
+  margin: 24px auto;
+  padding: clamp(16px, 3vw, 40px) clamp(16px, 3vw, 32px);
+  text-align: center;
+}
+.gallery-cta a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6em;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: clamp(18px, 1.4vw, 22px);
+  color: var(--accent);
+  text-decoration: none;
+  border-bottom: 1px solid var(--accent);
+  padding-bottom: 0.15em;
+  transition: opacity 0.2s ease;
+}
+.gallery-cta a:hover { opacity: 0.7; }
+.gallery-cta a .arrow { display: inline-block; transition: transform 0.2s ease; }
+.gallery-cta a:hover .arrow { transform: translateX(4px); }
+
+/* External link with optional poster thumbnail — used to point at a live deliverable.
+    With `poster`: renders as a clickable thumbnail with play-icon overlay.
+    Without `poster`: renders as a small inline italic CTA (see .gallery-cta). */
+.gallery-embed {
+  max-width: 1200px;
+  margin: 24px auto 8px;
+  position: relative;
+  background: var(--bg-elevated);
+  overflow: hidden;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+}
+.gallery-embed-poster {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  cursor: pointer;
+  background: transparent;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  display: block;
+  color: inherit;
+  font: inherit;
+}
+.gallery-embed-poster img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  filter: brightness(0.65);
+  transition: filter 0.3s ease;
+}
+.gallery-embed-poster:hover img { filter: brightness(0.85); }
+.gallery-embed-cta {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8em;
+  color: #fff;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: clamp(18px, 1.6vw, 24px);
+  pointer-events: none;
+  text-align: center;
+  padding: 16px;
+}
+.gallery-embed-cta .play-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.4em;
+  height: 2.4em;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  font-size: 0.7em;
+  padding-left: 0.2em;
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+.gallery-embed-poster:hover .gallery-embed-cta .play-icon {
+  transform: scale(1.08);
+  background: rgba(255, 255, 255, 0.1);
+}
+.gallery-embed-fallback {
+  max-width: 1200px;
+  margin: 0 auto 24px;
+  text-align: right;
+  padding: 0 clamp(16px, 3vw, 32px);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+}
+.gallery-embed-fallback a {
+  color: var(--text-dim);
+  text-decoration: none;
+  border-bottom: 1px solid var(--text-faint);
+  padding-bottom: 1px;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+.gallery-embed-fallback a:hover {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+
+.scroll-hint {
+  padding: 0 var(--page-padding) 64px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--text-faint);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.scroll-hint .line {
+  flex: 1;
+  max-width: 80px;
+  height: 1px;
+  background: var(--text-faint);
+}
+
+/* =========================================
+    ABOUT PAGE
+    ========================================= */
+.about-page {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: clamp(24px, 4vw, 64px) var(--page-padding) 96px;
+  text-align: center;
+}
+.about-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--text-dim);
+  margin-bottom: 24px;
+}
+.about-heading {
+  font-family: var(--font-display);
+  font-size: clamp(40px, 5vw, 72px);
+  font-weight: 400;
+  letter-spacing: -0.015em;
+  line-height: 1;
+  margin-bottom: 40px;
+}
+.about-heading em {
+  font-style: italic;
+  color: var(--accent);
+}
+.about-avatar {
+  width: 128px;
+  height: 128px;
+  margin: 0 auto 40px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  background: var(--bg-elevated);
+}
+.about-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: saturate(0.95);
+}
+.about-intro {
+  font-size: clamp(16px, 1.2vw, 18px);
+  line-height: 1.75;
+  color: var(--text);
+  text-align: left;
+  max-width: 56ch;
+  margin: 0 auto;
+}
+footer {
+  padding: 48px var(--page-padding);
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--text-dim);
+  flex-wrap: wrap;
+}
+
+/* =========================================
+    CONTACT PAGE
+    ========================================= */
+.contact-links {
+  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  max-width: 56ch;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: left;
+}
+.contact-link {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+  padding: 24px 0;
+  border-bottom: 1px solid var(--border);
+  transition: padding 0.25s ease;
+}
+.contact-link:first-of-type { border-top: 1px solid var(--border); }
+.contact-link:hover { padding-left: 8px; }
+.contact-link .label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--text-dim);
+  flex-shrink: 0;
+}
+.contact-link .value {
+  font-family: var(--font-display);
+  font-size: clamp(18px, 1.6vw, 22px);
+  color: var(--text);
+  transition: color 0.2s ease;
+  text-align: right;
+  word-break: break-all;
+}
+.contact-link:hover .value { color: var(--accent); }
+
+/* =========================================
+    KOREAN TYPOGRAPHY
+    Reference: modern Korean studio sites (Studio fnt, Plus-X, Hi-Phen, etc.)
+    consistently lean on Pretendard or similar geometric sans, drop the
+    Latin drop-cap / italic conventions, and pull tracking in. Hangul is
+    denser per character than Latin, so we also scale body text down a hair
+    and tighten line-height to prevent the page from feeling "loose."
+    ========================================= */
+
+/* Body + display swap to Pretendard when the page is Korean */
+html[lang="ko"] body {
+  font-family: var(--font-sans-ko);
+  font-weight: 400;
+  letter-spacing: -0.005em;
+}
+html[lang="ko"] .site-title,
+html[lang="ko"] .project-name,
+html[lang="ko"] .project-title,
+html[lang="ko"] .about-heading,
+html[lang="ko"] .contact-link .value,
+html[lang="ko"] .gallery-cta a,
+html[lang="ko"] .gallery-embed-cta {
+  font-family: var(--font-display-ko);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+}
+
+/* Hangul has no true italic — switch <em> to a weight + color emphasis instead */
+html[lang="ko"] em {
+  font-style: normal;
+  font-weight: 600;
+}
+
+/* Summary / pull-quote: keep an editorial feel via Pretendard medium, upright */
+html[lang="ko"] .gallery-text.summary {
+  font-family: var(--font-display-ko);
+  font-style: normal;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
+
+/* Body copy: a touch denser than English to match Hangul rhythm */
+html[lang="ko"] .gallery-text {
+  font-size: clamp(14.5px, 1vw, 16px);
+  line-height: 1.85;
+  letter-spacing: -0.005em;
+}
+html[lang="ko"] .about-intro,
+html[lang="ko"] .project-description {
+  line-height: 1.85;
+  letter-spacing: -0.005em;
+}
+
+/* Mono-style labels read awkwardly in Korean — uppercase does nothing for
+    Hangul and the wide tracking pulls syllable blocks apart. Switch to
+    Pretendard with restrained letter-spacing. */
+html[lang="ko"] .section-label,
+html[lang="ko"] .scroll-hint,
+html[lang="ko"] .site-tagline,
+html[lang="ko"] .site-nav,
+html[lang="ko"] .lang-toggle,
+html[lang="ko"] .back-btn,
+html[lang="ko"] .project-tag,
+html[lang="ko"] .project-specs,
+html[lang="ko"] .about-label,
+html[lang="ko"] .contact-link .label,
+html[lang="ko"] footer,
+html[lang="ko"] .gallery-item .caption,
+html[lang="ko"] .gallery-embed-fallback {
+  font-family: var(--font-sans-ko);
+  font-weight: 500;
+  letter-spacing: 0.04em;
+}
+
+/* Keep the EN/KO toggle in mono — it's pure Latin */
+html[lang="ko"] .lang-toggle [data-lang] {
+  font-family: var(--font-mono);
+  letter-spacing: 0.15em;
+}
+
+/* Project-specs values stay tabular — keep mono for years, software lists */
+html[lang="ko"] .project-specs span {
+  font-family: var(--font-mono);
+  letter-spacing: 0.05em;
+}
+
+
+/* =========================================
+    RESPONSIVE
+    ========================================= */
+@media (max-width: 640px) {
+  .project-grid { grid-template-columns: 1fr; }
+  .project-specs { text-align: left; }
+  .gallery-item { height: 60vh; }
+}

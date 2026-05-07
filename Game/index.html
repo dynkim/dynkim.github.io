@@ -1,87 +1,201 @@
 <!DOCTYPE html>
-<!--
-  dynkim.github.io/game
-  ─────────────────────────────────────────────────────────────────────
-  This file is a copy of the root index.html with two differences:
-    1. <base href="/"> — makes all asset paths resolve from the site root
-    2. VARIANT constant — auto-detected from window.location.pathname
-  
-  To update: keep this file in sync with root index.html.
-  The only line that must stay different from the root is <base href="/">.
-  ─────────────────────────────────────────────────────────────────────
--->
 <html lang="en">
 <head>
-  <!-- ⬇ REQUIRED — keeps all images/videos loading from the repo root -->
   <base href="/">
-
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Doyeon Kim — Game Environment Art</title>
 
-  <!-- ============================================================
-       PASTE THE REST OF YOUR <head> CONTENT FROM index.html HERE
-       (fonts, styles, everything between <head> and </head>)
-       ============================================================ -->
-
+  <!-- Typography: Instrument Serif for English titles, IBM Plex Sans/Mono for UI,
+       Pretendard for Korean (the de-facto modern Korean web sans). -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=IBM+Plex+Sans:wght@300;400;500&family=IBM+Plex+Mono:wght@300;400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="index.css" />
 </head>
 <body>
 
-  <!-- ============================================================
-       PASTE THE ENTIRE <body> HTML FROM index.html HERE
-       (all the view divs, footer, etc.)
-       ============================================================ -->
+<!-- ========================================
+     HOME VIEW
+     ======================================== -->
+<div id="view-home" class="view active">
 
-  <script>
-  /* ================================================
-     VARIANT DETECTION
-     Reads /game from window.location.pathname → sorts
-     game-tagged projects to the front of each grid.
-     ================================================ */
-  const VARIANT = (function () {
-    const p = window.location.pathname.replace(/\/$/, '').toLowerCase();
-    if (p === '/lbe')  return 'lbe';
-    if (p === '/game') return 'game';
-    return 'default';
-  })();
+  <header class="site-header">
+    <div class="identity">
+      <div class="avatar">
+        <img src="images/profile.jpg" alt="Doyeon Kim portrait" />
+      </div>
+      <div>
+        <h1 class="site-title" data-i18n-html="siteTitle">Doyeon Kim <em>—</em> 3D Artist</h1>
+        <div class="site-tagline" data-i18n="siteTagline">3D Worlds · Props · Work in Progress</div>
+      </div>
+    </div>
+    <nav class="site-nav">
+      <a class="nav-link" href="#about" onclick="event.preventDefault(); goAbout();" data-i18n="navAbout">About</a>
+      <a class="nav-link" href="#contact" onclick="event.preventDefault(); goContact();" data-i18n="navContact">Contact</a>
+      <span class="nav-divider" aria-hidden="true"></span>
+      <a class="resume-btn" href="DOYEON_KIM_3D_Artist.pdf" download="DOYEON_KIM_3D_Artist.pdf" data-i18n-href="resumeBtn">
+        <svg viewBox="0 0 24 24"><path d="M12 4v12M8 14l4 4 4-4"/><path d="M4 20h16"/></svg>
+        <span data-i18n="resumeBtn">Resume</span>
+      </a>
+      <button class="lang-toggle" onclick="toggleLang()" aria-label="Toggle language">
+        <span data-lang="en">EN</span><span class="sep">/</span><span data-lang="ko">KO</span>
+      </button>
+    </nav>
+  </header>
 
-  /* Sort so VARIANT-matching projects come first.
-     Projects without a match move to the end — not hidden. */
-  function variantSort(projects) {
-    if (VARIANT === 'default') return projects;
-    return [...projects].sort((a, b) => {
-      const aMatch = (a.tags || []).includes(VARIANT);
-      const bMatch = (b.tags || []).includes(VARIANT);
-      if (aMatch && !bMatch) return -1;
-      if (!aMatch && bMatch) return  1;
-      return 0;
-    });
-  }
+  <div class="section-label" data-i18n="selectedWork">Selected Work · 2026</div>
 
-  /* Optional: update page title per variant */
-  if (VARIANT === 'lbe') {
-    document.title = 'Doyeon Kim — LBE & Venue Environments';
-  } else if (VARIANT === 'game') {
-    document.title = 'Doyeon Kim — Game Environment Art';
-  }
+  <div class="scroll-wrapper">
+    <main class="project-grid" id="project-grid">
+      <!-- Projects populated by JS from the data array below -->
+    </main>
+    <button class="scroll-arrow scroll-arrow-left" id="grid-arrow-left" aria-label="Scroll left">
+      <svg viewBox="0 0 24 24"><polyline points="15 6 9 12 15 18"></polyline></svg>
+    </button>
+    <button class="scroll-arrow scroll-arrow-right" id="grid-arrow-right" aria-label="Scroll right">
+      <svg viewBox="0 0 24 24"><polyline points="9 6 15 12 9 18"></polyline></svg>
+    </button>
+  </div>
 
-  /* ============================================================
-     PASTE THE REST OF YOUR <script> CONTENT FROM index.html HERE.
+  <div class="scroll-hint">
+    <span class="line"></span>
+    <span data-i18n="scrollHint">Scroll horizontally to see more work</span>
+    <span class="line"></span>
+  </div>
 
-     Then find where you call renderGrid() (or equivalent) and
-     wrap the projects array with variantSort():
+  <div class="section-label" data-i18n="selectedProjects">Selected Projects</div>
 
-       renderGrid(el, variantSort(PROJECTS_PRIMARY));
-       renderGrid(el2, variantSort(PROJECTS_SECONDARY));
+  <div class="scroll-wrapper">
+    <main class="project-grid" id="project-grid-2">
+      <!-- Secondary projects populated by JS -->
+    </main>
+    <button class="scroll-arrow scroll-arrow-left" id="grid2-arrow-left" aria-label="Scroll left">
+      <svg viewBox="0 0 24 24"><polyline points="15 6 9 12 15 18"></polyline></svg>
+    </button>
+    <button class="scroll-arrow scroll-arrow-right" id="grid2-arrow-right" aria-label="Scroll right">
+      <svg viewBox="0 0 24 24"><polyline points="9 6 15 12 9 18"></polyline></svg>
+    </button>
+  </div>
 
-     Also add a `tags` field to each project object, e.g.:
+  <footer>
+    <div>© 2026 Doyeon Kim</div>
+    <div><a href="mailto:doyeangkim@gmail.com" style="transition: color 0.2s;" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color=''">doyeangkim@gmail.com</a></div>
+  </footer>
+</div>
 
-       { ..., tags: ['lbe'] }   // LBE venue work
-       { ..., tags: ['game'] }  // Game environment work
-       { ..., tags: ['lbe', 'game'] }  // fits both
 
-     ============================================================ */
+<!-- ========================================
+     PROJECT DETAIL VIEW
+     ======================================== -->
+<div id="view-project" class="view">
 
-  </script>
+  <header class="project-header">
+    <button class="back-btn" onclick="goHome()">
+      <span class="arrow">←</span> <span data-i18n="navBackToWork">Back to work</span>
+    </button>
+  </header>
+
+  <div class="project-header" style="padding-top: 0;">
+    <div class="project-title-block">
+      <h2 class="project-title" id="detail-title">Project Title</h2>
+      <p class="project-description" id="detail-description">Description.</p>
+    </div>
+    <div class="project-specs" id="detail-specs"></div>
+  </div>
+
+  <div class="gallery-wrapper">
+    <div class="gallery" id="gallery">
+      <!-- Images populated by JS -->
+    </div>
+  </div>
+
+  <footer>
+    <div>© 2026 Doyeon Kim</div>
+    <button class="back-btn" onclick="goHome()">
+      <span data-i18n="navAllProjects">All projects</span> <span class="arrow" style="transform: rotate(180deg)">←</span>
+    </button>
+  </footer>
+</div>
+
+
+<!-- ========================================
+     ABOUT VIEW
+     ======================================== -->
+<div id="view-about" class="view">
+
+  <header class="project-header">
+    <button class="back-btn" onclick="goHome()">
+      <span class="arrow">←</span> <span data-i18n="navBackToWork">Back to work</span>
+    </button>
+  </header>
+
+  <main class="about-page">
+    <div class="about-label" data-i18n="navAbout">About</div>
+    <h2 class="about-heading" data-i18n-html="aboutHeading">Doyeon Kim <em>—</em> 3D Artist</h2>
+    <div class="about-avatar">
+      <img src="images/profile.jpg" alt="Doyeon Kim portrait" />
+    </div>
+    <p class="about-intro" data-i18n="aboutIntro">Hi, thanks for visiting my website! I’m a 3D artist and college lecturer who loves blending technical workflows with a dash of creative storytelling. This is a collection of my past, recent, and ongoing projects, ranging from single assets to full environments. Whether I’m sculpting in ZBrush or modeling in Maya, I focus on crafting diverse subjects—from peaceful gardens to space colonies—with an eye for realistic and grounded design. I’m always looking for ways to make digital worlds feel inviting, so I hope you enjoy seeing how it all comes together!</p>
+
+    <a class="resume-cta" href="DOYEON_KIM_3D_Artist.pdf" download="DOYEON_KIM_3D_Artist.pdf">
+      <svg viewBox="0 0 24 24"><path d="M12 4v12M8 14l4 4 4-4"/><path d="M4 20h16"/></svg>
+      <span data-i18n="resumeDownload">Download Resume</span>
+    </a>
+  </main>
+
+  <footer>
+    <div>© 2026 Doyeon Kim</div>
+    <button class="back-btn" onclick="goHome()">
+      <span data-i18n="navAllProjects">All projects</span> <span class="arrow" style="transform: rotate(180deg)">←</span>
+    </button>
+  </footer>
+</div>
+
+
+<!-- ========================================
+     CONTACT VIEW
+     ======================================== -->
+<div id="view-contact" class="view">
+
+  <header class="project-header">
+    <button class="back-btn" onclick="goHome()">
+      <span class="arrow">←</span> <span data-i18n="navBackToWork">Back to work</span>
+    </button>
+  </header>
+
+  <main class="about-page">
+    <div class="about-label" data-i18n="navContact">Contact</div>
+    <h2 class="about-heading" data-i18n-html="contactHeading">Let’s <em>talk</em></h2>
+    <p class="about-intro" data-i18n="contactIntro" style="text-align: center; margin-bottom: 48px;">Open to freelance projects, studio roles, and collaborations. Feel free to reach out via email or LinkedIn.</p>
+
+    <div class="contact-links">
+      <a class="contact-link" href="mailto:doyeangkim@gmail.com">
+        <span class="label" data-i18n="contactEmail">Email</span>
+        <span class="value">doyeangkim@gmail.com</span>
+      </a>
+      <a class="contact-link" href="https://www.linkedin.com/in/doyeon-kim-271299210" target="_blank" rel="noopener noreferrer">
+        <span class="label" data-i18n="contactLinkedIn">LinkedIn</span>
+        <span class="value">linkedin.com/in/doyeon-kim-271299210</span>
+      </a>
+    </div>
+  </main>
+
+  <footer>
+    <div>© 2026 Doyeon Kim</div>
+    <button class="back-btn" onclick="goHome()">
+      <span data-i18n="navAllProjects">All projects</span> <span class="arrow" style="transform: rotate(180deg)">←</span>
+    </button>
+  </footer>
+</div>
+
+<script src="i18n.js"></script>
+<script src="data.js"></script>
+<script src="rendering.js"></script>
+<script src="navigation.js"></script>
+<script src="scroll.js"></script>
+<script src="routing.js"></script>
+<script src="main.js"></script>
+
 </body>
 </html>
