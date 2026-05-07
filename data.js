@@ -305,14 +305,23 @@ const VARIANTS = {
     label1: { en: 'Location & Experience Design · 2026',  ko: '공간 & 체험 디자인 · 2026' },
     label2: { en: '3D Art',                               ko: '3D 아트' },
   },
+  game: {
+    // Game studios: game-engine environments & props first
+    row1: ['cyberpunk-seoul', 'sienar-chall-utilipede', 'japanese-izakaya', 'secret-garden', 'vintage-telephone', 'espresso-machine'],
+    row2: ['fallout-vault-33', 'wizard-of-oz-sphere', 'la-2028-olympics', 'welcome-to-oko'],
+    label1: { en: 'Game Environment Art · 2026',          ko: '게임 환경 아트 · 2026' },
+    label2: { en: 'Selected Projects',                    ko: '다른 작업' },
+  },
 };
 
-/* Returns 'vfx', 'lbe', or 'default' based on the current hostname.
-   Hostname matching is intentionally loose — use substrings that are
-   unique to each domain (e.g. vfx.doyeonkim.com → 'vfx'). */
+/* Returns 'vfx', 'lbe', 'game', or 'default'.
+   Matches against hostname (production: vfx.doyeonkim.com, doyeonkim-lbe.netlify.app, …)
+   or URL path (local/dev: /LBE/, /Game/, /vfx/). */
 function detectVariant() {
   const host = window.location.hostname;
-  if (host.includes('vfx')) return 'vfx';
-  if (host.includes('lbe')) return 'lbe';
+  const path = window.location.pathname.toLowerCase();
+  if (host.includes('vfx')  || path.startsWith('/vfx'))  return 'vfx';
+  if (host.includes('lbe')  || path.startsWith('/lbe'))  return 'lbe';
+  if (host.includes('game') || path.startsWith('/game')) return 'game';
   return 'default';
 }
