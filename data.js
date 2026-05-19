@@ -206,7 +206,8 @@ const PROJECTS_SECONDARY = [
       { src: "spwz-03.jpg", caption: "" },
       { text: { en: "The Wizard of Oz at Sphere was realized through a joint effort between Sphere Entertainment, Magnopus, Warner Bros., and Google. As a 3D artist brought onto the project at Magnopus, I supported the team in making our artists\u2019 imagination and creativity tangible. Magnopus\u2019 proprietary cross-reality platform, OKO, played a crucial role in making this possible. Serving as our main tool, OKO allowed our team to craft a digital-twin simulated space of the Las Vegas Sphere, where all work was pre-rendered, tested, examined, and rehearsed before being put on the physical stage.", 
         ko: {
-          title: "Task",
+          title: "",
+          bulleted: true,
           items: [
             "Sphere BIM 모델을 분석하고 실시간 협업이 가능한 디지털 공간 구축.",
             "영화의 두 핵심 비주얼 테마(캔자스·에메랄드 시티)를 공간 디자인으로 재해석.",
@@ -218,6 +219,7 @@ const PROJECTS_SECONDARY = [
         { en: "We began with the fundamental step of digital construction: examining the BIM model of the Sphere, which was incredibly heavy at around 6 GB. Even after cropping the sections we needed for real-time simulation, half the size remained\u2014still far too heavy for cross-reality workflows. This required a dedicated team effort to reduce the size and optimize the environment, making it accessible across all client devices\u2014such as web, iOS, and Android\u2014while establishing the theme of the Wizard of Oz show in the digital space. This optimization opened up vast potential for testing and sharing among studio teams, on-site teams, and clients.", 
           ko: {
             title: "Action",
+            bulleted: true,
             items: [
               "Unreal 5·Maya·Blender를 활용해 약 6GB BIM 데이터를 100MB로 경량화하고, cross-platform 개발팀과 협력해 실시간 협업 작업이 가능한 수준으로 최적화.",
               "오즈의 마법사 테마의 LED·사이니지·홀로그램 기반 팬 전용 콘텐츠를 활용해, 세피아와 에메랄드 두 가지 비주얼 테마의 디지털 공간을 구현.",
@@ -227,9 +229,10 @@ const PROJECTS_SECONDARY = [
       { video: "spwz-video-01.mp4", src: "sspwz-video-01-poster.jpg", caption: "" },
       { video: "spwz-video-02.mp4", src: "sspwz-video-02-poster.jpg", caption: "" },
       { text:
-        { en: "After optimizing the Sphere\u2019s interior, we were left with its integral framework, allowing us to dive into the artistic tasks alongside other artists from Magnopus and Sphere Entertainment. We anchored the experience around two distinct visual moments from the movie: the prevailing sepia tones representing Kansas at the beginning, and the vibrant emerald tones of the Emerald City later on. Through numerous iterations, the optimized space gained color and was prepared for additional visual, architectural, and even pyrotechnic tests.", 
+        { en: "After optimizing the Sphere\u2019s interior, we were left with its integral framework, allowing us to dive into the artistic s alongside other artists from Magnopus and Sphere Entertainment. We anchored the experience around two distinct visual moments from the movie: the prevailing sepia tones representing Kansas at the beginning, and the vibrant emerald tones of the Emerald City later on. Through numerous iterations, the optimized space gained color and was prepared for additional visual, architectural, and even pyrotechnic tests.", 
           ko: {
             title: "Result",
+            bulleted: true,
             items: [
               "스튜디오·현장·클라이언트 팀이 물리적 위치에 관계없이 동일한 디지털 공간에서 실시간 시뮬레이션·피드백 공유가 가능해져, 사이니지 영상 및 공연 특수효과의 품질 사전 검증 가능.",
               "2025년 8월 28일 공연 성공적 개막, 약 두 달 만에 티켓 100만 장 판매·수익 1억 3천만 달러 이상 달성.",
@@ -267,30 +270,80 @@ const PROJECTS_SECONDARY = [
     tags: { en: ["environment design", "cross-reality", "game ready"], ko: ["배경 디자인", "크로스-리얼리티", "게임 준비"] },
     thumb: "laoly-01.jpg",
     images: [
-      { summary: true, text: { en: "Ahead of the 2028 Los Angeles Olympic Games, Magnopus received an RFP from the LA28 Organizing Committee to design an immersive Olympics Experience Center. As a 3D Artist at Magnopus, I developed a digital twin of SoFi Stadium within the OKO cross-reality platform, serving as the centerpiece of the pitch that won the commission.", 
-        ko: "핵심 참여 내용: 5인 팀을 공동 리드하며 Web/AR/VR 크로스 플랫폼에서 구동 가능한 3D 올림픽 경기장 디자인 및 제작을 담당하여 최종 RFP 선정에 기여. Gensler와 협력해 전체 익스피리언스 센터 디자인 콘셉트를 완성하고 LA28 올림픽대회조직위원회로부터 최종 선정." } },
+      {
+        summary: true,
+        text: {
+          en: "In a groundbreaking collaboration with Sphere Entertainment, Google, and Warner Bros., Magnopus successfully delivered an immersive Wizard of Oz experience for the 16K-resolution Las Vegas Sphere. As a key 3D artist on the project, I optimized a massive physical venue model into an accessible digital twin using the proprietary OKO cross-reality platform.",
+          ko: {
+            title: "핵심 참여 내용",
+            bulleted: true,
+            items: [
+              "Gensler와 협업해 올림픽 익스피리언스 센터 체험관 디자인해, LA28 Organizing Committee로부터 최종 선정.",
+              "3D 아티스트·개발자 5인 팀 공동 리드 및 아트·개발 간 KPI 조율을 통해 SoFi Stadium 디지털 트윈 공간을 웹브라우저 및 퀘스트 3 환경에서도 안정적인 실시간 렌더링 구현.",
+              "Unreal Engine 5 기반 cross-platform 워크플로우 및 3D 최적화 프로세스를 문서화해 후속 프로젝트의 디버깅 시간 단축과 협업 효율 향상에 기여.",
+            ]
+          }
+        }
+      },
       { video: "LA28_video_FINAL-crop.mp4", src: "LA28_video_FINAL-crop-poster.jpg", caption: "" },
       { src: "LAConventionCenter_Solar.webp", caption: "" },
       { text: { en: "The Olympics Experience Center is a 14,000-square-foot(1,300-square-meter) immersive venue planned near the Los Angeles Convention Center, designed to give visitors a behind-the-scenes look at the upcoming Olympic Games. To secure the project, Magnopus partnered with Gensler to demonstrate how integrating digital entertainment with architectural design can elevate the visitor experience. We anchored our pitch around a virtual replica of SoFi Stadium, building it as a fully navigable digital environment.", 
-        ko: "프로젝트 배경: 본 프로젝트는 LA28 올림픽대회조직위원회가 관광 및 후원 증진을 위해 400평 규모의 체험관을 다운타운 LA에 조성하기 위해 시작됐다. 단순한 홍보를 넘어 cross-reality 기반의 인터랙션을 접목해, LA의 주요 랜드마크와 스타디움을 체험할 수 있는 공간 구축을 목표로 삼았다. 이에 따라 Magnopus와 Disney를 포함한 10개 사를 대상으로 RFP가 발송되며 프로젝트가 시작됐다." } },
-      { text: { en: "", 
-        ko: "핵심 역량: Maya, Blender, CAD, Unreal 5 등의 3D 툴을 활용하여 10만석 규모의 LA SoFi 스타디움을 AR/VR 환경에 최적화된 디지털 트윈으로 제작했다. 게임 월드 제작 지식을 기반으로 스타디움 모듈화 및 최적화 프로세스를 리딩하며, 스타디움을 올림픽 경기장 콘셉트에 맞게 탈바꿈시켰다. 또한, 멀티 접속 및 실시간 수정이 가능한 자사 프로덕션 툴을 이용해 Gensler와 협력해 전체 전시관 콘셉트를 효율적으로 디자인했다." } },
+                ko: {
+          title: "프로젝트 배경",
+          items: [
+            "LA28 Organizing Committee는 LA 컨벤션 센터 인근에 약 400평 규모의 ‘올림픽 익스피리언스 센터’를 조성하기 위해 XR 기반 체험관 디자인 RFP를 진행했다.",
+            "프로젝트는 LA 지역의 스타디움과 랜드마크를 홍보하고, 올림픽 후원사 콘텐츠를 결합한 몰입형 공간 구축이 목표였으며, Magnopus를 포함한 약 10개 글로벌 스튜디오가 경쟁에 참여했다.",
+            "Magnopus는 cross-reality 플랫폼 ‘OKO’를 기반으로, Gensler와 협력해 몰입형 디지털 체험관 제안안을 제작했다.",
+          ]
+        } } },
+        { text: { en: "", 
+                ko: {
+          title: "",
+          items: [
+            "3D 아티스트 및 개발자 5인으로 구성된 팀을 공동 리드하며, 웹/AR/VR 환경에서 안정적으로 구동 가능한 대규모 디지털 스타디움 공간을 제작하고, 최종 클라이언트 프레젠테이션용 체험 데모를 완성하는 역할을 맡았다.",
+            "특히 7만~10만 명 규모의 SoFi Stadium을 디지털 트윈으로 구현하면서도 모바일·XR 디바이스에서 원활히 동작할 수 있도록 최적화해야 했다.",
+          ]
+        } } },
       { pair: [
         { src: "InglewoodStadiumDesktop.webp", caption: "" },
         { src: "sofi_fly_over.gif", caption: "" }
       ] },
       { text: { en: "I was responsible for establishing the visual direction and coordinating a team of five artists to build the stadium\u2019s architecture, including the swimming venue, broadcasting area, and surrounding plaza. The environment was heavily optimized to run seamlessly across web, mobile, and VR, allowing the LA28 committee to explore the proposed space from any device. Through rigorous iteration, we balanced performance and atmosphere, cutting load times in half and improving runtime performance by 60%, all while preserving the grand scale of an Olympic venue.", 
-        ko: "성과 및 협업 경험: 아트 및 개발로 구성된 5인 팀을 공동 리드하며, 모바일 및 AR/VR 환경에서도 원활하게 구동될 수 있도록 기가바이트 단위의 스타디움 3D 데이터를 100MB 미만으로 최적화했다. 아트 디렉터와 긴밀히 협업하며 시각적 완성도를 유지하는 방향으로 개발·아트 팀 간 목표를 조율했고, 인터랙션 개발자들이 렉 없이 작동할 수 있는 가상 공간을 구축했다. 또한 외부 협력사인 Gensler와의 미팅에 참여해 디자인 피드백을 수용하고, Unreal 5 BP 지식을 활용해 실제 클라이언트 플랫폼 적용 가능 여부를 빠르게 검증해 각 팀에 공유했다." } },
-      { pair: [
+                ko: {
+          title: "Action",
+          bulleted: true,
+          items: [
+            "Unreal Engine 5과 3D 툴 활용해 SoFi Stadium 기반 올림픽 수영 경기장 제작.",
+            "아트 디렉터와 협업하여 올림픽 경기의 콘셉트에 부합한 조명, 공간을 실시간 경험에 최적화된 3D로 연출.",
+            "Cross-reality 플랫폼 사용, Gensler와 실시간으로 공간 디자인(Hype Room)을 진행해 디자인 피드백의 기술적 구현 가능성(Unreal)을 빠르게 검증하고 각 팀에 공유.",
+            "아트·개발 간 KPI 충돌을 조율하고 모바일 및 XR 디바이스 대응을 위해 기가바이트 단위의 스타디움 데이터를 100MB 미만의 최적화된 디지털 공간으로 구축."
+          ]
+        } } },
+        { pair: [
         { src: "laoly_06.jpg", caption: "" },
         { src: "laoly_07.jpg", caption: "" }
       ] },
       { text: { en: "Our visual goal was to capture the immense scale and openness of SoFi Stadium converted into an Olympic aquatic center. Given the stadium\u2019s massive interior volume, we developed a comprehensive set design to seamlessly connect the competition area with the spectator experience. Leveraging our team\u2019s firsthand experience visiting the physical venue, we efficiently blocked out the foundational layouts for key areas, including the competition and practice pools, broadcasting zones, camera rails, and referee stations. We also drew inspiration from the Paris Olympic swimming facilities and the Lucas Oil Stadium, which served as an excellent real-world precedent for transforming a large arena into a swimming venue. Because our baseline requirement was to enable full interactivity within the OKO platform, we actively utilized its native VR and AR features to review and iterate our designs in a true spatial context.", 
-        ko: "협업을 통한 문제 해결 사례: 3D 아트와 인터랙션 개발 팀 간의 KPI 충돌을 조율해 합의점을 도출했으며, 성능 최적화를 통해 VR상에서 인터랙티브 스타디움의 로딩 시간을 20초 이내로 단축하는 등 완성도와 최적화 문제를 해결했다.(Quest 3 기준)" } },
-      { src: "laoly_15.png", caption: "" },
+                ko: {
+          title: "Result",
+          bulleted: true,
+          items: [
+            "Quest 3 기준 맵 재진입 시간을 약 20초 이내로 단축하고, 모바일·XR 환경에서도 끊김 없이 동작하는 인터랙티브 디지털 스타디움 공간 구현에 성공했다.",
+            "인터랙션 요소 안정화 및 최적화를 통해 체험관 핵심 공간인 ‘Hype Room’ 데모를 성공적으로 선보였으며, LA28 올림픽 익스피리언스 센터 RFP 최종 선정에 기여했다.",
+            "프로젝트 종료 후, 협업 과정에서 축적된 Unreal Engine 5 기반 최적화 및 디버깅 워크플로우를 문서화·배포해 후속 프로젝트의 그래픽 디버깅 시간을 단축하고 팀 간 협업 효율 향상에 기여했다.",
+          ]
+        } } },
+        { src: "laoly_15.png", caption: "" },
       { text: { en: "The demo successfully illustrated how visitors would interact with the future Experience Center, helping Magnopus win the bid over ten competing studios. For our team, the project was an opportunity to realize the full potential of cross-reality technology: collaborative iteration across geographies, simulation prior to construction, and the creation of a digital space that goes beyond previewing a physical venue. We built an interactive Olympic stadium where users can experience the space not just as visitors, but through a variety of engaging roles.", 
-        ko: "핵심 및 성과: High-profile 프로젝트를 성공적으로 수행하며 공동 리더십과 커뮤니케이션 역량 등 미드 레벨 이상의 협업 능력을 입증했으며, Unreal 5 워크플로우 문서화를 통해 후속 프로젝트의 디버깅 시간을 단축하는 등 기술적 기여도 함께 이끌어냈다. 프로젝트를 진행하며 다양한 분야의 전문가들로 구성된 팀의 협업 구조를 세분화하고 팀 내 결속을 강화했다. 또한 영어 환경에서 아트 디렉터와 긴밀히 소통하며, 주도적으로 태스크를 실행하는 등 협업 역량을 입증했다. 이후 Unreal 5 기반 워크플로우 문서를 제작·배포했고, 이를 통해 후속 프로젝트인 Wizard of OZ의 시각적 완성도 향상에 기여했다. 나아가 Magnopus의 cross-reality 기술력과 건축·엔터테인먼트 기술 융합 프로젝트의 가능성을 효과적으로 보여주었다." } },
-    ]
+                ko: {
+          title: "협업을 통한 문제 해결 사례",
+          items: [
+            "5인으로 구성된 SoFi 스타디움 제작 팀을 공동 리드하며 3D 아트와 인터랙션 개발 간 KPI 충돌을 조정해 합의점을 도출했다. 목표로 하는 웹·모바일 환경에서 플레이 성능 테스트를 반복하고, 기존 유사 프로젝트의 데이터를 복기 해 각 개발 파트의 목표치를 합리적으로 조율했다.",
+            "범위 내에서 게임 배경의 리소스 사용률을 관리했고, 그 결과 맵 접속 시간을 절반으로 단축하고(퀘스트3 상 20초 내 공간 재부팅), 인터랙션 요소들을 안정화 시킴으로써 완성도를 높였다.",
+            "이를 통해 체험관 내 가장 큰 비중을 차지하는 ‘Hype Room’의 데모를 성공적으로 보였고, RFP에 최종 선정되는 데 기여했다.",
+          ]
+        } } },
+      ]
   },
   {
     id: "welcome-to-oko",
@@ -396,16 +449,24 @@ const PROJECTS_SECONDARY = [
       ] },
       { text: { en: "", 
         ko: "핵심 역량: Maya·Blender·Unreal 5 기반의 3D 콘텐츠 제작 역량과 cross-reality 플랫폼 운용 경험을 바탕으로, 패션 의류와 리테일 공간을 웹·AR·디지털사이니지에 최적화된 디지털 공간으로 구현했다. 특히 웹·AR 플랫폼 간 렌더링 차이를 최소화하기 위한 최적화 기준을 수립하고, 기존 프로젝트 데이터와 워크플로우 문서를 기반으로 렌더링 버그를 빠르게 분석해 해결했다." } },
+      { src: "gap-08.jpg", caption: { en: "", ko: "" } },
+      {pair: [
       { src: "gap-04.jpg", caption: { en: "", ko: "" } },
+      { src: "gap-09.jpg", caption: { en: "", ko: "" } },  
+      ] },
       { text: { en: "", 
         ko: "성과 및 협업 경험: 2주라는 짧은 기간 안에 cross-reality 기반 리테일 데모를 성공적으로 구축하고, Gap 경영진 대상 프레젠테이션을 안정적으로 완료해 파트너십 구축에 기여했다. 프로젝트 진행 과정에서는 프로덕션 팀·2D/3D 콘텐츠 팀·개발 팀이 동시에 협업하는 구조 속에서, 각 파트 간 기술적 요구사항과 일정 충돌을 조율하며 프로젝트 완성도를 유지했다. 또한 원격으로 QA팀과 협업 및 실시간 피드백 체계를 통해 새로운 스튜디오에서도 AR 정확성과 인터랙션 안정성을 확보했다." } },
       { src: "gap-05.jpg", caption: { en: "", ko: "" } },
-      { text: { en: "", 
-        ko: "협업을 통한 문제 해결 사례: OKO 플랫폼 리팩토링 과정에서 Web·Unreal·AR 환경 간 동일한 3D 에셋이 서로 다르게 렌더링되는 문제를 발견했고, 이로 인해 기존 리테일 샵 에셋을 전면 수정해야 하는 상황이 발생했다." } },
-      { text: { en: "", 
-        ko: "이를 해결하기 위해 기존 cross-reality 프로젝트 마다 축적·업데이트해온 워크플로우 및 최적화 데이터를 기반으로 플랫폼별 렌더링 기준을 재정립했고, 리팩토링 영향을 최소화할 수 있는 새로운 목표치를 빠르게 수립했다. 이를 통해 프로젝트 일정 지연 없이 데모를 안정적으로 완성할 수 있었다." } },
-      { text: { en: "", 
-        ko: "또한 신규 기능으로 도입된 Gaussian Splat 기술 적용 여부를 검토하는 과정에서, 시각적 품질은 우수하지만 성능 최적화 문제가 발생할 가능성을 사전에 분석해 사용 계획을 보류하도록 조율했다. 이를 통해 데모 안정성과 실시간 퍼포먼스를 우선시하는 방향으로 팀 의사결정을 유도했다." } },
+      { text: { en: "",
+        ko: {
+          title: "협업을 통한 문제 해결 사례",
+          bulleted: false,
+          items: [
+            "OKO 플랫폼 리팩토링 과정에서 Web·Unreal·AR 환경 간 동일한 3D 에셋이 서로 다르게 렌더링되는 문제를 발견했고, 이로 인해 기존 리테일 샵 에셋을 전면 수정해야 하는 상황이 발생했다.",
+            "이를 해결하기 위해 기존 cross-reality 프로젝트 마다 축적·업데이트해온 워크플로우 및 최적화 데이터를 기반으로 플랫폼별 렌더링 기준을 재정립했고, 리팩토링 영향을 최소화할 수 있는 새로운 목표치를 빠르게 수립했다. 이를 통해 프로젝트 일정 지연 없이 데모를 안정적으로 완성할 수 있었다.",
+            "또한 신규 기능으로 도입된 Gaussian Splat 기술 적용 여부를 검토하는 과정에서, 시각적 품질은 우수하지만 성능 최적화 문제가 발생할 가능성을 사전에 분석해 사용 계획을 보류하도록 조율했다. 이를 통해 데모 안정성과 실시간 퍼포먼스를 우선시하는 방향으로 팀 의사결정을 유도했다."
+          ]
+        } } },
       { src: "gap-07.jpg", caption: { en: "", ko: "" } },  
       { text: { en: "", 
         ko: "핵심 성과 및 기여: 고난도 cross-reality 리테일 프로젝트를 제한된 기간과 외부 환경에서 성공적으로 수행하며, 기술 검증·협업 조율·실시간 문제 해결 역량을 입증했다. 특히 다양한 분야의 전문가들이 참여하는 프로젝트 중심에서 직접 클라이언트 및 경영진과 소통하며, 이를 바탕으로 관련된 팀들과 기술적 의사결정과 프로젝트 방향성을 조율하는 협업 경험을 축적했다. 또한 본 프로젝트는 OKO 플랫폼이 엔터테인먼트뿐 아니라 패션·리테일 산업에서도 활용될 수 있음을 보여준 사례로, Magnopus의 cross-reality 기술 응용 범위와 사업 확장 가능성을 효과적으로 입증했다." } },
@@ -430,6 +491,7 @@ const PROJECTS_SECONDARY = [
       { summary: true, text: { en: "", 
         ko: "핵심 참여 내용: 5인 규모의 OKO 포트나이트 TF팀에 3D 아티스트로 참여하여, 뉴욕 타임스퀘어 기반의 게임 공간 제작 담당 및 실시간 공연 시뮬레이션을 위한 파이프라인 구축에 참여했다. " } },
       { src: "fortnite-01.jpg", caption: { en: "", ko: "" } },
+      { src: "fortnite-02.jpg", caption: "" },
       { text: { en: "", 
         ko: "프로젝트 배경: 본 프로젝트는 게임 내부 이벤트와 현실 공간 연출을 동시에 연결해야 하는 프로젝트 특성상, 실제 공연 현장과 가상 공연 환경을 하나의 cross-reality 워크플로우로 통합하는 것이 핵심 과제였다. 특히 Times Square 는 복잡한 행정 구역, 밀집된 군중 환경, 다수의 광고 전광판 소유권 구조 등으로 인해 물리적 리허설이 어려운 장소였으며, 이를 해결하기 위해 시뮬레이션이 가능한 별개의 게임 공간 제작이 진행됐다." } },
       { src: "fortnite-03.jpg", caption: { en: "", ko: "" } },
@@ -437,10 +499,8 @@ const PROJECTS_SECONDARY = [
         ko: "핵심 역량: Maya, Blender, Unreal Engine 5을 활용하여, 뉴욕 타임스퀘어를 본딴 공간을 구현했다. 모바일 및 웹 환경에서 군중, 카메라, 그리고 전광판 영상 시뮬레이션을 위해 최적화했다." } },
       { text: { en: "", 
         ko: "성과 및 협업 경험: 복잡한 도심-게임 공연 시뮬레이션 공간을 만들어, 전체 프로젝트를 81일이라는 제한된 일정 안에 성공적으로 완수하는데 기여했다. 아트 디렉터 및 콘서트 제작팀과 지속적인 피드백 루프를 유지하며, 실제 공연 이전 단계에서 애니메이션·카메라·군중 흐름 등을 디지털 공간 상에서 사전 검증할 수 있도록 지원했다. 이를 통해 공연 운영 리스크를 줄이고, 실시간 라이브 이벤트 제작 효율성을 향상시켰다." } },
-      { pair: [
-        { src: "fortnite-02.jpg", caption: "" },
-        { src: "fortnite-04.jpg", caption: "" }
-      ] },
+      { src: "fortnite-07.jpg", caption: "" },
+      { src: "fortnite-04.jpg", caption: "" },
       { text: { en: "", 
         ko: "협업을 통한 문제 해결 사례: 복잡한 전광판과 군중 밀집 환경으로 인해 발생할 수 있는 리스크를 방지하기 위한 정교한 인터랙티브 공간이 필요했고, 인터랙션 개발자 및 아트팀과 협업해 최적의 시뮬레이션 공간을 구축했다. 공연 연출의 시각적 완성도를 유지하면서도 인터랙션 안정성을 확보해야 했기 때문에, 각 팀의 요구사항을 합리적으로 조정하며 KPI를 조율했다. 이를 통해 안정적으로 구동될 수 있도록 대규모 씬을 완성했다." } },
       { src: "fortnite-06.jpg", caption: { en: "", ko: "" } },
