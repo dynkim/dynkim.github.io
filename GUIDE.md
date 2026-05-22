@@ -1,186 +1,215 @@
-# Portfolio Variants on GitHub Pages
-## `dynkim.github.io/LBE` · `dynkim.github.io/game`
+# dynkim.github.io — Project Guide
+
+A bilingual (EN/KO) portfolio site for a 3D environment artist, served via GitHub Pages. Static HTML/CSS/JS — no build step (yet — see [NOTION_CMS_PLAN.md](NOTION_CMS_PLAN.md) for the planned Notion CMS integration).
 
 ---
 
-## How it works
-
-GitHub Pages serves `LBE/index.html` when someone visits `/LBE`, and `game/index.html` when someone visits `/game`. The trick is one line in each sub-page's `<head>`:
-
-```html
-<base href="/">
-```
-
-This makes every relative asset path (`profile.jpg`, `laoly-01.jpg`, etc.) resolve from the root of your domain — so all your images and videos load correctly even though the HTML file sits in a subfolder.
-
-The JS in all three files is identical. It simply reads `window.location.pathname` to know which variant it's running as, then re-sorts the projects array to put the relevant work first.
-
----
-
-## Folder structure to create
+## Repository structure
 
 ```
-dynkim.github.io/          ← your existing repo root
-├── index.html             ← modify this (Step 1)
-├── LBE/
-│   └── index.html         ← create this (Step 2)
-├── game/
-│   └── index.html         ← create this (Step 2)
-├── profile.jpg
-├── laoly-01.jpg
-└── ... (all your existing assets stay here — do not move them)
+dynkim.github.io/
+├── index.html              ← root portfolio (default variant)
+├── LBE/index.html          ← /LBE variant (uses <base href="/">)
+├── game/index.html         ← /game variant (uses <base href="/">)
+├── data.js                 ← all project content (text, image filenames, variants)
+├── i18n.js                 ← language toggle + t() helper
+├── rendering.js            ← home grid + project detail rendering
+├── navigation.js           ← view switching, back button, routing helpers
+├── routing.js              ← hash-based deep linking
+├── scroll.js               ← scroll-driven UI behaviour
+├── main.js                 ← boot sequence
+├── index.css               ← all styling
+├── images/                 ← all images & video poster frames
+├── videos/                 ← all .mp4 files
+├── PDF/                    ← resume PDFs
+├── GUIDE.md                ← this file (EN)
+├── GUIDE.ko.md             ← Korean version of this guide
+├── NOTION_CMS_PLAN.md      ← roadmap for Notion CMS integration
+└── README.md
 ```
 
 ---
 
-## Step 1 — Modify your root `index.html`
+## Core systems
 
-Make these three additions to your existing `index.html`.
+### 1. Bilingual content (i18n)
 
-### A. Variant detection — paste at the very top of your `<script>` block
+Every user-facing string is stored as a `{ en, ko }` object. The `t()` helper in `i18n.js` resolves the current language with English fallback. Plain strings pass through unchanged.
 
 ```js
-/* ================================================
-   PORTFOLIO VARIANT
-   Reads the URL path so the same code serves
-   /LBE, /game, and the default root portfolio.
-   ================================================ */
-const VARIANT = (function () {
-  const p = window.location.pathname.replace(/\/$/, '').toLowerCase();
-  if (p === '/lbe')  return 'lbe';
-  if (p === '/game') return 'game';
-  return 'default';
-})();
+name: { en: "Vintage Telephone", ko: "빈티지 전화기" }
 ```
 
-### B. Tag your projects — add a `tags` field to every project in your data array
+The language toggle in the top nav writes `currentLang` and re-renders. `html[lang]` is set to `en`/`ko` so CSS can branch on language (Korean uses Pretendard, English uses Instrument Serif).
 
-Each project gets one or more tags: `'lbe'`, `'game'`, or both.
+### 2. Variant system
+
+Defined in `data.js` via the `VARIANTS` constant. Four variants exist:
+
+| Variant | URL trigger | Purpose |
+|---|---|---|
+| `default` | `dynkim.github.io` | All projects, balanced ordering |
+| `vfx` | hostname/path/hash contains `vfx` | VFX & animation focus |
+| `lbe` | hostname/path/hash contains `lbe` | Location-based experience focus |
+| `game` | hostname/path/hash contains `game` | Game environment art focus |
+
+Each variant specifies:
+- `row1` / `row2` — **explicit ordered lists of project slugs** (not tag-based filtering)
+- `label1` / `label2` — bilingual section labels for each row
+
+Detection (`detectVariant()` in `data.js`) checks hostname, path, hash, then `sessionStorage` fallback. Once detected, the variant persists across navigation in the same session.
+
+### 3. Project data
+
+Two arrays in `data.js`:
+
+- `PROJECTS` — primary work (own projects)
+- `PROJECTS_SECONDARY` — studio/agency work (Magnopus, etc.)
+
+`ALL_PROJECTS` merges both for lookup by slug. Splitting into two arrays prevents URL hash collisions and lets the home page render two distinct rows.
+
+Each project has:
 
 ```js
-// Example — match these to your actual project objects:
-
-// LBE projects (venue / location-based experience work)
-{ id: 'laoly',    tags: ['lbe'],  ... }   // LA Olympics venues
-{ id: 'stadium',  tags: ['lbe'],  ... }   // Inglewood / SoFi / LA Convention
-{ id: 'deloitte', tags: ['lbe'],  ... }   // Deloitte onboarding
-{ id: 'planet',   tags: ['lbe'],  ... }   // Planetarium WIP
-
-// Game projects (video game environment art)
-{ id: 'fallout',  tags: ['game'], ... }   // Fallout
-{ id: 'oko',      tags: ['game'], ... }   // Oko / Magoko
-{ id: 'sg',       tags: ['game'], ... }   // sg- series
-{ id: 'vt',       tags: ['game'], ... }   // vt- series
-{ id: 'spwz',     tags: ['game'], ... }   // spwz- series
-{ id: 'jb',       tags: ['game'], ... }   // jb- series
-{ id: 'cp',       tags: ['game'], ... }   // cp- series
-
-// Projects that fit both  
-{ id: 'sn',  tags: ['lbe', 'game'], ... }
-{ id: 'em',  tags: ['lbe', 'game'], ... }
-```
-
-### C. Variant-aware sorting — paste this function right before your grid-rendering code
-
-```js
-/* Sort a projects array so the current variant's work comes first.
-   Projects without a matching tag are moved to the end, not hidden. */
-function variantSort(projects) {
-  if (VARIANT === 'default') return projects;
-  return [...projects].sort((a, b) => {
-    const aMatch = (a.tags || []).includes(VARIANT);
-    const bMatch = (b.tags || []).includes(VARIANT);
-    if (aMatch && !bMatch) return -1;
-    if (!aMatch && bMatch) return  1;
-    return 0;
-  });
+{
+  id: "wizard-of-oz-sphere",          // unique slug, used in URL hash
+  name: { en: "...", ko: "..." },
+  tag: { en: "...", ko: "..." },
+  wip: false,
+  description: { en: "...", ko: "..." },
+  year: "2025",
+  client: "Sphere Entertainment",     // optional
+  externalPartner: "Google, Warner Bros.",
+  status: { en: "Released", ko: "출시됨" },
+  software: "Unreal 5 · OKO · Maya",
+  role: { en: "...", ko: "..." },
+  tags: { en: [...], ko: [...] },
+  thumb: "spwz-01.jpg",               // home card image
+  thumbVideo: "spwz-thumb.mp4",       // optional, replaces thumb
+  images: [ /* gallery items, see below */ ]
 }
 ```
 
-Then wrap the array you pass to your grid renderer with `variantSort(...)`:
+### 4. Gallery item types
+
+Inside `images: [...]` each entry is one of six shapes. The renderer in `rendering.js:67` switches on the keys present.
+
+| Type | Required keys | Notes |
+|---|---|---|
+| Image | `src` | Optional `caption: { en, ko }`, `narrow: true` |
+| Video | `video`, `src` (poster) | Autoplays muted/looped. Optional `caption`, `narrow` |
+| Pair | `pair: [item, item]` | Two side-by-side images/videos |
+| Text (plain) | `text: { en: "...", ko: "..." }` | Paragraph(s). Strings or arrays of strings. |
+| Text (labeled block) | `text: { en: "...", ko: { title, items, bulleted } }` | Section label + line-broken items. See §5 |
+| Summary | `summary: true` + `text` | Pull-quote variant with serif quotation marks |
+| Link | `link`, `label: { en, ko }` | Optional `poster`, `aspect` for video-card style |
+
+### 5. Labeled blocks (new)
+
+Used to break long Korean project narratives into clearly delimited sections (프로젝트 배경 / Task / Action / Result, etc.).
 
 ```js
-// Before (example — your actual call may look slightly different):
-renderGrid(document.getElementById('project-grid'), PROJECTS_PRIMARY);
-
-// After:
-renderGrid(document.getElementById('project-grid'), variantSort(PROJECTS_PRIMARY));
+{
+  text: {
+    en: "In August 2025, Sphere Entertainment presented...",
+    ko: {
+      title: "프로젝트 배경",
+      items: [
+        "Sphere Entertainment, Google, Warner Bros., Magnopus는...",
+        "공연의 시뮬레이션·리허설·비주얼 테스트를..."
+      ],
+      bulleted: false     // true only for summary-style blocks
+    }
+  }
+}
 ```
+
+Renders as a centred accent-coloured title above a list of line-broken items with no bullets. When `summary: true` + `bulleted: true` are combined, the block gets the large serif quotation marks frame and accent bullet markers.
+
+**Currently used by**: `wizard-of-oz-sphere` only. Other secondary-row projects still use plain `text.ko` strings with inline `라벨:` prefixes — they will be migrated incrementally.
+
+CSS classes: `.gallery-text.labeled-block`, `.labeled-title`, `.labeled-items`, `.labeled-items.bulleted` ([index.css:1050+](index.css)).
 
 ---
 
-## Step 2 — Create the two sub-page files
+## Variant pages (`/LBE`, `/game`)
 
-Both files are **exact copies of your updated `index.html`** with one addition in `<head>`: the `<base>` tag. That single line is all that differs.
-
-### `LBE/index.html`
-
-Copy your entire updated `index.html`, then add this as the **first line inside `<head>`**:
+GitHub Pages serves `LBE/index.html` at `/LBE` and `game/index.html` at `/game`. Each is **a copy of the root `index.html`** with one extra line in `<head>`:
 
 ```html
 <base href="/">
 ```
 
-So your `<head>` starts like:
+This makes every relative asset path resolve from the domain root, so images and scripts load correctly even though the HTML sits in a subfolder.
 
-```html
-<head>
-  <base href="/">          <!-- ADD THIS LINE — makes all assets load from root -->
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Studio — 3D Environment Art</title>
-  ...
-```
+`detectVariant()` reads `window.location.pathname`, finds `lbe` or `game`, and picks the matching `VARIANTS` entry.
 
-### `game/index.html`
+### Keeping variant pages in sync
 
-Identical — same copy of `index.html`, same `<base href="/">` as the first line in `<head>`.
-
-That's it. The variant detection JS reads `window.location.pathname`, which will be `/LBE` or `/game` in the sub-pages, and sorts automatically.
+When you change `index.html`, you usually need to **mirror the same change into `LBE/index.html` and `game/index.html`**. The only intentional difference is the `<base>` tag. If this becomes painful, the long-term fix is rendering all three from a single source (e.g., the Notion build pipeline).
 
 ---
 
-## Step 3 — Push to GitHub
+## Adding a new project
+
+1. **Add image/video files** to `images/` and `videos/`. Use a consistent slug prefix (e.g., `myproj-01.jpg`).
+2. **Append a project object** to `PROJECTS` (or `PROJECTS_SECONDARY`) in `data.js`. Copy the closest existing project as a template.
+3. **Add the slug** to the appropriate `row1`/`row2` arrays in `VARIANTS` for every variant where you want it to appear.
+4. **For secondary (studio) projects**, write the gallery as text + image blocks. Korean text can use labeled block format from day one.
+
+---
+
+## Converting a project to labeled-block format
+
+For Korean text blocks currently written as `"프로젝트 배경: 문장1. 문장2."`:
+
+1. Split the string at the first `:` to get the label + body.
+2. Split the body by `. ` (period + space) into separate sentences.
+3. Replace `text.ko` with an object:
+
+```js
+text: {
+  en: "...existing English paragraph...",
+  ko: {
+    title: "프로젝트 배경",
+    items: [
+      "문장1.",
+      "문장2."
+    ]
+  }
+}
+```
+
+The English side stays as a plain string. The renderer detects the object shape automatically and switches to labeled-block rendering.
+
+---
+
+## Local development
+
+No build tool. Open `index.html` directly in a browser, or run any static server:
 
 ```bash
-git add LBE/index.html game/index.html index.html
-git commit -m "Add LBE and game portfolio variants"
+python3 -m http.server 8000
+# then visit http://localhost:8000
+```
+
+To test variants locally: `http://localhost:8000/#lbe`, `#game`, `#vfx`. The hash-based detection picks them up without subfolder copies.
+
+---
+
+## Deployment
+
+Push to `main`. GitHub Pages rebuilds in ~1 minute.
+
+```bash
+git add -A
+git commit -m "..."
 git push
 ```
 
-GitHub Pages will pick it up within ~1 minute.
-
 ---
 
-## Your three live URLs
+## Roadmap
 
-| URL | What it shows |
-|---|---|
-| `dynkim.github.io` | Default order (all projects) |
-| `dynkim.github.io/LBE` | LBE work first, then game work |
-| `dynkim.github.io/game` | Game work first, then LBE work |
-
----
-
-## Keeping them in sync
-
-All three files share the same code — the only structural difference is `<base href="/">` in the sub-pages. When you add a new project:
-
-1. Update the data array in root `index.html` (add the `tags` field)
-2. Copy the updated `<script>` block into `LBE/index.html` and `game/index.html`
-
-If this copy-paste becomes annoying, the next step would be extracting your projects data into a `projects.js` file and loading it with `<script src="/projects.js">` — but that's optional and not needed now.
-
----
-
-## Optional: page title that changes per variant
-
-In your `<script>`, after the `VARIANT` detection block:
-
-```js
-if (VARIANT === 'lbe') {
-  document.title = 'Doyeon Kim — LBE & Venue Environments';
-} else if (VARIANT === 'game') {
-  document.title = 'Doyeon Kim — Game Environment Art';
-}
-```
+- **Notion CMS integration** — see [NOTION_CMS_PLAN.md](NOTION_CMS_PLAN.md). Will replace hand-edited `data.js` with a Notion-backed source synced via GitHub Actions.
+- **Progressive labeled-block migration** — currently only `wizard-of-oz-sphere` uses labeled blocks. Other secondary projects will be converted one at a time.
