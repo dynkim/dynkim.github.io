@@ -37,7 +37,7 @@ const UI_STRINGS = {
     resumeDownload:   'Download Resume',
   },
   ko: {
-    siteTitle:        '김도연 <em>—</em> 3D 디자이너',
+    siteTitle:        '김도연 <em>—</em> 공간 디자이너',
     siteTagline:      '3D 콘텐츠 · 공간 디자인 · 시뮬레이션 · 이머시브 엔터테인먼트',
     navAbout:         '소개',
     navContact:       '연락처',
@@ -46,7 +46,7 @@ const UI_STRINGS = {
     selectedWork:     '주요 작업 · 2026',
     selectedProjects: '다른 작업',
     scrollHint:       '좌우로 스크롤하여 더 보기',
-    aboutHeading:     '김도연 <em>—</em> 3D 디자이너',
+    aboutHeading:     '김도연 <em>—</em> 공간 디자이너',
     aboutIntro:       '5년 차 3D 콘텐츠 아티스트로서, 오스카 시각효과상 수상자 Ben Grossmann이 설립한 Magnopus에서 게임, 버추얼 프로덕션, 이커머스 등 다양한 분야의 3D 콘텐츠 제작에 참여했습니다. 또한 라스베이거스 스피어, Fortnite 콘서트, 2028 LA 올림픽 체험 센터 등 다양한 프로젝트에서 3D 모델링부터 대규모 공간 제작까지 수행하며, 이머시브 엔터테인먼트의 경계를 확장하는 작업에 기여했습니다. 저는 차세대 엔터테인먼트 기술을 기반으로 새로운 방식의 스토리텔링을 구현하는 데 깊은 관심을 가지고 있습니다.',
     contactHeading:   '<em>함께</em> 이야기해요',
     contactIntro:     '프리랜스 프로젝트부터 스튜디오 합류, 다양한 형태의 협업까지 폭넓게 열려 있습니다. 이메일이나 링크드인으로 편하게 연락 주세요.',
