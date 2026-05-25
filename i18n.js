@@ -8,8 +8,8 @@
 */
 const UI_STRINGS = {
   en: {
-    siteTitle:        'Doyeon Kim <em>—</em> Space Artist',
-    siteTagline:      '3D Art · 3D Architecture · Simulation · Immersive Entertainment',
+    siteTitle:        'Doyeon Kim <em>—</em> 3D Designer',
+    siteTagline:      '3D Content · 3D Architecture · Immersive Entertainment',
     navAbout:         'About',
     navContact:       'Contact',
     navBackToWork:    'Back to work',
@@ -17,8 +17,8 @@ const UI_STRINGS = {
     selectedWork:     'Selected Work · 2026',
     selectedProjects: 'Selected Projects',
     scrollHint:       'Scroll horizontally to see more work',
-    aboutHeading:     'Doyeon Kim <em>—</em> Space Artist',
-    aboutIntro:       'Hi, thanks for visiting my website! I&rsquo;m a space artist and college lecturer who loves blending technical workflows with a dash of creative storytelling. This is a collection of my past, recent, and ongoing projects, ranging from single assets to full environments. Whether I&rsquo;m sculpting in ZBrush or modeling in Maya, I focus on crafting diverse subjects&mdash;from peaceful gardens to space colonies&mdash;with an eye for realistic and grounded design. I&rsquo;m always looking for ways to make digital worlds feel inviting, so I hope you enjoy seeing how it all comes together!',
+    aboutHeading:     'Doyeon Kim <em>—</em> 3D Designer',
+    aboutIntro:       'Hi, thanks for visiting my website! I&rsquo;m a 3D designer and college lecturer who loves blending technical workflows with a dash of creative storytelling. This is a collection of my past, recent, and ongoing projects, ranging from single assets to full environments. Whether I&rsquo;m sculpting in ZBrush or modeling in Maya, I focus on crafting diverse subjects&mdash;from peaceful gardens to space colonies&mdash;with an eye for realistic and grounded design. I&rsquo;m always looking for ways to make digital worlds feel inviting, so I hope you enjoy seeing how it all comes together!',
     contactHeading:   'Let&rsquo;s <em>talk</em>',
     contactIntro:     'Open to freelance projects, studio roles, and collaborations. Feel free to reach out via email or LinkedIn.',
     contactEmail:     'Email',
@@ -38,7 +38,7 @@ const UI_STRINGS = {
   },
   ko: {
     siteTitle:        '김도연 <em>—</em> 공간 디자이너',
-    siteTagline:      '3D 콘텐츠 · 공간 디자인 · 시뮬레이션 · 이머시브 엔터테인먼트',
+    siteTagline:      '3D 콘텐츠 · 공간 디자인 · 이머시브 엔터테인먼트',
     navAbout:         '소개',
     navContact:       '연락처',
     navBackToWork:    '작업으로 돌아가기',
