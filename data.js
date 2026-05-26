@@ -50,7 +50,7 @@ const PROJECTS = [
     description: { en: "A hard-surface study of the Sienar-Chall Utilipede Transport — a Star Wars canon utility freighter. Focus on mechanical paneling, weathered industrial metal, and faithful silhouette work from reference.", 
     ko: "올란도 디즈니 월드에 설치된 스타워즈 우주선. 버추얼 프로덕션용으로 제작. '시나르-챌 유틸리피드 트랜스포트'의 3D 모델링. SciFi 풍의 패널링, 풍화된 메탈, 레퍼런스에 충실한 프로젝트." },
     year: "2026",
-    software: "Maya · Substance 3D Painter · Substance 3D Designer · Photoshop · Marmoset",
+    software: "Maya · Substance 3D Painter · Substance game ready · Photoshop · Marmoset",
     role: { en: "Modelling, Texturing", ko: "모델링, 텍스처링" },
     tags: { en: ["Star Wars", "hard-surface modeling", "mechanics", "sci-fi vehicle", "game ready"], ko: ["스타워즈", "하드서페이스 모델링", "메커닉", "SF", "game ready"] },
     thumb: "sn-01.jpg",
@@ -173,7 +173,7 @@ const PROJECTS_SECONDARY = [
     client: 'Sphere Entertainment',
     externalPartner: 'Google, Warner Bros.',
     status: { en: 'Released', ko: '출시됨' },
-    software: "Unreal 5 · OKO · Maya · Substance 3D Designer, Substance 3D Painter",
+    software: "Unreal 5 · OKO · Maya · Substance game ready, Substance 3D Painter",
     role: { en: "3D Artist — Spatial Design, BIM Optimization, Digital Twin", ko: "3D 아티스트 — 공간 디자인, BIM 데이터 최적화, 디지털 트윈" },
     tags: { en: ["hard-surface modeling", "AR/VR", "game ready"], ko: ["하드서페이스 모델링", "AR/VR", "game ready"] },
     thumb: "spwz-01.jpg",
@@ -528,7 +528,18 @@ const VARIANTS = {
     row2: ['wizard-of-oz-sphere', 'la-2028-olympics', 'welcome-to-oko', 'fallout-vault-33', 'fortnite-concert-snoopdogg-icespice', 'gap-cross-reality-retail'],
     label1: { en: 'Selected Work · 2026',              ko: '주요 작업 · 2026' },
     label2: { en: 'Selected Projects',                  ko: '다른 작업' },
-    // No overrides — global UI_STRINGS values are used as-is.
+    overrides: {
+      en: {
+        siteTitle:    'Doyeon Kim <em>—</em> 3D Artist',
+        siteTagline:  '3D Worlds · Props · Environments',
+        aboutHeading: 'Doyeon Kim <em>—</em> 3D Artist',
+      },
+      ko: {
+        siteTitle:    '김도연 <em>—</em> 3D 아티스트',
+        siteTagline:  '3D 월드 · 프롭 · 환경',
+        aboutHeading: '김도연 <em>—</em> 3D 아티스트',
+      },
+    },
   },
   vfx: {
     row1: ['secret-garden', 'japanese-izakaya', 'cyberpunk-seoul', 'sienar-chall-utilipede', 'vintage-telephone', 'espresso-machine'],
@@ -555,14 +566,14 @@ const VARIANTS = {
     label2: { en: 'Selected Work · 2026',                 ko: '주요 참여 프로젝트' },
     overrides: {
       en: {
-        siteTitle:    'Doyeon Kim <em>—</em> 3D Designer',
+        siteTitle:    'Doyeon Kim <em>—</em> 3D Spatial Designer',
         siteTagline:  '3D Content · 3D Architecture · Immersive Entertainment',
-        aboutHeading: 'Doyeon Kim <em>—</em> 3D Designer',
+        aboutHeading: 'Doyeon Kim <em>—</em> 3D Spatial Designer',
       },
       ko: {
-        siteTitle:    '김도연 <em>—</em> 공간 디자이너',
+        siteTitle:    '김도연 <em>—</em> 3D 공간 디자이너',
         siteTagline:  '3D 콘텐츠 · 공간 디자인 · 이머시브 엔터테인먼트',
-        aboutHeading: '김도연 <em>—</em> 공간 디자이너',
+        aboutHeading: '김도연 <em>—</em> 3D 공간 디자이너',
       },
     },
   },
@@ -578,9 +589,9 @@ const VARIANTS = {
         aboutHeading: 'Doyeon Kim <em>—</em> Environment Artist',
       },
       ko: {
-        siteTitle:    '김도연 <em>—</em> 환경 아티스트',
+        siteTitle:    '김도연 <em>—</em> 배경 아티스트',
         siteTagline:  '게임 환경 · 프롭 · 리얼타임 아트',
-        aboutHeading: '김도연 <em>—</em> 환경 아티스트',
+        aboutHeading: '김도연 <em>—</em> 배경 아티스트',
       },
     },
   },

@@ -39,7 +39,7 @@ function renderHome() {
 /* ================================================
    OPEN / CLOSE PROJECT
    ================================================ */
-function openProject(id) {
+function openProject(id, push = true) {
   const p = ALL_PROJECTS.find(x => x.id === id);
   if (!p) return;
 
@@ -152,5 +152,5 @@ function openProject(id) {
   document.getElementById('view-project').classList.add('active');
   window.scrollTo({ top: 0, behavior: 'instant' });
 
-  history.pushState({ view: 'project', id }, '', `#${id}`);
+  if (push) history.pushState({ view: 'project', id }, '', `#${id}`);
 }

@@ -4,12 +4,12 @@
 function handleRoute() {
   const hash = window.location.hash.replace('#', '');
   if (hash === 'about') {
-    goAbout();
+    goAbout(false);
   } else if (hash === 'contact') {
-    goContact();
+    goContact(false);
   } else if (hash && ALL_PROJECTS.find(p => p.id === hash)) {
-    openProject(hash);
+    openProject(hash, false);
   } else {
-    goHome();
+    goHome(false);
   }
 }
