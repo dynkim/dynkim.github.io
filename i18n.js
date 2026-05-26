@@ -86,7 +86,23 @@ function t(value) {
   return '';
 }
 
+/* ui() — resolve a UI string key.
+   Resolution order:
+     1. variant overrides[currentLang][key]   (e.g. lbe ko title)
+     2. variant overrides.en[key]             (en fallback for that variant)
+     3. global UI_STRINGS[currentLang][key]
+     4. global UI_STRINGS.en[key]
+   data.js (VARIANTS + detectVariant) loads after i18n.js, so guard with
+   typeof checks — they will always be defined by the time ui() is called. */
 function ui(key) {
+  if (typeof detectVariant === 'function' && typeof VARIANTS !== 'undefined') {
+    const variantKey = detectVariant();
+    const ov = VARIANTS[variantKey] && VARIANTS[variantKey].overrides;
+    if (ov) {
+      if (ov[currentLang] && ov[currentLang][key] != null) return ov[currentLang][key];
+      if (ov.en        && ov.en[key]        != null) return ov.en[key];
+    }
+  }
   return (UI_STRINGS[currentLang] && UI_STRINGS[currentLang][key]) ||
          UI_STRINGS.en[key] || '';
 }

@@ -291,9 +291,9 @@ const PROJECTS_SECONDARY = [
                 ko: {
           title: "프로젝트 배경",
           items: [
-            "LA28 Organizing Committee는 LA 컨벤션 센터 인근에 약 400평 규모의 ‘올림픽 익스피리언스 센터’를 조성하기 위해 XR 기반 체험관 디자인 RFP를 진행했다.",
+            "LA28 Organizing Committee는 LA 컨벤션 센터 인근에 약 400평 규모의 '올림픽 익스피리언스 센터'를 조성하기 위해 XR 기반 체험관 디자인 RFP를 진행했다.",
             "프로젝트는 LA 지역의 스타디움과 랜드마크를 홍보하고, 올림픽 후원사 콘텐츠를 결합한 몰입형 공간 구축이 목표였으며, Magnopus를 포함한 약 10개 글로벌 스튜디오가 경쟁에 참여했다.",
-            "Magnopus는 cross-reality 플랫폼 ‘OKO’를 기반으로, Gensler와 협력해 몰입형 디지털 체험관 제안안을 제작했다.",
+            "Magnopus는 cross-reality 플랫폼 'OKO'를 기반으로, Gensler와 협력해 몰입형 디지털 체험관 제안안을 제작했다.",
           ]
         } } },
         { text: { en: "", 
@@ -329,7 +329,7 @@ const PROJECTS_SECONDARY = [
           bulleted: true,
           items: [
             "Quest 3 기준 맵 재진입 시간을 약 20초 이내로 단축하고, 모바일·XR 환경에서도 끊김 없이 동작하는 인터랙티브 디지털 스타디움 공간 구현에 성공했다.",
-            "인터랙션 요소 안정화 및 최적화를 통해 체험관 핵심 공간인 ‘Hype Room’ 데모를 성공적으로 선보였으며, LA28 올림픽 익스피리언스 센터 RFP 최종 선정에 기여했다.",
+            "인터랙션 요소 안정화 및 최적화를 통해 체험관 핵심 공간인 'Hype Room' 데모를 성공적으로 선보였으며, LA28 올림픽 익스피리언스 센터 RFP 최종 선정에 기여했다.",
             "프로젝트 종료 후, 협업 과정에서 축적된 Unreal Engine 5 기반 최적화 및 디버깅 워크플로우를 문서화·배포해 후속 프로젝트의 그래픽 디버깅 시간을 단축하고 팀 간 협업 효율 향상에 기여했다.",
           ]
         } } },
@@ -340,7 +340,7 @@ const PROJECTS_SECONDARY = [
           items: [
             "5인으로 구성된 SoFi 스타디움 제작 팀을 공동 리드하며 3D 아트와 인터랙션 개발 간 KPI 충돌을 조정해 합의점을 도출했다. 목표로 하는 웹·모바일 환경에서 플레이 성능 테스트를 반복하고, 기존 유사 프로젝트의 데이터를 복기 해 각 개발 파트의 목표치를 합리적으로 조율했다.",
             "범위 내에서 게임 배경의 리소스 사용률을 관리했고, 그 결과 맵 접속 시간을 절반으로 단축하고(퀘스트3 상 20초 내 공간 재부팅), 인터랙션 요소들을 안정화 시킴으로써 완성도를 높였다.",
-            "이를 통해 체험관 내 가장 큰 비중을 차지하는 ‘Hype Room’의 데모를 성공적으로 보였고, RFP에 최종 선정되는 데 기여했다.",
+            "이를 통해 체험관 내 가장 큰 비중을 차지하는 'Hype Room'의 데모를 성공적으로 보였고, RFP에 최종 선정되는 데 기여했다.",
           ]
         } } },
       ]
@@ -514,7 +514,13 @@ const PROJECTS_SECONDARY = [
 const ALL_PROJECTS = [...PROJECTS, ...PROJECTS_SECONDARY];
 
 /* ================================================
-   VARIANT SYSTEM — controls project order per domain
+   VARIANT SYSTEM — controls project order AND
+   per-variant UI string overrides per domain.
+
+   overrides: { en: { key: value }, ko: { key: value } }
+   Any key here takes precedence over the global UI_STRINGS
+   table in i18n.js. Only specify keys that differ from the
+   global defaults — everything else falls through automatically.
    ================================================ */
 const VARIANTS = {
   default: {
@@ -522,24 +528,61 @@ const VARIANTS = {
     row2: ['wizard-of-oz-sphere', 'la-2028-olympics', 'welcome-to-oko', 'fallout-vault-33', 'fortnite-concert-snoopdogg-icespice', 'gap-cross-reality-retail'],
     label1: { en: 'Selected Work · 2026',              ko: '주요 작업 · 2026' },
     label2: { en: 'Selected Projects',                  ko: '다른 작업' },
+    // No overrides — global UI_STRINGS values are used as-is.
   },
   vfx: {
     row1: ['secret-garden', 'japanese-izakaya', 'cyberpunk-seoul', 'sienar-chall-utilipede', 'vintage-telephone', 'espresso-machine'],
     row2: ['wizard-of-oz-sphere', 'fortnite-concert-snoopdogg-icespice', 'la-2028-olympics', 'welcome-to-oko', 'fallout-vault-33', 'gap-cross-reality-retail'],
     label1: { en: '3D · Environments & Animation · 2026', ko: '3D · 환경 & 애니메이션 · 2026' },
     label2: { en: 'Selected Projects',                    ko: '다른 작업' },
+    overrides: {
+      en: {
+        siteTitle:    'Doyeon Kim <em>—</em> 3D Artist',
+        siteTagline:  '3D Environments · VFX · Virtual Production',
+        aboutHeading: 'Doyeon Kim <em>—</em> 3D Artist',
+      },
+      ko: {
+        siteTitle:    '김도연 <em>—</em> 3D 아티스트',
+        siteTagline:  '3D 환경 · VFX · 버추얼 프로덕션',
+        aboutHeading: '김도연 <em>—</em> 3D 아티스트',
+      },
+    },
   },
   lbe: {
     row1: ['wizard-of-oz-sphere', 'la-2028-olympics', 'welcome-to-oko', 'fallout-vault-33', 'fortnite-concert-snoopdogg-icespice', 'gap-cross-reality-retail'],
     row2: ['secret-garden', 'japanese-izakaya', 'cyberpunk-seoul', 'sienar-chall-utilipede', 'vintage-telephone', 'espresso-machine'],
     label1: { en: 'Featured Project Contributions',       ko: '주요 작업' },
     label2: { en: 'Selected Work · 2026',                 ko: '주요 참여 프로젝트' },
+    overrides: {
+      en: {
+        siteTitle:    'Doyeon Kim <em>—</em> 3D Designer',
+        siteTagline:  '3D Content · 3D Architecture · Immersive Entertainment',
+        aboutHeading: 'Doyeon Kim <em>—</em> 3D Designer',
+      },
+      ko: {
+        siteTitle:    '김도연 <em>—</em> 공간 디자이너',
+        siteTagline:  '3D 콘텐츠 · 공간 디자인 · 이머시브 엔터테인먼트',
+        aboutHeading: '김도연 <em>—</em> 공간 디자이너',
+      },
+    },
   },
   game: {
     row1: ['cyberpunk-seoul', 'sienar-chall-utilipede', 'japanese-izakaya', 'secret-garden', 'vintage-telephone', 'espresso-machine'],
     row2: ['fallout-vault-33', 'fortnite-concert-snoopdogg-icespice', 'wizard-of-oz-sphere', 'la-2028-olympics', 'welcome-to-oko', 'gap-cross-reality-retail'],
     label1: { en: 'Game Environment Art · 2026',          ko: '게임 환경 아트 · 2026' },
     label2: { en: 'Selected Projects',                    ko: '다른 작업' },
+    overrides: {
+      en: {
+        siteTitle:    'Doyeon Kim <em>—</em> Environment Artist',
+        siteTagline:  'Game Environments · Props · Real-Time Art',
+        aboutHeading: 'Doyeon Kim <em>—</em> Environment Artist',
+      },
+      ko: {
+        siteTitle:    '김도연 <em>—</em> 환경 아티스트',
+        siteTagline:  '게임 환경 · 프롭 · 리얼타임 아트',
+        aboutHeading: '김도연 <em>—</em> 환경 아티스트',
+      },
+    },
   },
 };
 
