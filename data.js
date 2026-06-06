@@ -20,6 +20,7 @@ const PROJECTS = [
     role: { en: "Full Environment — Modelling, Materials, Lighting", ko: "환경 전반 — 모델링, 머티리얼, 라이팅" },
     tags: { en: ["hard-surface modeling", "organic modeling", "game ready", "photogrammetry"], ko: ["하드서페이스 모델링", "오가닉 모델링", "game ready", "포토그래메트리"] },
     thumb: "sg-03.jpg",
+    logo: "unreal_logo.png",
     images: [
       { src: "sg-01.jpg", caption: { en: "Establishing shot — fountain and cloister", ko: "전경 — 분수와 회랑" } },
       { src: "sg-02.jpg", caption: { en: "Cupid statue — hero closeup", ko: "큐피드 조각상 — 히어로 클로즈업" } },
@@ -48,12 +49,14 @@ const PROJECTS = [
     tag: { en: "Star Wars, Vehicle", ko: "스타워즈, 비히클" },
     wip: false,
     description: { en: "A hard-surface study of the Sienar-Chall Utilipede Transport — a Star Wars canon utility freighter. Focus on mechanical paneling, weathered industrial metal, and faithful silhouette work from reference.", 
-    ko: "올란도 디즈니 월드에 설치된 스타워즈 우주선. 버추얼 프로덕션용으로 제작. '시나르-챌 유틸리피드 트랜스포트'의 3D 모델링. SciFi 풍의 패널링, 풍화된 메탈, 레퍼런스에 충실한 프로젝트." },
+    ko: "올란도 디즈니 월드에 설치된 스타워즈 우주선 시나르-챌을 게임용 에셋으로 제작. 서브스턴스 3D 디자이너와 페인터를 사용해 SciFi 풍의 패널링을 재현한 프로젝트." },
     year: "2026",
     software: "Maya · Substance 3D Painter · Substance game ready · Photoshop · Marmoset",
     role: { en: "Modelling, Texturing", ko: "모델링, 텍스처링" },
     tags: { en: ["Star Wars", "hard-surface modeling", "mechanics", "sci-fi vehicle", "game ready"], ko: ["스타워즈", "하드서페이스 모델링", "메커닉", "SF", "game ready"] },
     thumb: "sn-01.jpg",
+    logo: "star_wars_fanart_logo.png",
+    logoScale: 3.6,
     images: [
       { src: "sn-01.jpg", caption: { en: "Hero render — Sienar-Chall Utilipede Transport", ko: "히어로 렌더 — 시나르-챌 유틸리피드 트랜스포트" } },
     ]
@@ -103,6 +106,7 @@ const PROJECTS = [
     role: { en: "Full Environment — Modelling, Materials, Lighting", ko: "환경 전반 — 모델링, 머티리얼, 라이팅" },
     tags: { en: ["hard-surface modeling", "game ready", "VR"], ko: ["하드서페이스 모델링", "game ready", "VR"] },
     thumb: "jb-01.jpg",
+    logo: "unreal_logo.png",
     images: [
       { src: "jb-01.jpg", caption: { en: "Establishing shot — bar interior", ko: "전경 — 바 내부" } },
       { src: "jb-02.jpg", caption: { en: "Espresso machine and tap handles", ko: "에스프레소 머신과 탭 핸들" } },
@@ -569,11 +573,13 @@ const VARIANTS = {
         siteTitle:    'Doyeon Kim <em>—</em> 3D Spatial Designer',
         siteTagline:  '3D Content · 3D Architecture · Immersive Entertainment',
         aboutHeading: 'Doyeon Kim <em>—</em> 3D Spatial Designer',
+        aboutIntro:   '5-year designer who has contributed to 3D content production across games, virtual production, and e-commerce at Magnopus, founded by Oscar-winning VFX artist Ben Grossmann. I&rsquo;ve worked on projects spanning the Las Vegas Sphere, Fortnite concerts, and the LA 2028 Olympics Experience Center — from 3D modelling to large-scale spatial design — pushing the boundaries of immersive entertainment.',
       },
       ko: {
         siteTitle:    '김도연 <em>—</em> 3D 공간 디자이너',
         siteTagline:  '3D 콘텐츠 · 공간 디자인 · 이머시브 엔터테인먼트',
         aboutHeading: '김도연 <em>—</em> 3D 공간 디자이너',
+        aboutIntro:   '5년 차 디자이너로서, 오스카 시각효과상 수상자 Ben Grossmann이 설립한 Magnopus에서 게임, 버추얼 프로덕션, 이커머스 등 다양한 분야의 3D 콘텐츠 제작에 참여했습니다. 또한 라스베이거스 스피어, Fortnite 콘서트, 2028 LA 올림픽 체험 센터 등 다양한 프로젝트에서 3D 모델링부터 대규모 공간 제작까지 수행하며, 이머시브 엔터테인먼트의 경계를 확장하는 작업에 기여했습니다.',
       },
     },
   },

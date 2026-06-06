@@ -8,16 +8,21 @@ function renderProjectsInto(grid, list) {
     const media = p.thumbVideo
       ? `<video src="videos/${p.thumbVideo}" poster="images/${p.thumb}" autoplay muted loop playsinline preload="metadata"></video>`
       : `<img src="images/${p.thumb}" alt="${name}" loading="lazy" />`;
-    return `
+    const logo = p.logo
+      ? `<img class="project-logo" src="images/${p.logo}" alt="" aria-hidden="true" style="${p.logoScale ? `--logo-scale: ${p.logoScale};` : ''}" />`
+      : '';    return `
       <button class="project-card" onclick="openProject('${p.id}')" aria-label="Open ${name}">
         <div class="project-thumb">${media}</div>
+        ${logo}
         <div class="project-meta">
           <div class="project-name">${name}</div>
           <div class="project-tag ${p.wip ? 'wip' : ''}">${tag}</div>
         </div>
       </button>`;
   }).join('');
+  grid.querySelectorAll('.project-card').forEach(applyLogoColorFromThumb);
 }
+
 
 function sortVariantProjects(projects) {
   return typeof variantSort === 'function' ? variantSort(projects) : projects;
@@ -53,11 +58,14 @@ function openProject(id, push = true) {
   const tagsRow = tagsString
     ? `<div>${ui('specTags')} / <span>${tagsString}</span></div>`
     : '';
-  document.getElementById('detail-specs').innerHTML = `
-    <div>${ui('specYear')} / <span>${t(p.year)}</span></div>
+  const clientRows = isSecondaryRow
+    ? `
     <div>${ui('specClient')} / <span>${t(p.client)}</span></div>
     <div>${ui('specExternalPartner')} / <span>${t(p.externalPartner)}</span></div>
-    <div>${ui('specStatus')} / <span>${t(p.status)}</span></div>
+    <div>${ui('specStatus')} / <span>${t(p.status)}</span></div>`
+    : '';
+  document.getElementById('detail-specs').innerHTML = `
+    <div>${ui('specYear')} / <span>${t(p.year)}</span></div>${clientRows}
     <div>${ui('specSoftware')} / <span>${t(p.software)}</span></div>
     <div>${ui('specRole')} / <span>${t(p.role)}</span></div>
     ${tagsRow}
@@ -153,4 +161,34 @@ function openProject(id, push = true) {
   window.scrollTo({ top: 0, behavior: 'instant' });
 
   if (push) history.pushState({ view: 'project', id }, '', `#${id}`);
+}
+
+function applyLogoColorFromThumb(card) {
+  const thumb = card.querySelector('.project-thumb img');
+  const logo  = card.querySelector('.project-logo');
+  if (!thumb || !logo) return;
+
+  const sample = () => {
+    const canvas = document.createElement('canvas');
+    canvas.width  = 1;
+    canvas.height = 1;
+    const ctx = canvas.getContext('2d');
+    try {
+      ctx.drawImage(thumb, 0, 0, thumb.naturalWidth, thumb.naturalHeight, 0, 0, 1, 1);
+      const [r, g, b] = ctx.getImageData(0, 0, 1, 1).data;
+      // Perceived brightness (ITU-R BT.601)
+      const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+      if      (brightness > 220) logo.style.filter = 'brightness(0) drop-shadow(0 2px 8px rgba(255,255,255,0.3))';
+      else if (brightness > 160) logo.style.filter = 'brightness(0) invert(0.45) drop-shadow(0 2px 8px rgba(0,0,0,0.4))';
+      else                       logo.style.filter = 'brightness(0) invert(1) drop-shadow(0 2px 8px rgba(0,0,0,0.5))';  
+    } catch (e) {
+      // Cross-origin fallback — keep CSS default
+    }
+  };
+
+  if (thumb.complete && thumb.naturalWidth) {
+    sample();
+  } else {
+    thumb.addEventListener('load', sample, { once: true });
+  }
 }

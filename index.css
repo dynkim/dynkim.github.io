@@ -32,6 +32,9 @@
   --font-sans-ko:    'Pretendard Variable', Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', system-ui, sans-serif;
 
   --page-padding: clamp(24px, 4vw, 64px);
+
+  /* ... existing tokens ... */
+  --logo-scale: 2;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -374,7 +377,18 @@ html[lang="ko"] .resume-cta {
   color: var(--text-dim);
   white-space: nowrap;
 }
-.project-tag.wip { color: var(--accent); }
+.project-tag.wip { color: var(--accent); 
+}
+.project-logo {
+  position: absolute;
+  top: clamp(16px, 2vw, 28px);
+  left: clamp(16px, 2vw, 28px);
+  width: calc(clamp(52px, 7vw, 96px) * var(--logo-scale));
+  height: auto;
+  z-index: 3;
+  pointer-events: none;
+  /*filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.5));*/
+}
 
 /* =========================================
     SCROLL ARROWS — overlay buttons on horizontal galleries
@@ -792,13 +806,22 @@ html[lang="en"] .gallery-text p:first-child::first-letter {
   font-size: clamp(40px, 5vw, 72px);
   font-weight: 400;
   letter-spacing: -0.015em;
-  line-height: 1;
+  line-height: 1.1;        /* was 1 — gives room now that it's two lines */
+  text-wrap: balance;      /* tidies the title if it wraps on narrow screens */
   margin-bottom: 40px;
 }
+
+/* Break after the em-dash: name + dash on line 1, title on line 2 */
+.about-heading em::after {
+  content: "\A";
+  white-space: pre;
+}
+
 .about-heading em {
   font-style: italic;
   color: var(--accent);
 }
+
 .about-avatar {
   width: 256px;
   height: 256px;
