@@ -133,3 +133,63 @@ function setupAllScrollArrows() {
   );
   // Gallery is now vertical; no scroll arrows needed there.
 }
+
+function setupAutoScroll(grid, { speed = 0.35, resumeDelay = 500 } = {}) {
+  if (!grid) return;
+  if (grid._autoScrollStop) grid._autoScrollStop();
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  grid.style.scrollBehavior = 'auto';
+
+  // Remove stale clones
+  grid.querySelectorAll('[data-clone]').forEach(n => n.remove());
+
+  const originals = Array.from(grid.children);
+  console.log('[autoScroll] grid:', grid.id, 'originals:', originals.length, 'scrollWidth:', grid.scrollWidth);
+  if (!originals.length) return;
+
+  originals.forEach(node => {
+    const clone = node.cloneNode(true);
+    clone.setAttribute('aria-hidden', 'true');
+    clone.dataset.clone = '1';
+    grid.appendChild(clone);
+  });
+  grid.querySelectorAll('.project-card').forEach(applyLogoColorFromThumb);
+
+  let paused = false;
+  let resumeTimer = null;
+  let raf;
+
+  const tick = () => {
+    if (!paused && !grid.classList.contains('dragging')) {
+      const half = grid.scrollWidth / 2;
+      grid.scrollLeft += speed;
+      if (grid.scrollLeft >= half) grid.scrollLeft -= half;
+      if (grid.scrollLeft < 0)     grid.scrollLeft += half;
+    }
+    raf = requestAnimationFrame(tick);
+  };
+
+  raf = requestAnimationFrame(tick);
+
+  const pause = () => {
+    clearTimeout(resumeTimer);
+    paused = true;
+  };
+  const resume = () => {
+    clearTimeout(resumeTimer);
+    resumeTimer = setTimeout(() => { paused = false; }, resumeDelay);
+  };
+
+  grid.addEventListener('pointerenter', pause);
+  grid.addEventListener('pointerleave', resume);
+
+  grid._autoScrollStop = () => {
+    cancelAnimationFrame(raf);
+    clearTimeout(resumeTimer);
+    grid.removeEventListener('pointerenter', pause);
+    grid.removeEventListener('pointerleave', resume);
+    grid.querySelectorAll('[data-clone]').forEach(n => n.remove());
+    delete grid._autoScrollStop;
+  };
+}
