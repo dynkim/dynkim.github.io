@@ -8,12 +8,19 @@ function renderProjectsInto(grid, list) {
     const media = p.thumbVideo
       ? `<video src="videos/${p.thumbVideo}" poster="images/${p.thumb}" autoplay muted loop playsinline preload="metadata"></video>`
       : `<img src="images/${p.thumb}" alt="${name}" loading="lazy" />`;
+    const logoFilter = p.logoWhite ? 'filter: brightness(0) invert(1);' : '';
+    const logoRightFilter = p.logoRightWhite ? 'filter: brightness(0) invert(1);' : '';
     const logo = p.logo
-      ? `<img class="project-logo" src="images/${p.logo}" alt="" aria-hidden="true" style="${p.logoScale ? `--logo-scale: ${p.logoScale};` : ''}" />`
-      : '';    return `
+      ? `<img class="project-logo" src="images/${p.logo}" alt="" aria-hidden="true" style="${p.logoScale ? `--logo-scale: ${p.logoScale};` : ''}${logoFilter}" ${p.logoWhite ? 'data-force-white="1"' : ''}/>`
+      : '';    
+    const logoRight = p.logoRight
+      ? `<img class="project-logo project-logo-right" src="images/${p.logoRight}" alt="" aria-hidden="true" style="${p.logoRightScale ? `--logo-scale: ${p.logoRightScale};` : ''}${logoRightFilter}" />`
+      : '';      
+      return `
       <button class="project-card" onclick="openProject('${p.id}')" aria-label="Open ${name}">
         <div class="project-thumb">${media}</div>
         ${logo}
+        ${logoRight}
         <div class="project-meta">
           <div class="project-name">${name}</div>
           <div class="project-tag ${p.wip ? 'wip' : ''}">${tag}</div>
@@ -167,6 +174,7 @@ function applyLogoColorFromThumb(card) {
   const thumb = card.querySelector('.project-thumb img');
   const logo  = card.querySelector('.project-logo');
   if (!thumb || !logo) return;
+  if (logo.dataset.forceWhite) return;
 
   const sample = () => {
     const canvas = document.createElement('canvas');

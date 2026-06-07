@@ -56,7 +56,6 @@ const PROJECTS = [
     tags: { en: ["Star Wars", "hard-surface modeling", "mechanics", "sci-fi vehicle", "game ready"], ko: ["스타워즈", "하드서페이스 모델링", "메커닉", "SF", "game ready"] },
     thumb: "sn-01.jpg",
     logo: "star_wars_fanart_logo.png",
-    logoScale: 3.6,
     images: [
       { src: "sn-01.jpg", caption: { en: "Hero render — Sienar-Chall Utilipede Transport", ko: "히어로 렌더 — 시나르-챌 유틸리피드 트랜스포트" } },
     ]
@@ -181,6 +180,8 @@ const PROJECTS_SECONDARY = [
     role: { en: "3D Artist — Spatial Design, BIM Optimization, Digital Twin", ko: "3D 아티스트 — 공간 디자인, BIM 데이터 최적화, 디지털 트윈" },
     tags: { en: ["hard-surface modeling", "AR/VR", "game ready"], ko: ["하드서페이스 모델링", "AR/VR", "game ready"] },
     thumb: "spwz-01.jpg",
+    logo: "sphere_logo.png",
+    logoWhite: "sphere_logo_white.png",
     images: [
       {
         summary: true,
@@ -364,6 +365,7 @@ const PROJECTS_SECONDARY = [
     role: { en: "3D Artist — Environment, Material Library, Workflow", ko: "3D 아티스트 — 환경, 머티리얼 라이브러리, 워크플로우" },
     tags: { en: ["hard-surface modeling", "futuristic", "AR/VR", "game ready"], ko: ["하드서페이스 모델링", "퓨처리스틱", "AR/VR", "game ready"] },
     thumb: "welcomeoko-01.jpg",
+    logo: "oko_logo.png",
     images: [
       { summary: true, text: { en: "Welcome to OKO is the tutorial space for Magnopus' proprietary cross-reality platform, OKO—a futuristic museum designed to introduce new users to the studio's work and storytelling lineage. As a 3D Artist at Magnopus, I translated the concept into a fully realized environment and helped establish the workflow that supported the platform's wider rollout.", 
         ko: "핵심 참여 내용: 3D 아티스트로서 공간 전체 디자인 및 제작을 담당. Unreal 5을 기반으로 웹/모바일/VR 클라이언트 어디서든 탐험하고 상호작용할 수 있는 cross-platform 공간을 구현. Amazon Studios, Epic Games, Gensler, Deloitte 등 10여 개 이상의 글로벌 조직에 OKO를 소개하는 대표 공간으로 활용 중이다." } },
@@ -408,6 +410,10 @@ const PROJECTS_SECONDARY = [
     role: { en: "3D Artist — Asset Optimization", ko: "3D 아티스트 — 에셋 최적화" },
     tags: { en: ["hard-surface modeling", "sci-fi", "AR/VR", "game ready"], ko: ["하드서페이스 모델링", "SF", "AR/VR", "game ready"] },
     thumb: "flout-01.jpg",
+    logo: "fallout_logo.png",
+    logoWhite: true,
+    logoRight: "amazon_logo.png",
+    logoRightWhite: true,    
     images: [
       { summary: true, text: { en: "Before Amazon Studios commissioned Magnopus to launch The World of Fallout—an interactive web experience timed to the show's second season—the OKO team built a Vault 33 sizzle to anchor the pitch. As a 3D Artist on the OKO side, I optimized assets pulled from the series and helped stress-test whether the platform could carry Fallout's world at game-grade fidelity, straight into a web browser and on AR.", 
         ko: "핵심 참여 내용: 3D 아티스트로서 고사양 프로덕션 에셋을 웹·AR 환경에 최적화하고, 원작 특유의 포스트 아포칼립스 무드와 시네마틱 퀄리티를 유지한 채 브라우저에서 실시간으로 탐험 가능한 〈Fallout〉 세계를 구현하는 작업을 담당했다." } },
@@ -491,6 +497,7 @@ const PROJECTS_SECONDARY = [
     role: { en: "3D Artist — Environment, Materials, Optimization", ko: "3D 아티스트 — 환경, 머티리얼, 최적화" },
     tags: { en: ["hard-surface modeling", "cross-reality", "fortnite"], ko: ["하드서페이스 모델링", "크로스 리얼리티", "Fortnite"] },
     thumb: "fortnite-01.jpg",
+    logo: "fortnite_logo.png",  
     images: [
       { summary: true, text: { en: "", 
         ko: "핵심 참여 내용: 5인 규모의 OKO 포트나이트 TF팀에 3D 아티스트로 참여하여, 뉴욕 타임스퀘어 기반의 게임 공간 제작 담당 및 실시간 공연 시뮬레이션을 위한 파이프라인 구축에 참여했다. " } },
@@ -602,9 +609,8 @@ const VARIANTS = {
     },
   },
   environment: {
-    row1: ['secret-garden', 'cyberpunk-seoul', 'japanese-izakaya', 'wizard-of-oz-sphere', 'la-2028-olympics', 'welcome-to-oko'],
-    row2: ['fallout-vault-33', 'gap-cross-reality-retail', 'fortnite-concert-snoopdogg-icespice', 'sienar-chall-utilipede', 'vintage-telephone', 'espresso-machine'],
-    label1: { en: 'Environment Design · 2026',            ko: '환경 디자인 · 2026' },
+    row1: ['fallout-vault-33', 'welcome-to-oko', 'fortnite-concert-snoopdogg-icespice', 'wizard-of-oz-sphere', 'la-2028-olympics', 'gap-cross-reality-retail'],
+    row2: ['japanese-izakaya', 'sienar-chall-utilipede', 'cyberpunk-seoul', 'secret-garden', 'vintage-telephone', 'espresso-machine'],    label1: { en: 'Environment Design · 2026',            ko: '환경 디자인 · 2026' },
     label2: { en: 'Selected Projects',                    ko: '다른 작업' },
     overrides: {
       en: {
