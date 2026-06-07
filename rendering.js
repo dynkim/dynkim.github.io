@@ -110,9 +110,8 @@ function openProject(id, push = true) {
         const listCls = bulleted ? 'labeled-items bulleted' : 'labeled-items';
         const titleHtml = title ? `<p class="labeled-title">${title}</p>` : '';
         const listHtml = items.map(i => `<li>${i}</li>`).join('');
-        return `<div class="${cls} labeled-block">${titleHtml}<ul class="${listCls}">${listHtml}</ul></div>`;
+        return `<div class="${cls} labeled-block"><div class="labeled-block-inner">${titleHtml}<ul class="${listCls}">${listHtml}</ul></div></div>`;
       }
-
       // Default text rendering path (string or array of strings)
       const paras = Array.isArray(resolved) ? resolved : [resolved];
       const emphasizeHead = para => {

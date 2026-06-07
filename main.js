@@ -1,7 +1,6 @@
 /* ================================================
    MAIN — initialization and routing hook
    ================================================ */
-// FIND:
 function init() {
   applyI18n();
   renderHome();
@@ -19,4 +18,12 @@ function applyVariantResume() {
     a.href     = file;
     a.download = file;
   });
+}
+
+window.addEventListener('popstate', handleRoute);
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', init);
+} else {
+  init();
 }

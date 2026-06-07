@@ -1143,3 +1143,23 @@ html[lang="ko"] .project-specs span {
   font-weight: 300;
   font-size: 1.4em;
 }
+
+/* In the summary+labeled-block combo, the title should sit on its own
+   full-width line above the bulleted items, not compete with the inline-block ul */
+.gallery-text.summary.labeled-block .labeled-title {
+  display: block;
+  width: 100%;
+}
+
+/* Ensures title + bullets stack vertically inside summary quote frame */
+.labeled-block-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.labeled-block-inner .labeled-title {
+  margin-bottom: 0.8em;
+}
+.labeled-block-inner .labeled-items.bulleted {
+  display: inline-block; /* keep left-aligned shrink-wrap */
+}
