@@ -601,6 +601,24 @@ const VARIANTS = {
       },
     },
   },
+  environment: {
+    row1: ['secret-garden', 'cyberpunk-seoul', 'japanese-izakaya', 'wizard-of-oz-sphere', 'la-2028-olympics', 'welcome-to-oko'],
+    row2: ['fallout-vault-33', 'gap-cross-reality-retail', 'fortnite-concert-snoopdogg-icespice', 'sienar-chall-utilipede', 'vintage-telephone', 'espresso-machine'],
+    label1: { en: 'Environment Design · 2026',            ko: '환경 디자인 · 2026' },
+    label2: { en: 'Selected Projects',                    ko: '다른 작업' },
+    overrides: {
+      en: {
+        siteTitle:    'Doyeon Kim <em>—</em> Environment Designer',
+        siteTagline:  'Environments · Worldbuilding · Real-Time Spaces',
+        aboutHeading: 'Doyeon Kim <em>—</em> Environment Designer',
+      },
+      ko: {
+        siteTitle:    '김도연 <em>—</em> 환경 디자이너',
+        siteTagline:  '환경 · 월드빌딩 · 리얼타임 공간',
+        aboutHeading: '김도연 <em>—</em> 환경 디자이너',
+      },
+    },
+  },
 };
 
 function detectVariant() {
@@ -609,9 +627,10 @@ function detectVariant() {
   const hash = window.location.hash.toLowerCase().replace(/^#/, '');
 
   let variant = null;
-  if      (host.includes('vfx')  || path.startsWith('/vfx')  || hash === 'vfx')  variant = 'vfx';
-  else if (host.includes('lbe')  || path.startsWith('/lbe')  || hash === 'lbe')  variant = 'lbe';
-  else if (host.includes('game') || path.startsWith('/game') || hash === 'game') variant = 'game';
+  if      (host.includes('vfx')         || path.startsWith('/vfx')         || hash === 'vfx')         variant = 'vfx';
+  else if (host.includes('lbe')         || path.startsWith('/lbe')         || hash === 'lbe')         variant = 'lbe';
+  else if (host.includes('game')        || path.startsWith('/game')        || hash === 'game')        variant = 'game';
+  else if (host.includes('environment') || path.startsWith('/environment') || hash === 'environment') variant = 'environment';
 
   if (variant) {
     try { sessionStorage.setItem('variant', variant); } catch (e) {}
