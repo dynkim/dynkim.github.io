@@ -612,18 +612,18 @@ const VARIANTS = {
     row1: ['fallout-vault-33', 'welcome-to-oko', 'fortnite-concert-snoopdogg-icespice', 'wizard-of-oz-sphere', 'la-2028-olympics', 'gap-cross-reality-retail'],
     row2: ['japanese-izakaya', 'sienar-chall-utilipede', 'cyberpunk-seoul', 'secret-garden', 'vintage-telephone', 'espresso-machine'],    label1: { en: 'Environment Design · 2026',            ko: '환경 디자인 · 2026' },
     label2: { en: 'Selected Projects',                    ko: '다른 작업' },
-    overrides: {
-      en: {
-        siteTitle:    'Doyeon Kim <em>—</em> Environment Designer',
-        siteTagline:  'Environments · Worldbuilding · Real-Time Spaces',
-        aboutHeading: 'Doyeon Kim <em>—</em> Environment Designer',
-      },
-      ko: {
-        siteTitle:    '김도연 <em>—</em> 환경 디자이너',
-        siteTagline:  '환경 · 월드빌딩 · 리얼타임 공간',
-        aboutHeading: '김도연 <em>—</em> 환경 디자이너',
-      },
+  overrides: {
+    en: {
+      siteTitle:    'Doyeon Kim <em>—</em> 3D Environment Designer',
+      siteTagline:  'Game Environments · Worldbuilding · VR/AR',
+      aboutHeading: 'Doyeon Kim <em>—</em> 3D Environment Designer',
     },
+    ko: {
+      siteTitle:    '김도연 <em>—</em> 3D 배경 디자이너',
+      siteTagline:  '게임 배경 · 월드빌딩 · VR/AR',
+      aboutHeading: '김도연 <em>—</em> 3D 배경 디자이너',
+    },
+    },  
   },
 };
 
