@@ -626,7 +626,7 @@ const VARIANTS = {
       },
     },
   },
-  gamemodeler: {
+  modeler3D: {
     row1: ['cyberpunk-seoul', 'sienar-chall-utilipede', 'japanese-izakaya', 'secret-garden', 'vintage-telephone', 'espresso-machine'],
     row2: ['fallout-vault-33', 'fortnite-concert-snoopdogg-icespice', 'wizard-of-oz-sphere', 'la-2028-olympics', 'welcome-to-oko', 'gap-cross-reality-retail'],
     label1: { en: 'Game Art · 2026',                     ko: '게임 아트 · 2026' },
@@ -654,10 +654,9 @@ function detectVariant() {
   let variant = null;
   if      (host.includes('vfx')         || path.startsWith('/vfx')         || hash === 'vfx')         variant = 'vfx';
   else if (host.includes('lbe')         || path.startsWith('/lbe')         || hash === 'lbe')         variant = 'lbe';
-  else if (host.includes('game')        || path.startsWith('/game')        || hash === 'game')        variant = 'game';
   else if (host.includes('environment') || path.startsWith('/environment') || hash === 'environment') variant = 'environment';
-  else if (host.includes('gamemodeler') || path.startsWith('/gamemodeler') || hash === 'gamemodeler') variant = 'gamemodeler';
-  if (variant) {
+  else if (host.includes('modeler3D')   || path.startsWith('/modeler3D')   || hash === 'modeler3D')   variant = 'modeler3D';
+  else if (host.includes('game')        || path.startsWith('/game')        || hash === 'game')        variant = 'game';  if (variant) {
     try { sessionStorage.setItem('variant', variant); } catch (e) {}
     return variant;
   }
