@@ -626,6 +626,24 @@ const VARIANTS = {
       },
     },
   },
+  gamemodeler: {
+    row1: ['cyberpunk-seoul', 'sienar-chall-utilipede', 'japanese-izakaya', 'secret-garden', 'vintage-telephone', 'espresso-machine'],
+    row2: ['fallout-vault-33', 'fortnite-concert-snoopdogg-icespice', 'wizard-of-oz-sphere', 'la-2028-olympics', 'welcome-to-oko', 'gap-cross-reality-retail'],
+    label1: { en: 'Game Art · 2026',                     ko: '게임 아트 · 2026' },
+    label2: { en: 'Selected Projects',                    ko: '다른 작업' },
+    overrides: {
+      en: {
+        siteTitle:    'Doyeon Kim <em>—</em> 3D Modeler',
+        siteTagline:  'Props · Hard Surface · Game-Ready Assets',
+        aboutHeading: 'Doyeon Kim <em>—</em> 3D Modeler',
+      },
+      ko: {
+        siteTitle:    '김도연 <em>—</em> 3D 모델러',
+        siteTagline:  '프롭 · 하드서페이스 · 게임 레디 에셋',
+        aboutHeading: '김도연 <em>—</em> 3D 모델러',
+      },
+    },
+  },
 };
 
 function detectVariant() {
@@ -638,7 +656,7 @@ function detectVariant() {
   else if (host.includes('lbe')         || path.startsWith('/lbe')         || hash === 'lbe')         variant = 'lbe';
   else if (host.includes('game')        || path.startsWith('/game')        || hash === 'game')        variant = 'game';
   else if (host.includes('environment') || path.startsWith('/environment') || hash === 'environment') variant = 'environment';
-
+  else if (host.includes('gamemodeler') || path.startsWith('/gamemodeler') || hash === 'gamemodeler') variant = 'gamemodeler';
   if (variant) {
     try { sessionStorage.setItem('variant', variant); } catch (e) {}
     return variant;
@@ -648,4 +666,5 @@ function detectVariant() {
     if (saved && VARIANTS[saved]) return saved;
   } catch (e) {}
   return 'default';
-}
+
+};

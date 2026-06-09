@@ -12,8 +12,12 @@ function init() {
 
 function applyVariantResume() {
   const variant = detectVariant();
-  if (variant !== 'environment') return;
-  const file = 'PDF/김도연 - 이력서 3D 배경 디자이너.pdf';
+  const files = {
+    environment: 'PDF/김도연 - 이력서 3D 배경 디자이너.pdf',
+    gamemodeler: 'PDF/김도연 - 이력서 게임 모델러.pdf',  // ← add this line
+  };
+  const file = files[variant];
+  if (!file) return;
   document.querySelectorAll('a.resume-btn, a.resume-cta').forEach(a => {
     a.href     = file;
     a.download = file;
