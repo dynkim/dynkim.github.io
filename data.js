@@ -580,7 +580,7 @@ const VARIANTS = {
         siteTitle:    'Doyeon Kim <em>—</em> 3D Spatial Designer',
         siteTagline:  '3D Content · 3D Architecture · Immersive Entertainment',
         aboutHeading: 'Doyeon Kim <em>—</em> 3D Spatial Designer',
-        aboutIntro:   '5-year designer who has contributed to 3D content production across games, virtual production, and e-commerce at Magnopus, founded by Oscar-winning VFX artist Ben Grossmann. I&rsquo;ve worked on projects spanning the Las Vegas Sphere, Fortnite concerts, and the LA 2028 Olympics Experience Center — from 3D modelling to large-scale spatial design — pushing the boundaries of immersive entertainment.',
+        aboutIntro:   '5-year designer who has contributed to 3D content production across games, virtual production, and e-commerce at Magnopus, founded by Oscar-winning VFX artist Ben Grossmann. I have worked on projects spanning the Las Vegas Sphere, Fortnite concerts, and the LA 2028 Olympics Experience Center — from 3D modelling to large-scale spatial design — pushing the boundaries of immersive entertainment.',
       },
       ko: {
         siteTitle:    '김도연 <em>—</em> 3D 공간 디자이너',
@@ -626,21 +626,23 @@ const VARIANTS = {
       },
     },
   },
-  modeler3D: {
-    row1: ['cyberpunk-seoul', 'sienar-chall-utilipede', 'japanese-izakaya', 'secret-garden', 'vintage-telephone', 'espresso-machine'],
+  modeler3d: {
+    row1: ['sienar-chall-utilipede', 'cyberpunk-seoul', 'japanese-izakaya', 'secret-garden', 'vintage-telephone', 'espresso-machine'],
     row2: ['fallout-vault-33', 'fortnite-concert-snoopdogg-icespice', 'wizard-of-oz-sphere', 'la-2028-olympics', 'welcome-to-oko', 'gap-cross-reality-retail'],
     label1: { en: 'Game Art · 2026',                     ko: '게임 아트 · 2026' },
     label2: { en: 'Selected Projects',                    ko: '다른 작업' },
     overrides: {
       en: {
         siteTitle:    'Doyeon Kim <em>—</em> 3D Modeler',
-        siteTagline:  'Props · Hard Surface · Game-Ready Assets',
+        siteTagline:  'Realistic · Organic · Hard Surface · Game-Ready Assets',
         aboutHeading: 'Doyeon Kim <em>—</em> 3D Modeler',
+        aboutIntro:   'I am a 3D modeler specialising in environment art, props, and real-time workflows — from ZBrush and Maya to Unreal Engine. My work spans game-ready assets, full environments, and immersive spatial experiences, always with an eye for grounded, detail-driven design. I am currently based in Korea, working across personal projects, studio collaborations, and teaching 3D production.',    
       },
       ko: {
         siteTitle:    '김도연 <em>—</em> 3D 모델러',
-        siteTagline:  '프롭 · 하드서페이스 · 게임 레디 에셋',
+        siteTagline:  '리얼리스틱 · 오가닉 · 하드서페이스 · 게임 레디 에셋',
         aboutHeading: '김도연 <em>—</em> 3D 모델러',
+        aboutIntro:   '5년 차 3D 모델러로서, 오스카 시각효과상 수상자 Ben Grossmann이 설립한 Magnopus에서 게임, 버추얼 프로덕션, 이커머스 등 다양한 분야의 3D 콘텐츠 제작에 참여했습니다. 또한 라스베이거스 스피어, Fortnite 콘서트, 2028 LA 올림픽 체험 센터 등 다양한 프로젝트에서 3D 모델링부터 대규모 공간 제작까지 수행하며, 이머시브 엔터테인먼트의 경계를 확장하는 작업에 기여했습니다. ZBrush·Maya·Blender·Unreal Engine·Substance 3D를 사용하며 현재 개인 프로젝트, 스튜디오 협업, 강의를 병행하고 있습니다.',
       },
     },
   },
@@ -655,7 +657,7 @@ function detectVariant() {
   if      (host.includes('vfx')         || path.startsWith('/vfx')         || hash === 'vfx')         variant = 'vfx';
   else if (host.includes('lbe')         || path.startsWith('/lbe')         || hash === 'lbe')         variant = 'lbe';
   else if (host.includes('environment') || path.startsWith('/environment') || hash === 'environment') variant = 'environment';
-  else if (host.includes('modeler3D')   || path.startsWith('/modeler3D')   || hash === 'modeler3D')   variant = 'modeler3D';
+  else if (host.includes('modeler3d')   || path.startsWith('/modeler3d')   || hash === 'modeler3d')   variant = 'modeler3d';
   else if (host.includes('game')        || path.startsWith('/game')        || hash === 'game')        variant = 'game';  if (variant) {
     try { sessionStorage.setItem('variant', variant); } catch (e) {}
     return variant;

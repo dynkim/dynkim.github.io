@@ -18,7 +18,7 @@ const UI_STRINGS = {
     selectedProjects: 'Selected Projects',
     scrollHint:       'Scroll horizontally to see more work',
     aboutHeading:     'Doyeon Kim <em>—</em> 3D Designer',
-    aboutIntro:       'I am a 3D artist specialising in environment art, props, and real-time workflows — from ZBrush and Maya to Unreal Engine. My work spans game-ready assets, full environments, and immersive spatial experiences, always with an eye for grounded, detail-driven design. I&rsquo;m currently based in Korea, working across personal projects, studio collaborations, and teaching 3D production.',    
+    aboutIntro:       'I am a 3D artist specialising in environment art, props, and real-time workflows — from ZBrush and Maya to Unreal Engine. My work spans game-ready assets, full environments, and immersive spatial experiences, always with an eye for grounded, detail-driven design. I am currently based in Korea, working across personal projects, studio collaborations, and teaching 3D production.',    
     contactHeading:   'Let&rsquo;s <em>talk</em>',
     contactIntro:     'Open to freelance projects, studio roles, and collaborations. Feel free to reach out via email or LinkedIn.',
     contactEmail:     'Email',
@@ -67,7 +67,7 @@ const UI_STRINGS = {
   }
 };
 
-let currentLang = 'en';
+let currentLang = 'ko';  // default to Korean, will switch to English if browser lang is different or user toggles
 try {
   const saved = localStorage.getItem('lang');
   if (saved === 'en' || saved === 'ko') {

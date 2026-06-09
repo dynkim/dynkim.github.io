@@ -14,7 +14,7 @@ function applyVariantResume() {
   const variant = detectVariant();
   const files = {
     environment: 'PDF/김도연 - 이력서 3D 배경 디자이너.pdf',
-    modeler3D: 'PDF/김도연 - 이력서 게임 모델러.pdf',  // ← add this line
+    modeler3d: 'PDF/김도연 - 이력서 3D 모델러.pdf',  // ← add this line
   };
   const file = files[variant];
   if (!file) return;
