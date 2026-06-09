@@ -12,12 +12,25 @@ function init() {
 
 function applyVariantResume() {
   const variant = detectVariant();
+  // Resume file per variant + language. Anything not listed falls back to the
+  // Korean 공간디자이너 résumé that ships hardcoded in index.html.
+  const DEFAULT_RESUME = 'PDF/김도연-공간디자이너.pdf';
   const files = {
-    environment: 'PDF/김도연 - 이력서 3D 배경 디자이너.pdf',
-    modeler3d: 'PDF/김도연 - 이력서 3D 모델러.pdf',  // ← add this line
+    default: {
+      en: 'PDF/DOYEON_KIM_3D_Artist.pdf',
+      ko: DEFAULT_RESUME,
+    },
+    environment: {
+      en: 'PDF/김도연 - 이력서 3D 배경 디자이너.pdf',
+      ko: 'PDF/김도연 - 이력서 3D 배경 디자이너.pdf',
+    },
+    modeler3d: {
+      en: 'PDF/김도연 - 이력서 3D 모델러.pdf',
+      ko: 'PDF/김도연 - 이력서 3D 모델러.pdf',
+    },
   };
-  const file = files[variant];
-  if (!file) return;
+  const variantFiles = files[variant] || {};
+  const file = variantFiles[currentLang] || DEFAULT_RESUME;
   document.querySelectorAll('a.resume-btn, a.resume-cta').forEach(a => {
     a.href     = file;
     a.download = file;

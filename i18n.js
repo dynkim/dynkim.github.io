@@ -132,6 +132,7 @@ function setLang(lang) {
   currentLang = lang;
   try { localStorage.setItem('lang', lang); } catch (e) {}
   applyI18n();
+  if (typeof applyVariantResume === 'function') applyVariantResume();   // ← add this
   if (typeof renderHome === 'function') renderHome();
   const projectView = document.getElementById('view-project');
   if (projectView && projectView.classList.contains('active')) {

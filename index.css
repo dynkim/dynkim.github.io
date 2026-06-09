@@ -1193,7 +1193,7 @@ html[lang="ko"] .project-specs span {
 }
 
 .lang-toggle {
-  animation: langHint 1.6s ease-out 3;
+  animation: langHint 1.6s ease-out 5;
 }
 
 @media (prefers-reduced-motion: reduce) {
