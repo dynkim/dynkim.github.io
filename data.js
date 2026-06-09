@@ -535,8 +535,8 @@ const ALL_PROJECTS = [...PROJECTS, ...PROJECTS_SECONDARY];
    ================================================ */
 const VARIANTS = {
   default: {
-    row1: ['secret-garden', 'sienar-chall-utilipede', 'vintage-telephone', 'japanese-izakaya', 'espresso-machine', 'cyberpunk-seoul'],
-    row2: ['wizard-of-oz-sphere', 'la-2028-olympics', 'welcome-to-oko', 'fallout-vault-33', 'fortnite-concert-snoopdogg-icespice', 'gap-cross-reality-retail'],
+    row1: ['wizard-of-oz-sphere', 'la-2028-olympics', 'welcome-to-oko', 'fallout-vault-33', 'fortnite-concert-snoopdogg-icespice', 'gap-cross-reality-retail'],
+    row2: ['secret-garden', 'sienar-chall-utilipede', 'vintage-telephone', 'japanese-izakaya', 'espresso-machine', 'cyberpunk-seoul'],
     label1: { en: 'Selected Work · 2026',              ko: '주요 작업 · 2026' },
     label2: { en: 'Selected Projects',                  ko: '다른 작업' },
     overrides: {
