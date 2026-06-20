@@ -30,6 +30,25 @@ function renderProjectsInto(grid, list) {
   grid.querySelectorAll('.project-card').forEach(applyLogoColorFromThumb);
 }
 
+/* Exhibition poster strip — display-only, no detail view. */
+const POSTERS = [
+  'disorient-ringularity-전시-포스터.jpg',
+  'Love-Machine-전시-포스터.jpg',
+  'Mumbling-after-Silence-전시-포스터.jpg',
+  'tex-ture-2023-국제전-포스터.jpg',
+  'When-We-Become-You-and-I-Again-포스터.jpg',
+  '서울옥션블루-nft-작가-공모전-포스터.jpg',
+  '아르스-일렉트로니카-가든-서울-페스티벌-전시-포스터.jpg',
+  '인류세-내일-포스터.jpg',
+];
+
+function renderPosterStrip() {
+  const strip = document.getElementById('poster-strip');
+  if (!strip) return;
+  strip.innerHTML = POSTERS
+    .map(src => `<img src="images/${src}" alt="" loading="lazy" />`)
+    .join('');
+}
 
 function sortVariantProjects(projects) {
   return typeof variantSort === 'function' ? variantSort(projects) : projects;
@@ -45,6 +64,7 @@ function renderHome() {
   renderProjectsInto(document.getElementById('project-grid-3'), sortVariantProjects(row3));  
   const grid3el = document.getElementById('project-grid-3');
   if (grid3el) renderProjectsInto(grid3el, sortVariantProjects(row3));
+  renderPosterStrip();
     // Update section labels to match this variant + current language
   const l1 = document.querySelector('[data-i18n="selectedWork"]');
   const l2 = document.querySelector('[data-i18n="selectedProjects"]');
@@ -57,6 +77,7 @@ setTimeout(() => {
   setupAutoScroll(document.getElementById('project-grid'));
   setupAutoScroll(document.getElementById('project-grid-2'));
   setupAutoScroll(document.getElementById('project-grid-3'));
+  setupAutoScroll(document.getElementById('poster-strip'));
 }, 100);
 }
 

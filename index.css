@@ -1199,3 +1199,28 @@ html[lang="ko"] .project-specs span {
 @media (prefers-reduced-motion: reduce) {
   .lang-toggle { animation: none; }
 }
+
+/* ── Exhibition poster strip (display-only carousel) ── */
+.poster-strip-wrapper {
+  overflow: hidden;
+  width: 100%;
+  margin: 8px 0 32px;
+}
+.poster-strip {
+  display: flex;
+  gap: 16px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  padding: 0 24px;
+}
+.poster-strip::-webkit-scrollbar { display: none; }
+.poster-strip img {
+  height: var(--poster-h, 260px);
+  width: auto;
+  flex: 0 0 auto;
+  border-radius: 4px;
+  display: block;
+  user-select: none;
+  -webkit-user-drag: none;
+}
