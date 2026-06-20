@@ -42,6 +42,7 @@ function renderHome() {
   const row3 = (variant.row3 || []).map(id => ALL_PROJECTS.find(p => p.id === id)).filter(Boolean);
   renderProjectsInto(document.getElementById('project-grid'),   sortVariantProjects(row1));
   renderProjectsInto(document.getElementById('project-grid-2'), sortVariantProjects(row2));
+  renderProjectsInto(document.getElementById('project-grid-3'), sortVariantProjects(row3));  
   const grid3el = document.getElementById('project-grid-3');
   if (grid3el) renderProjectsInto(grid3el, sortVariantProjects(row3));
     // Update section labels to match this variant + current language

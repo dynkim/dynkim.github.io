@@ -561,6 +561,134 @@ const PROJECTS_DIGITALART = [
       } },
     ]
   },
+  {
+    id: "when-we-become-you-and-i-again",
+    name: { en: "When We Become You and I Again", ko: "When We Become You and I Again" },
+    tag: { en: "Projection Mapping · Installation", ko: "프로젝션 맵핑 · 설치" },
+    wip: false,
+    description: {
+      en: "Drift — a site-specific projection work on immigration, language loss, and the unstable state of being adrift.",
+      ko: "표류(Drift) — 이민의 삶과 모국어 상실, 그리고 '표류'라는 상태를 시각화한 장소 특정적 프로젝션 작업."
+    },
+    year: "2023",
+    software: "TouchDesigner · Unreal 5 · Projection Mapping",
+    role: { en: "Concept · 3D · Projection", ko: "기획 · 3D · 프로젝션" },
+    tags: {
+      en: ["Projection Mapping", "Media Art", "Installation"],
+      ko: ["프로젝션 맵핑", "미디어 아트", "설치"]
+    },
+    thumb: "youandme1.jpg",
+    images: [
+      { src: "youandme1.jpg", caption: { en: "", ko: "" } },
+      { text: {
+        en: "Drift is a work that unfolds the artist's experience of immigrant life in LA as a visual narrative of 'drifting' — a psychological and physical state.",
+        ko: "표류(Drift)는 작가가 LA에서 살아가며 체험한 이민의 삶을 '표류'라는 심리적·물리적 상태의 시각적 내러티브로 풀어낸 작업이다. 이민이 동반하는 상실 중 특히 모국어의 상실이 야기하는 불안정함이, 기존 문화에서는 느끼지 못했던 존재의 불완전성으로 이어지는 지점에 주목했다."
+      } },
+      { src: "youandme2.jpg", caption: { en: "", ko: "" } },
+      { text: {
+        en: "The countless lifeboats projection-mapped onto the floor, viewed closely, are made of the letters '우리' and 'we.'",
+        ko: "바닥에 프로젝션 맵핑된 무수한 구명정들은 가까이서 들여다보면 '우리'와 'we'라는 글자로 이루어져 있음을 확인할 수 있다. 알 수 없는 난파 현장에서 떠밀려온 이 글자의 구명정들은 한국 이민자뿐 아니라 세계 여러 나라에서 온 이민자들이 새로운 환경에 적응하며 겪는 문화·언어적 정체성의 혼란을 상징한다."
+      } },
+      { src: "youandme3.jpg", caption: { en: "", ko: "" } },
+      { text: {
+        en: "The roughly 10-minute looping video reveals the history of immigration as endlessly arriving waves, taking on a site-specific character that quietly commemorates those who left to put down new roots.",
+        ko: "약 10분간 반복되는 긴 루프 영상은 끊임없이 밀려오는 파도로 비유되는 이민의 역사를 시청각적으로 드러내며, 동시에 새로운 뿌리를 내리기 위해 떠나온 이들을 잔잔히 기념하는 장소 특정적 성격을 취한다."
+      } },
+    ]
+  },
+  {
+    id: "k-town-2023",
+    name: { en: "K-Town 2023", ko: "K-Town 2023" },
+    tag: { en: "Animation · Installation", ko: "애니메이션 · 설치" },
+    wip: false,
+    description: {
+      en: "Interviews with first-generation Korean immigrants in LA Koreatown, reconstructed as animated storefronts.",
+      ko: "LA 한인타운의 이민 1세대와의 인터뷰에서 출발해 스토어프론트를 애니메이션으로 재현한 작업."
+    },
+    year: "2023",
+    software: "Maya · Unreal 5 · After Effects",
+    role: { en: "Concept · 3D · Animation", ko: "기획 · 3D · 애니메이션" },
+    tags: {
+      en: ["Animation", "Media Art", "Installation"],
+      ko: ["애니메이션", "미디어 아트", "설치"]
+    },
+    thumb: "ktwon1.jpg",
+    images: [
+      { src: "ktwon1.jpg", caption: { en: "", ko: "" } },
+      { text: {
+        en: "K-Town began from conversations with first-generation immigrants the artist met at Korean markets, restaurants, and laundromats in LA Koreatown.",
+        ko: "케이타운(K-Town)은 작가가 LA Koreatown의 한인 마트, 음식점, 세탁소 등에서 만난 이민 1세대와의 대화에서 출발한 작업이다. 실제 인터뷰를 바탕으로 개인의 이민사와 자영업 과정에서 겪은 사건들을 애니메이션으로 재현하고, 이를 인터뷰 내러티브와 병치했다."
+      } },
+      { src: "ktwon2.jpg", caption: { en: "", ko: "" } },
+      { text: {
+        en: "Personal events at the storefronts they worked in or owned are rendered at a reduced scale, visualizing the distinctive yet universal experiences of LA's first-generation Korean immigrants in a more intimate, fragile form.",
+        ko: "이들이 근무하거나 소유한 스토어프론트(storefront)에서 벌어진 개인적 사건들을 실제 상점보다 축소된 스케일로 구현함으로써, LA 한인 이민 1세대가 지닌 차별적이면서도 보편적인 경험과 감정을 보다 친밀하고 연약한 형태로 시각화했다."
+      } },
+      { src: "ktwon3.jpg", caption: { en: "", ko: "" } },
+      { text: {
+        en: "At the same time, it reveals their solid, existential place and value in LA society in a monumental form, drawing empathy for a journey of making meaning through adaptation, compromise, and painful history.",
+        ko: "동시에 이들이 LA 사회에서 차지하는 단단하고 실존적인 위치와 가치를 기념비적 형태로 드러내며, 현지 적응과 타협, 그리고 아픈 역사를 딛고 존재의 의미를 만들어가는 여정에 대한 공감을 이끌어내고자 했다."
+      } },
+    ]
+  },
+  {
+    id: "mumbling-after-silence",
+    name: { en: "Mumbling after Silence", ko: "Mumbling after Silence" },
+    tag: { en: "3D Simulation", ko: "3D 시뮬레이션" },
+    wip: false,
+    description: {
+      en: "A 3D simulation breathing life into Korean and English letters to explore a wavering identity.",
+      ko: "3D 시뮬레이션으로 한글과 영어 문자에 생명력을 불어넣어 정체성을 탐구한 작업."
+    },
+    year: "2022",
+    software: "Maya · Houdini · 3D Simulation",
+    role: { en: "Concept · 3D · Simulation", ko: "기획 · 3D · 시뮬레이션" },
+    tags: {
+      en: ["3D Simulation", "Media Art", "Typography"],
+      ko: ["3D 시뮬레이션", "미디어 아트", "타이포그래피"]
+    },
+    thumb: "mumbling1.jpg",
+    images: [
+      { src: "mumbling1.jpg", caption: { en: "", ko: "" } },
+      { text: {
+        en: "Using 3D computer simulation to breathe life into letters, this work explores questions of identity through Korean and English words.",
+        ko: "3D 컴퓨터 시뮬레이션을 이용해 문자에 생명력을 불어넣은 작업으로, 이 시기 한글, 영어의 단어들을 이용해 정체성에 대한 고민을 작업으로 풀어내고자 했다."
+      } },
+      { src: "mumbling2.jpg", caption: { en: "", ko: "" } },
+      { text: {
+        en: "Glimpsing and experiencing the lives of long-settled immigrants in an entirely different society and culture during a short study-abroad period, the artist could not help but feel an incompleteness and sense of loss unfelt within one's home country.",
+        ko: "짧은 유학 시기 동안 전혀 다른 사회, 문화 환경에서 오래동안 거주해온 이민자들의 삶을 엿보고 또 스스로 체험하면서, 모국 안에서는 느낄 수 없는 불완전성과 상실감을 느낄 수 밖에 없었다."
+      } },
+      { src: "mumbling3.jpg", caption: { en: "", ko: "" } },
+      { text: {
+        en: "Against this backdrop, the work tries to grasp a wavering identity through letters, while depicting the daily life of people from different cultures living together as a pendulum swinging between chaos and harmony.",
+        ko: "이러한 배경에서 문자를 통해 흔들리는 정체성을 붙잡고자함과 동시에 기타 다른 문화권에서 온 이들이 함께 살며 일어나는 일상을 혼란과 조화를 진자 운동하는 모습으로 그려내고자 한 작업이다."
+      } },
+    ]
+  },
+  {
+    id: "spectra-studio-showcase-fall-2022",
+    name: { en: "Spectra Studio Showcase Fall 2022", ko: "Spectra Studio Showcase Fall 2022" },
+    tag: { en: "Group Exhibition", ko: "단체전" },
+    wip: false,
+    description: {
+      en: "TBD",
+      ko: "TBD"
+    },
+    year: "2022",
+    software: "TBD",
+    role: { en: "TBD", ko: "TBD" },
+    tags: {
+      en: ["Group Exhibition", "Media Art"],
+      ko: ["단체전", "미디어 아트"]
+    },
+    thumb: "spectra1.jpg",
+    images: [
+      { src: "spectra1.jpg", caption: { en: "", ko: "" } },
+      { text: { en: "TBD", ko: "TBD" } },
+      { src: "spectra2.jpg", caption: { en: "", ko: "" } },
+    ]
+  },
 ];
 
 /* Combined lookup so openProject() can resolve any id from either section. */
@@ -579,8 +707,7 @@ const VARIANTS = {
   default: {
     row1: ['wizard-of-oz-sphere', 'la-2028-olympics', 'welcome-to-oko', 'fallout-vault-33', 'fortnite-concert-snoopdogg-icespice', 'gap-cross-reality-retail'],
     row2: ['secret-garden', 'sienar-chall-utilipede', 'vintage-telephone', 'japanese-izakaya', 'espresso-machine', 'cyberpunk-seoul'],
-    row3: ['legacy-vr'], 
-    label1: { en: 'Selected Work · 2026',              ko: '주요 작업 · 2026' },
+    row3: ['legacy-vr', 'when-we-become-you-and-i-again', 'k-town-2023', 'mumbling-after-silence', 'spectra-studio-showcase-fall-2022'],    label1: { en: 'Selected Work · 2026',              ko: '주요 작업 · 2026' },
     label2: { en: 'Selected Projects',                  ko: '다른 작업' },
     label3: { en: 'Digital Art Exhibition',  ko: '디지털 아트 전시' },
     overrides: {
@@ -693,9 +820,10 @@ const VARIANTS = {
   digitalart: {
     row1: ['wizard-of-oz-sphere', 'la-2028-olympics', 'welcome-to-oko', 'fallout-vault-33', 'fortnite-concert-snoopdogg-icespice', 'gap-cross-reality-retail'],
     row2: ['secret-garden', 'japanese-izakaya', 'cyberpunk-seoul', 'sienar-chall-utilipede', 'vintage-telephone', 'espresso-machine'],
+    row3: ['legacy-vr'],
     label1: { en: 'Featured Project Contributions',       ko: '주요 작업' },
     label2: { en: 'Selected Work · 2026',                 ko: '주요 참여 프로젝트' },
-    overrides: {
+    label3: { en: 'Digital Art Exhibition',  ko: '디지털 아트 전시' },    overrides: {
       en: {
         siteTitle:    'Doyeon Kim <em>—</em> Digital Artist',
         siteTagline:  'Media Art · 3D · Immersive Worlds',
