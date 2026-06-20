@@ -576,6 +576,33 @@ html[lang="ko"] .resume-cta {
   margin: 24px auto;
 }
 
+/* Side-by-side text + image — image and text share a row */
+.gallery-split {
+  display: flex;
+  gap: 16px;
+  width: 100%;
+  align-items: center;
+}
+.gallery-split .gallery-item { flex: 1 1 0; min-width: 0; margin: 0; }
+.gallery-split-text {
+  flex: 1 1 0;
+  min-width: 0;
+  padding: clamp(16px, 3vw, 40px) clamp(16px, 3vw, 32px);
+  color: var(--text);
+  font-size: clamp(15px, 1.05vw, 17px);
+  line-height: 1.5;
+}
+.gallery-split-text p + p { margin-top: 1.25em; }
+html[lang="ko"] .gallery-split-text {
+  font-size: clamp(14.5px, 1.2vw, 16px);
+  line-height: 1.85;
+  letter-spacing: -0.005em;
+  word-break: keep-all;
+}
+@media (max-width: 640px) {
+  .gallery-split { flex-direction: column; }
+}
+
 /* Side-by-side pair — two media items with zero gap between them */
 .gallery-pair {
   display: flex;
@@ -615,6 +642,11 @@ html[lang="en"] .gallery-text p:first-child::first-letter {
   padding: 0.05em 0.12em 0 0;
   color: var(--accent);
 }
+
+/* html[lang="ko"] .gallery-text.summary em {
+  color: var(--accent);
+} */
+
 
 /* Summary variant — framed by oversized serif quotation marks */
 .gallery-text.summary {

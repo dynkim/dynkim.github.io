@@ -538,28 +538,39 @@ const PROJECTS_DIGITALART = [
       ko: ["VR 경험", "미디어 아트", "Love Machine — 단체전", "Broad Art Center, LA"]
     },
     thumb: "legacy1.jpg",
-    images: [
-      { src: "legacy1.jpg", caption: { en: "", ko: "" } },
-      { text: {
-        en: "Legacy is a VR work that peers into the artist's own family history.",
-        ko: "Legacy는 VR을 통해 작가 본인의 가족사를 엿보는 작업이다."
+images: [
+        {
+        summary: true,
+        text: {
+          en: "Legacy is a VR work that peers into the artist's own family history.",
+          ko: {
+            title: "",
+            bulleted: false,
+            items: [
+              "Legacy는 VR을 통해 작가 본인의 가족사를 엿보는 작업이다.",
+            ]
+          }
+        }
+      },
+      { src: "legacy4.jpg", caption: { en: "", ko: "" } },
+      { split: {
+        imageSide: "left",
+        image: { src: "legacy1.jpg", caption: { en: "", ko: "" } },
+        text: {
+          en: "Across three generations — grandfather, father, and artist — it unfolds modern Korean history and personal memory through old TV commercials and aged handwritten notes. At the intersection of grand history and intimate daily life, it explores how a person's character and experience take shape.",
+          ko: "할아버지–아버지–작가, 3대에 걸친 한국 현대사와 개인사를 옛 TV 광고와 오래된 메모를 통해 풀어냈다. 거시적 역사와 미시적 삶이 교차하는 지점에서 개인의 성격과 경험이 어떻게 형성되었는지 탐색한다."
+        }
       } },
-      { src: "legacy2.jpg", caption: { en: "", ko: "" } },
-      { text: {
-        en: "Across three generations — grandfather, father, and artist — it unfolds modern Korean history and personal memory through old TV commercials and aged handwritten notes.",
-        ko: "할아버지–아버지–작가, 3대에 걸친 한국 현대사와 개인사를 옛 TV 광고와 오래된 메모를 통해 풀어냈다."
+      { split: {
+        imageSide: "right",
+        image: { src: "legacy2.jpg", caption: { en: "", ko: "" } },
+        text: {
+          en: "It asks what legacy is left behind in the process. Through virtual reality, it seeks to share the universal yet unfamiliar experience of the Korean father–son relationship with an American audience, minimizing cultural resistance.",
+          ko: "그 과정에서 어떤 유산이 남겨졌는지를 스스로 질문한다. VR이라는 가상현실 매체를 통해 한국의 아버지–아들 관계가 지닌 보편적이면서도 낯선 경험을 문화적 저항을 최소화한 방식으로 미국 관객과 공유하고자 했다."
+        }
       } },
       { src: "legacy3.jpg", caption: { en: "", ko: "" } },
-      { text: {
-        en: "At the intersection of grand history and intimate daily life, it explores how a person's character and experience take shape — and asks what legacy is left behind in the process.",
-        ko: "거시적 역사와 미시적 삶이 교차하는 지점에서 개인의 성격과 경험이 어떻게 형성되었는지 탐색하며, 그 과정에서 어떤 유산이 남겨졌는지를 스스로 질문한다."
-      } },
-      { src: "legacy4.jpg", caption: { en: "", ko: "" } },
-      { text: {
-        en: "Through virtual reality, it seeks to share the universal yet unfamiliar experience of the Korean father–son relationship with an American audience, minimizing cultural resistance.",
-        ko: "VR이라는 가상현실 매체를 통해 한국의 아버지–아들 관계가 지닌 보편적이면서도 낯선 경험을 문화적 저항을 최소화한 방식으로 미국 관객과 공유하고자 했다."
-      } },
-    ]
+    ]  
   },
   {
     id: "when-we-become-you-and-i-again",
@@ -577,7 +588,7 @@ const PROJECTS_DIGITALART = [
       en: ["Projection Mapping", "Media Art", "Installation"],
       ko: ["프로젝션 맵핑", "미디어 아트", "설치"]
     },
-    thumb: "youandme1.jpg",
+    thumb: "youandme2.jpg",
     images: [
       { src: "youandme1.jpg", caption: { en: "", ko: "" } },
       { text: {

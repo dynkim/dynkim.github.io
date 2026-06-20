@@ -79,7 +79,8 @@ setTimeout(() => {
   setupAutoScroll(document.getElementById('project-grid-2'));
   setupAutoScroll(document.getElementById('project-grid-3'));
   setupAutoScroll(document.getElementById('poster-strip'));
-}, 100);
+    }, 
+  100);
 }
 
 /* ================================================
@@ -117,8 +118,7 @@ function openProject(id, push = true) {
 
     // ── TEXT / SUMMARY BLOCK ──────────────────────────────────────────────
     if (item.text != null || item.koBullets) {
-      const cls = item.summary ? 'gallery-text summary' : 'gallery-text';
-
+  const cls = (item.summary ? 'gallery-text summary' : 'gallery-text')
       // Legacy: koBullets sibling (kept for any data that hasn't been
       // migrated to the new { title, items, bulleted } shape under text.ko).
       if (item.koBullets && currentLang === 'ko') {
@@ -189,6 +189,18 @@ function openProject(id, push = true) {
       const cls = m.narrow ? 'gallery-item narrow' : 'gallery-item';
       return `<div class="${cls}">${media}<div class="caption">${caption || ''}</div></div>`;
     };
+
+    if (item.split) {
+      const { image, text, imageSide } = item.split;
+      const resolvedText = t(text);
+      const paras = Array.isArray(resolvedText) ? resolvedText : [resolvedText];
+      const textHtml = `<div class="gallery-split-text">${paras.map(p => `<p>${p}</p>`).join('')}</div>`;
+      const imageHtml = renderMediaItem(image);
+      const order = imageSide === 'right'
+        ? `${textHtml}${imageHtml}`
+        : `${imageHtml}${textHtml}`;
+      return `<div class="gallery-split">${order}</div>`;
+    }
 
     if (item.pair) {
       return `<div class="gallery-pair">${item.pair.map(renderMediaItem).join('')}</div>`;
