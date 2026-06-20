@@ -46,7 +46,7 @@ function renderPosterStrip() {
   const strip = document.getElementById('poster-strip');
   if (!strip) return;
   strip.innerHTML = POSTERS
-    .map(src => `<img src="images/${src}" alt="" loading="lazy" />`)
+    .map(src => `<img src="posters/${src}" alt="" loading="lazy" />`)
     .join('');
 }
 

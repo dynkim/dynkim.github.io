@@ -1204,8 +1204,9 @@ html[lang="ko"] .project-specs span {
 .poster-strip-wrapper {
   overflow: hidden;
   width: 100%;
-  margin: 8px 0 32px;
+  margin: 0 0 32px;
 }
+
 .poster-strip {
   display: flex;
   gap: 16px;
