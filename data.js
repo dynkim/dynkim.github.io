@@ -612,19 +612,19 @@ const PROJECTS_DIGITALART = [
       en: ["Animation", "Media Art", "Installation"],
       ko: ["애니메이션", "미디어 아트", "설치"]
     },
-    thumb: "ktwon1.jpg",
+    thumb: "ktown1.jpg",
     images: [
-      { src: "ktwon1.jpg", caption: { en: "", ko: "" } },
+      { src: "ktown1.jpg", caption: { en: "", ko: "" } },
       { text: {
         en: "K-Town began from conversations with first-generation immigrants the artist met at Korean markets, restaurants, and laundromats in LA Koreatown.",
         ko: "케이타운(K-Town)은 작가가 LA Koreatown의 한인 마트, 음식점, 세탁소 등에서 만난 이민 1세대와의 대화에서 출발한 작업이다. 실제 인터뷰를 바탕으로 개인의 이민사와 자영업 과정에서 겪은 사건들을 애니메이션으로 재현하고, 이를 인터뷰 내러티브와 병치했다."
       } },
-      { src: "ktwon2.jpg", caption: { en: "", ko: "" } },
+      { src: "ktown2.jpg", caption: { en: "", ko: "" } },
       { text: {
         en: "Personal events at the storefronts they worked in or owned are rendered at a reduced scale, visualizing the distinctive yet universal experiences of LA's first-generation Korean immigrants in a more intimate, fragile form.",
         ko: "이들이 근무하거나 소유한 스토어프론트(storefront)에서 벌어진 개인적 사건들을 실제 상점보다 축소된 스케일로 구현함으로써, LA 한인 이민 1세대가 지닌 차별적이면서도 보편적인 경험과 감정을 보다 친밀하고 연약한 형태로 시각화했다."
       } },
-      { src: "ktwon3.jpg", caption: { en: "", ko: "" } },
+      { src: "ktown3.jpg", caption: { en: "", ko: "" } },
       { text: {
         en: "At the same time, it reveals their solid, existential place and value in LA society in a monumental form, drawing empathy for a journey of making meaning through adaptation, compromise, and painful history.",
         ko: "동시에 이들이 LA 사회에서 차지하는 단단하고 실존적인 위치와 가치를 기념비적 형태로 드러내며, 현지 적응과 타협, 그리고 아픈 역사를 딛고 존재의 의미를 만들어가는 여정에 대한 공감을 이끌어내고자 했다."
@@ -707,7 +707,8 @@ const VARIANTS = {
   default: {
     row1: ['wizard-of-oz-sphere', 'la-2028-olympics', 'welcome-to-oko', 'fallout-vault-33', 'fortnite-concert-snoopdogg-icespice', 'gap-cross-reality-retail'],
     row2: ['secret-garden', 'sienar-chall-utilipede', 'vintage-telephone', 'japanese-izakaya', 'espresso-machine', 'cyberpunk-seoul'],
-    row3: ['legacy-vr', 'when-we-become-you-and-i-again', 'k-town-2023', 'mumbling-after-silence', 'spectra-studio-showcase-fall-2022'],    label1: { en: 'Selected Work · 2026',              ko: '주요 작업 · 2026' },
+    row3: ['legacy-vr', 'when-we-become-you-and-i-again', 'k-town-2023', 'mumbling-after-silence', 'spectra-studio-showcase-fall-2022'],    
+    label1: { en: 'Selected Work · 2026',              ko: '주요 작업 · 2026' },
     label2: { en: 'Selected Projects',                  ko: '다른 작업' },
     label3: { en: 'Digital Art Exhibition',  ko: '디지털 아트 전시' },
     overrides: {
@@ -820,8 +821,7 @@ const VARIANTS = {
   digitalart: {
     row1: ['wizard-of-oz-sphere', 'la-2028-olympics', 'welcome-to-oko', 'fallout-vault-33', 'fortnite-concert-snoopdogg-icespice', 'gap-cross-reality-retail'],
     row2: ['secret-garden', 'japanese-izakaya', 'cyberpunk-seoul', 'sienar-chall-utilipede', 'vintage-telephone', 'espresso-machine'],
-    row3: ['legacy-vr'],
-    label1: { en: 'Featured Project Contributions',       ko: '주요 작업' },
+    row3: ['legacy-vr', 'when-we-become-you-and-i-again', 'k-town-2023', 'mumbling-after-silence', 'spectra-studio-showcase-fall-2022'],        label1: { en: 'Featured Project Contributions',       ko: '주요 작업' },
     label2: { en: 'Selected Work · 2026',                 ko: '주요 참여 프로젝트' },
     label3: { en: 'Digital Art Exhibition',  ko: '디지털 아트 전시' },    overrides: {
       en: {
