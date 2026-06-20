@@ -35,6 +35,7 @@ const UI_STRINGS = {
     embedDefault:     'Launch experience',
     resumeBtn:        'Resume',
     resumeDownload:   'Download Resume',
+    digitalArtExhibition: 'Digital Art Exhibition',
   },
   ko: {
     siteTitle:        '김도연 <em>—</em> 공간 디자이너',
@@ -64,6 +65,7 @@ const UI_STRINGS = {
     embedDefault:     '체험 시작하기',
     resumeBtn:        '이력서',
     resumeDownload:   '이력서 다운로드',
+    digitalArtExhibition: '디지털 아트 전시',
   }
 };
 

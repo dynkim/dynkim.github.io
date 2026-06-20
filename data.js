@@ -520,9 +520,51 @@ const PROJECTS_SECONDARY = [
       ]
   },
 ];
+const PROJECTS_DIGITALART = [
+  {
+    id: "legacy-vr",
+    name: { en: "Legacy", ko: "Legacy" },
+    tag: { en: "VR Experience", ko: "VR 경험" },
+    wip: false,
+    description: {
+      en: "A VR work tracing three generations of the artist's family — grandfather, father, and artist — through old TV commercials and handwritten notes.",
+      ko: "VR로 들여다본 3대의 가족사 — 할아버지, 아버지, 그리고 작가. 옛 TV 광고와 오래된 메모로 풀어낸 한국 현대사와 개인사."
+    },
+    year: "2024",
+    software: "Unreal 5 · Maya · Substance",
+    role: { en: "Concept · VR · 3D · Narrative", ko: "기획 · VR · 3D · 내러티브" },
+    tags: {
+      en: ["VR Experience", "Media Art", "Love Machine — Group Exhibition", "Broad Art Center, LA"],
+      ko: ["VR 경험", "미디어 아트", "Love Machine — 단체전", "Broad Art Center, LA"]
+    },
+    thumb: "legacy1.jpg",
+    images: [
+      { src: "legacy1.jpg", caption: { en: "", ko: "" } },
+      { text: {
+        en: "Legacy is a VR work that peers into the artist's own family history.",
+        ko: "Legacy는 VR을 통해 작가 본인의 가족사를 엿보는 작업이다."
+      } },
+      { src: "legacy2.jpg", caption: { en: "", ko: "" } },
+      { text: {
+        en: "Across three generations — grandfather, father, and artist — it unfolds modern Korean history and personal memory through old TV commercials and aged handwritten notes.",
+        ko: "할아버지–아버지–작가, 3대에 걸친 한국 현대사와 개인사를 옛 TV 광고와 오래된 메모를 통해 풀어냈다."
+      } },
+      { src: "legacy3.jpg", caption: { en: "", ko: "" } },
+      { text: {
+        en: "At the intersection of grand history and intimate daily life, it explores how a person's character and experience take shape — and asks what legacy is left behind in the process.",
+        ko: "거시적 역사와 미시적 삶이 교차하는 지점에서 개인의 성격과 경험이 어떻게 형성되었는지 탐색하며, 그 과정에서 어떤 유산이 남겨졌는지를 스스로 질문한다."
+      } },
+      { src: "legacy4.jpg", caption: { en: "", ko: "" } },
+      { text: {
+        en: "Through virtual reality, it seeks to share the universal yet unfamiliar experience of the Korean father–son relationship with an American audience, minimizing cultural resistance.",
+        ko: "VR이라는 가상현실 매체를 통해 한국의 아버지–아들 관계가 지닌 보편적이면서도 낯선 경험을 문화적 저항을 최소화한 방식으로 미국 관객과 공유하고자 했다."
+      } },
+    ]
+  },
+];
 
 /* Combined lookup so openProject() can resolve any id from either section. */
-const ALL_PROJECTS = [...PROJECTS, ...PROJECTS_SECONDARY];
+const ALL_PROJECTS = [...PROJECTS, ...PROJECTS_SECONDARY, ...PROJECTS_DIGITALART];
 
 /* ================================================
    VARIANT SYSTEM — controls project order AND
@@ -537,8 +579,10 @@ const VARIANTS = {
   default: {
     row1: ['wizard-of-oz-sphere', 'la-2028-olympics', 'welcome-to-oko', 'fallout-vault-33', 'fortnite-concert-snoopdogg-icespice', 'gap-cross-reality-retail'],
     row2: ['secret-garden', 'sienar-chall-utilipede', 'vintage-telephone', 'japanese-izakaya', 'espresso-machine', 'cyberpunk-seoul'],
+    row3: ['legacy-vr'], 
     label1: { en: 'Selected Work · 2026',              ko: '주요 작업 · 2026' },
     label2: { en: 'Selected Projects',                  ko: '다른 작업' },
+    label3: { en: 'Digital Art Exhibition',  ko: '디지털 아트 전시' },
     overrides: {
       en: {
         siteTitle:    'Doyeon Kim <em>—</em> 3D Artist',
@@ -646,6 +690,26 @@ const VARIANTS = {
       },
     },
   },
+  digitalart: {
+    row1: ['wizard-of-oz-sphere', 'la-2028-olympics', 'welcome-to-oko', 'fallout-vault-33', 'fortnite-concert-snoopdogg-icespice', 'gap-cross-reality-retail'],
+    row2: ['secret-garden', 'japanese-izakaya', 'cyberpunk-seoul', 'sienar-chall-utilipede', 'vintage-telephone', 'espresso-machine'],
+    label1: { en: 'Featured Project Contributions',       ko: '주요 작업' },
+    label2: { en: 'Selected Work · 2026',                 ko: '주요 참여 프로젝트' },
+    overrides: {
+      en: {
+        siteTitle:    'Doyeon Kim <em>—</em> Digital Artist',
+        siteTagline:  'Media Art · 3D · Immersive Worlds',
+        aboutHeading: 'Doyeon Kim <em>—</em> Digital Artist',
+        // aboutIntro: '…optional separate About blurb for this audience…',
+      },
+      ko: {
+        siteTitle:    '김도연 <em>—</em> 디지털 아티스트',
+        siteTagline:  '미디어 아트 · 3D · 이머시브 월드',
+        aboutHeading: '김도연 <em>—</em> 디지털 아티스트',
+        // aboutIntro: '…',
+      },
+    },
+  },
 };
 
 function detectVariant() {
@@ -658,7 +722,9 @@ function detectVariant() {
   else if (host.includes('lbe')         || path.startsWith('/lbe')         || hash === 'lbe')         variant = 'lbe';
   else if (host.includes('environment') || path.startsWith('/environment') || hash === 'environment') variant = 'environment';
   else if (host.includes('modeler3d')   || path.startsWith('/modeler3d')   || hash === 'modeler3d')   variant = 'modeler3d';
-  else if (host.includes('game')        || path.startsWith('/game')        || hash === 'game')        variant = 'game';  if (variant) {
+  else if (host.includes('game')        || path.startsWith('/game')        || hash === 'game')        variant = 'game';
+  else if (host.includes('digitalart')  || path.startsWith('/digitalart')  || hash === 'digitalart')  variant = 'digitalart';
+  if (variant) {
     try { sessionStorage.setItem('variant', variant); } catch (e) {}
     return variant;
   }

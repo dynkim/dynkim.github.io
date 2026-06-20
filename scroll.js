@@ -62,8 +62,11 @@ function setupHorizontalScroll() {
   // Project galleries now stack vertically, so they use normal page scroll.
   const grid  = document.getElementById('project-grid');
   const grid2 = document.getElementById('project-grid-2');
+  const grid3 = document.getElementById('project-grid-3');
   attachHorizontalScroll(grid);
   attachHorizontalScroll(grid2);
+  attachHorizontalScroll(grid3);
+
 
   // Arrow keys scroll the home grid (only when home view is active).
   // We scroll whichever grid the cursor is currently over; falls back to grid 1.
@@ -71,7 +74,7 @@ function setupHorizontalScroll() {
   let lastHovered = grid;
   grid.addEventListener('mouseenter',  () => { lastHovered = grid;  });
   grid2.addEventListener('mouseenter', () => { lastHovered = grid2; });
-
+   
   document.addEventListener('keydown', (e) => {
     const homeActive    = document.getElementById('view-home').classList.contains('active');
     const projectActive = document.getElementById('view-project').classList.contains('active');

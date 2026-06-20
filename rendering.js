@@ -44,13 +44,15 @@ function renderHome() {
   // Update section labels to match this variant + current language
   const l1 = document.querySelector('[data-i18n="selectedWork"]');
   const l2 = document.querySelector('[data-i18n="selectedProjects"]');
+  const l3 = document.querySelector('[data-i18n="digitalArtExhibition"]');
   if (l1) l1.textContent = variant.label1[currentLang] || variant.label1.en;
   if (l2) l2.textContent = variant.label2[currentLang] || variant.label2.en;
-// Kick off after the browser has had one frame to measure the grid
+  if (l3 && variant.label3) l3.textContent = variant.label3[currentLang] || variant.label3.en;// Kick off after the browser has had one frame to measure the grid
 // In renderHome(), replace the existing setupAutoScroll calls with:
 setTimeout(() => {
   setupAutoScroll(document.getElementById('project-grid'));
   setupAutoScroll(document.getElementById('project-grid-2'));
+  setupAutoScroll(document.getElementById('project-grid-3'));
 }, 100);
 }
 
