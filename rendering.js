@@ -2,6 +2,7 @@
    RENDER HOME GRID
    ================================================ */
 function renderProjectsInto(grid, list) {
+  if (!grid) return;
   grid.innerHTML = list.map(p => {
     const name = t(p.name);
     const tag = t(p.tag);
@@ -71,7 +72,7 @@ function renderHome() {
   const l3 = document.querySelector('[data-i18n="digitalArtExhibition"]');
   if (l1) l1.textContent = variant.label1[currentLang] || variant.label1.en;
   if (l2) l2.textContent = variant.label2[currentLang] || variant.label2.en;
-  if (l3 && variant.label3) l3.textContent = variant.label3[currentLang] || variant.label3.en;// Kick off after the browser has had one frame to measure the grid
+  if (l3 && variant.label3) l3.textContent = variant.label3[currentLang] || variant.label3.en; // Kick off after the browser has had one frame to measure the grid
 // In renderHome(), replace the existing setupAutoScroll calls with:
 setTimeout(() => {
   setupAutoScroll(document.getElementById('project-grid'));

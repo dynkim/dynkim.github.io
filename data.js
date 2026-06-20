@@ -820,10 +820,12 @@ const VARIANTS = {
   },
   digitalart: {
     row1: ['wizard-of-oz-sphere', 'la-2028-olympics', 'welcome-to-oko', 'fallout-vault-33', 'fortnite-concert-snoopdogg-icespice', 'gap-cross-reality-retail'],
-    row2: ['secret-garden', 'japanese-izakaya', 'cyberpunk-seoul', 'sienar-chall-utilipede', 'vintage-telephone', 'espresso-machine'],
-    row3: ['legacy-vr', 'when-we-become-you-and-i-again', 'k-town-2023', 'mumbling-after-silence', 'spectra-studio-showcase-fall-2022'],        label1: { en: 'Featured Project Contributions',       ko: '주요 작업' },
-    label2: { en: 'Selected Work · 2026',                 ko: '주요 참여 프로젝트' },
-    label3: { en: 'Digital Art Exhibition',  ko: '디지털 아트 전시' },    overrides: {
+    row2: ['legacy-vr', 'when-we-become-you-and-i-again', 'k-town-2023', 'mumbling-after-silence', 'spectra-studio-showcase-fall-2022'],        
+    row3: ['secret-garden', 'japanese-izakaya', 'cyberpunk-seoul', 'sienar-chall-utilipede', 'vintage-telephone', 'espresso-machine'],
+    label1: { en: 'Featured Project Contributions',       ko: '주요 작업' },
+    label2: { en: 'Digital Art Exhibition',  ko: '디지털 아트 전시' },    
+    label3: { en: 'Selected Work · 2026',                 ko: '주요 참여 프로젝트' },
+    overrides: {
       en: {
         siteTitle:    'Doyeon Kim <em>—</em> Digital Artist',
         siteTagline:  'Media Art · 3D · Immersive Worlds',

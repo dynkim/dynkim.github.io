@@ -4,6 +4,7 @@
    scrolling stays on the page where users expect it.)
    ================================================ */
 function attachHorizontalScroll(el) {
+  if (!el) return;
   // --- Click-and-drag to scroll ---
   let isDown = false;
   let startX = 0;
@@ -72,9 +73,8 @@ function setupHorizontalScroll() {
   // We scroll whichever grid the cursor is currently over; falls back to grid 1.
   // Escape returns to home from a project detail view.
   let lastHovered = grid;
-  grid.addEventListener('mouseenter',  () => { lastHovered = grid;  });
-  grid2.addEventListener('mouseenter', () => { lastHovered = grid2; });
-   
+  if (grid)  grid.addEventListener('mouseenter',  () => { lastHovered = grid;  });
+  if (grid2) grid2.addEventListener('mouseenter', () => { lastHovered = grid2; });   
   document.addEventListener('keydown', (e) => {
     const homeActive    = document.getElementById('view-home').classList.contains('active');
     const projectActive = document.getElementById('view-project').classList.contains('active');
