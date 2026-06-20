@@ -566,7 +566,7 @@ images: [
         image: { src: "legacy2.jpg", caption: { en: "", ko: "" } },
         text: {
           en: "It asks what legacy is left behind in the process. Through virtual reality, it seeks to share the universal yet unfamiliar experience of the Korean father–son relationship with an American audience, minimizing cultural resistance.",
-          ko: "그 과정에서 어떤 유산이 남겨졌는지를 스스로 질문한다. VR이라는 가상현실 매체를 통해 한국의 아버지–아들 관계가 지닌 보편적이면서도 낯선 경험을 문화적 저항을 최소화한 방식으로 미국 관객과 공유하고자 했다."
+          ko: "그 과정에서 어떤 유산이 남겨졌는지를 스스로 질문한다. VR이라는 가상현실 매체를 통해 한국의 아버지–아들 관계가 지닌 보편적이면서도 낯선 경험을 문화적 저항을 최소화한 방식으로 더 다양한 관객과 공유하고자 했다."
         }
       } },
       { src: "legacy3.jpg", caption: { en: "", ko: "" } },
