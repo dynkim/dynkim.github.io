@@ -39,9 +39,12 @@ function renderHome() {
   const variant = VARIANTS[detectVariant()];
   const row1 = variant.row1.map(id => ALL_PROJECTS.find(p => p.id === id)).filter(Boolean);
   const row2 = variant.row2.map(id => ALL_PROJECTS.find(p => p.id === id)).filter(Boolean);
+  const row3 = (variant.row3 || []).map(id => ALL_PROJECTS.find(p => p.id === id)).filter(Boolean);
   renderProjectsInto(document.getElementById('project-grid'),   sortVariantProjects(row1));
   renderProjectsInto(document.getElementById('project-grid-2'), sortVariantProjects(row2));
-  // Update section labels to match this variant + current language
+  const grid3el = document.getElementById('project-grid-3');
+  if (grid3el) renderProjectsInto(grid3el, sortVariantProjects(row3));
+    // Update section labels to match this variant + current language
   const l1 = document.querySelector('[data-i18n="selectedWork"]');
   const l2 = document.querySelector('[data-i18n="selectedProjects"]');
   const l3 = document.querySelector('[data-i18n="digitalArtExhibition"]');

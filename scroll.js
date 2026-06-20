@@ -135,6 +135,14 @@ function setupAllScrollArrows() {
     document.getElementById('grid2-arrow-right')
   );
   // Gallery is now vertical; no scroll arrows needed there.
+  const grid3 = document.getElementById('project-grid-3');
+  if (grid3) {
+    setupScrollArrows(
+      grid3,
+      document.getElementById('grid3-arrow-left'),
+      document.getElementById('grid3-arrow-right')
+    );
+  }
 }
 
 function setupAutoScroll(grid, { speed = 0.35, resumeDelay = 500 } = {}) {
