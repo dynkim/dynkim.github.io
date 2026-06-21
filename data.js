@@ -702,8 +702,23 @@ images: [
   },
 ];
 
+/* Exhibition posters — display-only cards (no detail view). Managed as ordinary
+   projects so they render through renderProjectsInto like any other row.
+   `displayOnly: true` skips the detail link/meta; thumb carries its own
+   `posters/` path (a slash in `thumb` overrides the default images/ prefix). */
+const PROJECTS_DIGITALART2 = [
+  { id: "poster-disorient-ringularity",  displayOnly: true, name: { en: "Disorient: Ringularity",          ko: "디스오리엔트: 링귤래리티" },                 thumb: "posters/disorient-ringularity-전시-포스터.jpg" },
+  { id: "poster-love-machine",           displayOnly: true, name: { en: "Love Machine",                    ko: "러브 머신" },                               thumb: "posters/Love-Machine-전시-포스터.jpg" },
+  { id: "poster-mumbling-after-silence", displayOnly: true, name: { en: "Mumbling after Silence",          ko: "Mumbling after Silence" },                  thumb: "posters/Mumbling-after-Silence-전시-포스터.jpg" },
+  { id: "poster-texture-2023",           displayOnly: true, name: { en: "tex·ture 2023",                   ko: "tex·ture 2023 국제전" },                     thumb: "posters/tex-ture-2023-국제전-포스터.jpg" },
+  { id: "poster-when-we-become",         displayOnly: true, name: { en: "When We Become You and I Again",  ko: "When We Become You and I Again" },          thumb: "posters/When-We-Become-You-and-I-Again-포스터.jpg" },
+  { id: "poster-seoul-auction-blue-nft", displayOnly: true, name: { en: "Seoul Auction Blue NFT",          ko: "서울옥션블루 NFT 작가 공모전" },              thumb: "posters/서울옥션블루-nft-작가-공모전-포스터.jpg" },
+  { id: "poster-ars-electronica-garden", displayOnly: true, name: { en: "Ars Electronica Garden Seoul",    ko: "아르스 일렉트로니카 가든 서울 페스티벌" },    thumb: "posters/아르스-일렉트로니카-가든-서울-페스티벌-전시-포스터.jpg" },
+  { id: "poster-anthropocene-tomorrow",  displayOnly: true, name: { en: "Anthropocene: Tomorrow",          ko: "인류세: 내일" },                            thumb: "posters/인류세의-내일-포스터.jpg" },
+];
+
 /* Combined lookup so openProject() can resolve any id from either section. */
-const ALL_PROJECTS = [...PROJECTS, ...PROJECTS_SECONDARY, ...PROJECTS_DIGITALART];
+const ALL_PROJECTS = [...PROJECTS, ...PROJECTS_SECONDARY, ...PROJECTS_DIGITALART, ...PROJECTS_DIGITALART2];
 
 /* ================================================
    VARIANT SYSTEM — controls project order AND
@@ -722,6 +737,8 @@ const VARIANTS = {
     label1: { en: 'Selected Work · 2026',              ko: '주요 작업 · 2026' },
     label2: { en: 'Selected Projects',                  ko: '다른 작업' },
     label3: { en: 'Digital Art Exhibition',  ko: '디지털 아트 전시' },
+    // Per-slide auto-scroll speed (px/frame). Higher = faster, negative = right-to-left.
+    speeds: { grid1: 0.35, grid2: 0.45, grid3: 0.3 },
     overrides: {
       en: {
         siteTitle:    'Doyeon Kim <em>—</em> 3D Artist',
@@ -740,6 +757,8 @@ const VARIANTS = {
     row2: ['wizard-of-oz-sphere', 'fortnite-concert-snoopdogg-icespice', 'la-2028-olympics', 'welcome-to-oko', 'fallout-vault-33', 'gap-cross-reality-retail'],
     label1: { en: '3D · Environments & Animation · 2026', ko: '3D · 환경 & 애니메이션 · 2026' },
     label2: { en: 'Selected Projects',                    ko: '다른 작업' },
+    // Per-slide auto-scroll speed (px/frame). Higher = faster, negative = right-to-left.
+    speeds: { grid1: 0.4, grid2: 0.55 },
     overrides: {
       en: {
         siteTitle:    'Doyeon Kim <em>—</em> 3D Artist',
@@ -758,6 +777,8 @@ const VARIANTS = {
     row2: ['secret-garden', 'japanese-izakaya', 'cyberpunk-seoul', 'sienar-chall-utilipede', 'vintage-telephone', 'espresso-machine'],
     label1: { en: 'Featured Project Contributions',       ko: '주요 작업' },
     label2: { en: 'Selected Work · 2026',                 ko: '주요 참여 프로젝트' },
+    // Per-slide auto-scroll speed (px/frame). Higher = faster, negative = right-to-left.
+    speeds: { grid1: 0.5, grid2: 0.3 },
     overrides: {
       en: {
         siteTitle:    'Doyeon Kim <em>—</em> 3D Spatial Designer',
@@ -778,6 +799,8 @@ const VARIANTS = {
     row2: ['fallout-vault-33', 'fortnite-concert-snoopdogg-icespice', 'wizard-of-oz-sphere', 'la-2028-olympics', 'welcome-to-oko', 'gap-cross-reality-retail'],
     label1: { en: 'Game Environment Art · 2026',          ko: '게임 환경 아트 · 2026' },
     label2: { en: 'Selected Projects',                    ko: '다른 작업' },
+    // Per-slide auto-scroll speed (px/frame). Higher = faster, negative = right-to-left.
+    speeds: { grid1: 0.7, grid2: 0.35, grid3: 0.25, posters: 0.45 },
     overrides: {
       en: {
         siteTitle:    'Doyeon Kim <em>—</em> Environment Artist',
@@ -831,11 +854,15 @@ const VARIANTS = {
   },
   digitalart: {
     row1: ['wizard-of-oz-sphere', 'la-2028-olympics', 'welcome-to-oko', 'fallout-vault-33', 'fortnite-concert-snoopdogg-icespice', 'gap-cross-reality-retail'],
-    row2: ['legacy-vr', 'when-we-become-you-and-i-again', 'k-town-2023', 'mumbling-after-silence', 'spectra-studio-showcase-fall-2022'],        
+    row2: ['legacy-vr', 'when-we-become-you-and-i-again', 'k-town-2023', 'mumbling-after-silence', 'spectra-studio-showcase-fall-2022'],
     row3: ['secret-garden', 'japanese-izakaya', 'cyberpunk-seoul', 'sienar-chall-utilipede', 'vintage-telephone', 'espresso-machine'],
+    row4: ['poster-disorient-ringularity', 'poster-love-machine', 'poster-mumbling-after-silence', 'poster-texture-2023', 'poster-when-we-become', 'poster-seoul-auction-blue-nft', 'poster-ars-electronica-garden', 'poster-anthropocene-tomorrow'],
     label1: { en: 'Featured Project Contributions',       ko: '주요 작업' },
-    label2: { en: 'Digital Art Exhibition',  ko: '디지털 아트 전시' },    
+    label2: { en: 'Digital Art Exhibition',  ko: '디지털 아트 전시' },
     label3: { en: 'Selected Work · 2026',                 ko: '주요 참여 프로젝트' },
+    label4: { en: 'Exhibition Posters',                   ko: '전시 포스터' },
+    // Per-slide auto-scroll speed (px/frame). Higher = faster, negative = right-to-left.
+    speeds: { grid1: 1.3, grid2: 1.6, grid3: 0.4, grid4: 0.45 },
     overrides: {
       en: {
         siteTitle:    'Doyeon Kim <em>—</em> Digital Artist',

@@ -64,9 +64,11 @@ function setupHorizontalScroll() {
   const grid  = document.getElementById('project-grid');
   const grid2 = document.getElementById('project-grid-2');
   const grid3 = document.getElementById('project-grid-3');
+  const grid4 = document.getElementById('project-grid-4');
   attachHorizontalScroll(grid);
   attachHorizontalScroll(grid2);
   attachHorizontalScroll(grid3);
+  attachHorizontalScroll(grid4);
 
 
   // Arrow keys scroll the home grid (only when home view is active).
@@ -107,8 +109,18 @@ function setupScrollArrows(scrollEl, leftBtn, rightBtn) {
   window.addEventListener('resize', update);
 
   const stepFor = () => Math.round(scrollEl.clientWidth * 0.8);
-  leftBtn.addEventListener('click',  () => scrollEl.scrollBy({ left: -stepFor(), behavior: 'smooth' }));
-  rightBtn.addEventListener('click', () => scrollEl.scrollBy({ left:  stepFor(), behavior: 'smooth' }));
+  // Pause the auto-scroll loop around a click so it doesn't overwrite the
+  // smooth scrollBy on the next frame; resume() re-arms after resumeDelay and
+  // picks up from the new position. Re-arms on each click so rapid clicks work.
+  const arrowStep = (dir) => {
+    if (scrollEl._autoScrollPause) {
+      scrollEl._autoScrollPause();
+      scrollEl._autoScrollResume();
+    }
+    scrollEl.scrollBy({ left: dir * stepFor(), behavior: 'smooth' });
+  };
+  leftBtn.addEventListener('click',  () => arrowStep(-1));
+  rightBtn.addEventListener('click', () => arrowStep(1));
 
   // Recalculate as images load (scrollWidth is only accurate once images size themselves)
   const watchImages = () => {
@@ -143,12 +155,19 @@ function setupAllScrollArrows() {
       document.getElementById('grid3-arrow-right')
     );
   }
+  const grid4 = document.getElementById('project-grid-4');
+  if (grid4) {
+    setupScrollArrows(
+      grid4,
+      document.getElementById('grid4-arrow-left'),
+      document.getElementById('grid4-arrow-right')
+    );
+  }
 }
 
 function setupAutoScroll(grid, { speed = 0.35, resumeDelay = 500 } = {}) {
   if (!grid) return;
   if (grid._autoScrollStop) grid._autoScrollStop();
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
   grid.style.scrollBehavior = 'auto';
 
@@ -170,13 +189,21 @@ function setupAutoScroll(grid, { speed = 0.35, resumeDelay = 500 } = {}) {
   let paused = false;
   let resumeTimer = null;
   let raf;
+  // Track the scroll position as a float ourselves. Reading back
+  // grid.scrollLeft rounds to an integer in many browsers, so a 0.35/frame
+  // increment would round away to 0 and never advance. Accumulate here instead.
+  let pos = grid.scrollLeft;
 
   const tick = () => {
-    if (!paused && !grid.classList.contains('dragging')) {
+    if (paused || grid.classList.contains('dragging')) {
+      // User is in control — keep our accumulator in sync with reality.
+      pos = grid.scrollLeft;
+    } else {
       const half = grid.scrollWidth / 2;
-      grid.scrollLeft += speed;
-      if (grid.scrollLeft >= half) grid.scrollLeft -= half;
-      if (grid.scrollLeft < 0)     grid.scrollLeft += half;
+      pos += speed;
+      if (pos >= half) pos -= half;
+      if (pos < 0)     pos += half;
+      grid.scrollLeft = pos;
     }
     raf = requestAnimationFrame(tick);
   };
@@ -195,6 +222,13 @@ function setupAutoScroll(grid, { speed = 0.35, resumeDelay = 500 } = {}) {
   grid.addEventListener('pointerenter', pause);
   grid.addEventListener('pointerleave', resume);
 
+  // Let other controls (e.g. the scroll arrows) hand off cleanly: pause the
+  // loop, let their smooth scroll run, then resume from wherever it lands.
+  // While paused, tick() keeps `pos` synced to the real scrollLeft, so there's
+  // no fight over scrollLeft and no snap-back.
+  grid._autoScrollPause  = pause;
+  grid._autoScrollResume = resume;
+
   grid._autoScrollStop = () => {
     cancelAnimationFrame(raf);
     clearTimeout(resumeTimer);
@@ -202,5 +236,7 @@ function setupAutoScroll(grid, { speed = 0.35, resumeDelay = 500 } = {}) {
     grid.removeEventListener('pointerleave', resume);
     grid.querySelectorAll('[data-clone]').forEach(n => n.remove());
     delete grid._autoScrollStop;
+    delete grid._autoScrollPause;
+    delete grid._autoScrollResume;
   };
 }

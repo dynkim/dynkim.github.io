@@ -6,9 +6,22 @@ function renderProjectsInto(grid, list) {
   grid.innerHTML = list.map(p => {
     const name = t(p.name);
     const tag = t(p.tag);
+    // A thumb with a slash carries its own path (e.g. posters/foo.jpg);
+    // otherwise it defaults to the images/ folder.
+    const thumbSrc = p.thumb && p.thumb.includes('/') ? p.thumb : `images/${p.thumb}`;
     const media = p.thumbVideo
-      ? `<video src="videos/${p.thumbVideo}" poster="images/${p.thumb}" autoplay muted loop playsinline preload="metadata"></video>`
-      : `<img src="images/${p.thumb}" alt="${name}" loading="lazy" />`;
+      ? `<video src="videos/${p.thumbVideo}" poster="${thumbSrc}" autoplay muted loop playsinline preload="metadata"></video>`
+      : `<img src="${thumbSrc}" alt="${name}" loading="lazy" />`;
+
+    // Display-only cards (e.g. exhibition posters): no detail view, so render a
+    // plain div with just the image — no onclick, no meta overlay, no logo.
+    if (p.displayOnly) {
+      return `
+      <div class="project-card poster-card">
+        <div class="project-thumb">${media}</div>
+      </div>`;
+    }
+
     const logoFilter = p.logoWhite ? 'filter: brightness(0) invert(1);' : '';
     const logoRightFilter = p.logoRightWhite ? 'filter: brightness(0) invert(1);' : '';
     const logo = p.logo
@@ -31,26 +44,6 @@ function renderProjectsInto(grid, list) {
   grid.querySelectorAll('.project-card').forEach(applyLogoColorFromThumb);
 }
 
-/* Exhibition poster strip — display-only, no detail view. */
-const POSTERS = [
-  'disorient-ringularity-전시-포스터.jpg',
-  'Love-Machine-전시-포스터.jpg',
-  'Mumbling-after-Silence-전시-포스터.jpg',
-  'tex-ture-2023-국제전-포스터.jpg',
-  'When-We-Become-You-and-I-Again-포스터.jpg',
-  '서울옥션블루-nft-작가-공모전-포스터.jpg',
-  '아르스-일렉트로니카-가든-서울-페스티벌-전시-포스터.jpg',
-  '인류세-내일-포스터.jpg',
-];
-
-function renderPosterStrip() {
-  const strip = document.getElementById('poster-strip');
-  if (!strip) return;
-  strip.innerHTML = POSTERS
-    .map(src => `<img src="posters/${src}" alt="" loading="lazy" />`)
-    .join('');
-}
-
 function sortVariantProjects(projects) {
   return typeof variantSort === 'function' ? variantSort(projects) : projects;
 }
@@ -60,26 +53,33 @@ function renderHome() {
   const row1 = variant.row1.map(id => ALL_PROJECTS.find(p => p.id === id)).filter(Boolean);
   const row2 = variant.row2.map(id => ALL_PROJECTS.find(p => p.id === id)).filter(Boolean);
   const row3 = (variant.row3 || []).map(id => ALL_PROJECTS.find(p => p.id === id)).filter(Boolean);
+  // row4 = display-only posters; keep curated order (no variant sort).
+  const row4 = (variant.row4 || []).map(id => ALL_PROJECTS.find(p => p.id === id)).filter(Boolean);
   renderProjectsInto(document.getElementById('project-grid'),   sortVariantProjects(row1));
   renderProjectsInto(document.getElementById('project-grid-2'), sortVariantProjects(row2));
-  renderProjectsInto(document.getElementById('project-grid-3'), sortVariantProjects(row3));  
-  const grid3el = document.getElementById('project-grid-3');
-  if (grid3el) renderProjectsInto(grid3el, sortVariantProjects(row3));
-  renderPosterStrip();
+  renderProjectsInto(document.getElementById('project-grid-3'), sortVariantProjects(row3));
+  renderProjectsInto(document.getElementById('project-grid-4'), row4);
     // Update section labels to match this variant + current language
   const l1 = document.querySelector('[data-i18n="selectedWork"]');
   const l2 = document.querySelector('[data-i18n="selectedProjects"]');
   const l3 = document.querySelector('[data-i18n="digitalArtExhibition"]');
+  const l4 = document.querySelector('[data-i18n="exhibitionPosters"]');
   if (l1) l1.textContent = variant.label1[currentLang] || variant.label1.en;
   if (l2) l2.textContent = variant.label2[currentLang] || variant.label2.en;
-  if (l3 && variant.label3) l3.textContent = variant.label3[currentLang] || variant.label3.en; // Kick off after the browser has had one frame to measure the grid
-// In renderHome(), replace the existing setupAutoScroll calls with:
+  if (l3 && variant.label3) l3.textContent = variant.label3[currentLang] || variant.label3.en;
+  if (l4 && variant.label4) l4.textContent = variant.label4[currentLang] || variant.label4.en;
+// Kick off after the browser has had one frame to measure the grid.
+// speed = px per frame (~60fps). Higher = faster. Negative = right-to-left.
+// Per-variant overrides live in VARIANTS[...].speeds; anything unset falls
+// back to these defaults.
+const DEFAULT_SCROLL_SPEEDS = { grid1: 0.35, grid2: 0.35, grid3: 0.25, grid4: 0.45 };
+const speeds = { ...DEFAULT_SCROLL_SPEEDS, ...(variant.speeds || {}) };
 setTimeout(() => {
-  setupAutoScroll(document.getElementById('project-grid'));
-  setupAutoScroll(document.getElementById('project-grid-2'));
-  setupAutoScroll(document.getElementById('project-grid-3'));
-  setupAutoScroll(document.getElementById('poster-strip'));
-    }, 
+  setupAutoScroll(document.getElementById('project-grid'),   { speed: speeds.grid1 });
+  setupAutoScroll(document.getElementById('project-grid-2'), { speed: speeds.grid2 });
+  setupAutoScroll(document.getElementById('project-grid-3'), { speed: speeds.grid3 });
+  setupAutoScroll(document.getElementById('project-grid-4'), { speed: speeds.grid4 });
+    },
   100);
 }
 
