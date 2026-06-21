@@ -605,6 +605,7 @@ images: [
         en: "The roughly 10-minute looping video reveals the history of immigration as endlessly arriving waves, taking on a site-specific character that quietly commemorates those who left to put down new roots.",
         ko: "약 10분간 반복되는 긴 루프 영상은 끊임없이 밀려오는 파도로 비유되는 이민의 역사를 시청각적으로 드러내며, 동시에 새로운 뿌리를 내리기 위해 떠나온 이들을 잔잔히 기념하는 장소 특정적 성격을 취한다."
       } },
+      { vimeo: "807471214" },
     ]
   },
   {

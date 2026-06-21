@@ -195,6 +195,16 @@ function openProject(id, push = true) {
       return `<div class="gallery-cta"><a href="${safeUrl}" target="_blank" rel="noopener noreferrer">${label} <span class="arrow">→</span></a></div>`;
     }
 
+    if (item.vimeo) {
+      const aspect = item.aspect || '16/9';
+      const src = `https://player.vimeo.com/video/${item.vimeo}?title=0&byline=0&portrait=0&dnt=1`;
+      return `
+        <div class="gallery-embed" style="aspect-ratio: ${aspect}">
+          <iframe src="${src}" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen style="position:absolute;top:0;left:0;width:100%;height:100%;"></iframe>
+        </div>
+      `;
+    }
+
     const renderMediaItem = m => {
       const caption = t(m.caption);
       const media = m.video
