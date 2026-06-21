@@ -6,9 +6,22 @@ function renderProjectsInto(grid, list) {
   grid.innerHTML = list.map(p => {
     const name = t(p.name);
     const tag = t(p.tag);
+    // A thumb with a slash carries its own path (e.g. posters/foo.jpg);
+    // otherwise it defaults to the images/ folder.
+    const thumbSrc = p.thumb && p.thumb.includes('/') ? p.thumb : `images/${p.thumb}`;
     const media = p.thumbVideo
-      ? `<video src="videos/${p.thumbVideo}" poster="images/${p.thumb}" autoplay muted loop playsinline preload="metadata"></video>`
-      : `<img src="images/${p.thumb}" alt="${name}" loading="lazy" />`;
+      ? `<video src="videos/${p.thumbVideo}" poster="${thumbSrc}" autoplay muted loop playsinline preload="metadata"></video>`
+      : `<img src="${thumbSrc}" alt="${name}" loading="lazy" />`;
+
+    // Display-only cards (e.g. exhibition posters): no detail view, so render a
+    // plain div with just the image — no onclick, no meta overlay, no logo.
+    if (p.displayOnly) {
+      return `
+      <div class="project-card poster-card">
+        <div class="project-thumb">${media}</div>
+      </div>`;
+    }
+
     const logoFilter = p.logoWhite ? 'filter: brightness(0) invert(1);' : '';
     const logoRightFilter = p.logoRightWhite ? 'filter: brightness(0) invert(1);' : '';
     const logo = p.logo
@@ -31,26 +44,6 @@ function renderProjectsInto(grid, list) {
   grid.querySelectorAll('.project-card').forEach(applyLogoColorFromThumb);
 }
 
-/* Exhibition poster strip — display-only, no detail view. */
-const POSTERS = [
-  'disorient-ringularity-전시-포스터.jpg',
-  'Love-Machine-전시-포스터.jpg',
-  'Mumbling-after-Silence-전시-포스터.jpg',
-  'tex-ture-2023-국제전-포스터.jpg',
-  'When-We-Become-You-and-I-Again-포스터.jpg',
-  '서울옥션블루-nft-작가-공모전-포스터.jpg',
-  '아르스-일렉트로니카-가든-서울-페스티벌-전시-포스터.jpg',
-  '인류세-내일-포스터.jpg',
-];
-
-function renderPosterStrip() {
-  const strip = document.getElementById('poster-strip');
-  if (!strip) return;
-  strip.innerHTML = POSTERS
-    .map(src => `<img src="posters/${src}" alt="" loading="lazy" />`)
-    .join('');
-}
-
 function sortVariantProjects(projects) {
   return typeof variantSort === 'function' ? variantSort(projects) : projects;
 }
@@ -60,26 +53,47 @@ function renderHome() {
   const row1 = variant.row1.map(id => ALL_PROJECTS.find(p => p.id === id)).filter(Boolean);
   const row2 = variant.row2.map(id => ALL_PROJECTS.find(p => p.id === id)).filter(Boolean);
   const row3 = (variant.row3 || []).map(id => ALL_PROJECTS.find(p => p.id === id)).filter(Boolean);
-  renderProjectsInto(document.getElementById('project-grid'),   sortVariantProjects(row1));
+  const row4 = (variant.row4 || []).map(id => ALL_PROJECTS.find(p => p.id === id)).filter(Boolean);
+  // Grid id number == row number == DOM position. Any row may hold display-only
+  // posters; that's per-project (displayOnly flag), not per-row.
+  renderProjectsInto(document.getElementById('project-grid-1'), sortVariantProjects(row1));
   renderProjectsInto(document.getElementById('project-grid-2'), sortVariantProjects(row2));
-  renderProjectsInto(document.getElementById('project-grid-3'), sortVariantProjects(row3));  
-  const grid3el = document.getElementById('project-grid-3');
-  if (grid3el) renderProjectsInto(grid3el, sortVariantProjects(row3));
-  renderPosterStrip();
-    // Update section labels to match this variant + current language
-  const l1 = document.querySelector('[data-i18n="selectedWork"]');
-  const l2 = document.querySelector('[data-i18n="selectedProjects"]');
-  const l3 = document.querySelector('[data-i18n="digitalArtExhibition"]');
-  if (l1) l1.textContent = variant.label1[currentLang] || variant.label1.en;
-  if (l2) l2.textContent = variant.label2[currentLang] || variant.label2.en;
-  if (l3 && variant.label3) l3.textContent = variant.label3[currentLang] || variant.label3.en; // Kick off after the browser has had one frame to measure the grid
-// In renderHome(), replace the existing setupAutoScroll calls with:
+  renderProjectsInto(document.getElementById('project-grid-3'), sortVariantProjects(row3));
+  renderProjectsInto(document.getElementById('project-grid-4'), sortVariantProjects(row4));
+
+  // Per-row card height: set --card-h on each grid (cards inherit it). Unset
+  // rows clear the override and fall back to the CSS default.
+  const heights = variant.heights || {};
+  const setCardHeight = (id, val) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    if (val) el.style.setProperty('--card-h', val);
+    else     el.style.removeProperty('--card-h');
+  };
+  setCardHeight('project-grid-1', heights.grid1);
+  setCardHeight('project-grid-2', heights.grid2);
+  setCardHeight('project-grid-3', heights.grid3);
+  setCardHeight('project-grid-4', heights.grid4);
+  // Section labels by DOM position: the Nth .section-label in the home view
+  // shows variant.label{N}. Keeps label N aligned with #project-grid-N / rowN
+  // regardless of each page's data-i18n keys.
+  const variantLabels = [variant.label1, variant.label2, variant.label3, variant.label4];
+  document.querySelectorAll('#view-home .section-label').forEach((el, i) => {
+    const lab = variantLabels[i];
+    if (lab) el.textContent = lab[currentLang] || lab.en;
+  });
+// Kick off after the browser has had one frame to measure the grid.
+// speed = px per frame (~60fps). Higher = faster. Negative = right-to-left.
+// Per-variant overrides live in VARIANTS[...].speeds; anything unset falls
+// back to these defaults.
+const DEFAULT_SCROLL_SPEEDS = { grid1: 0.35, grid2: 0.35, grid3: 0.25, grid4: 0.45 };
+const speeds = { ...DEFAULT_SCROLL_SPEEDS, ...(variant.speeds || {}) };
 setTimeout(() => {
-  setupAutoScroll(document.getElementById('project-grid'));
-  setupAutoScroll(document.getElementById('project-grid-2'));
-  setupAutoScroll(document.getElementById('project-grid-3'));
-  setupAutoScroll(document.getElementById('poster-strip'));
-    }, 
+  setupAutoScroll(document.getElementById('project-grid-1'), { speed: speeds.grid1 });
+  setupAutoScroll(document.getElementById('project-grid-2'), { speed: speeds.grid2 });
+  setupAutoScroll(document.getElementById('project-grid-3'), { speed: speeds.grid3 });
+  setupAutoScroll(document.getElementById('project-grid-4'), { speed: speeds.grid4 });
+    },
   100);
 }
 

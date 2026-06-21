@@ -702,8 +702,23 @@ images: [
   },
 ];
 
+/* Exhibition posters — display-only cards (no detail view). Managed as ordinary
+   projects so they render through renderProjectsInto like any other row.
+   `displayOnly: true` skips the detail link/meta; thumb carries its own
+   `posters/` path (a slash in `thumb` overrides the default images/ prefix). */
+const PROJECTS_DIGITALART2 = [
+  { id: "poster-disorient-ringularity",  displayOnly: true, name: { en: "Disorient: Ringularity",          ko: "디스오리엔트: 링귤래리티" },                 thumb: "posters/disorient-ringularity-전시-포스터.jpg" },
+  { id: "poster-love-machine",           displayOnly: true, name: { en: "Love Machine",                    ko: "러브 머신" },                               thumb: "posters/Love-Machine-전시-포스터.jpg" },
+  { id: "poster-mumbling-after-silence", displayOnly: true, name: { en: "Mumbling after Silence",          ko: "Mumbling after Silence" },                  thumb: "posters/Mumbling-after-Silence-전시-포스터.jpg" },
+  { id: "poster-texture-2023",           displayOnly: true, name: { en: "tex·ture 2023",                   ko: "tex·ture 2023 국제전" },                     thumb: "posters/tex-ture-2023-국제전-포스터.jpg" },
+  { id: "poster-when-we-become",         displayOnly: true, name: { en: "When We Become You and I Again",  ko: "When We Become You and I Again" },          thumb: "posters/When-We-Become-You-and-I-Again-포스터.jpg" },
+  { id: "poster-seoul-auction-blue-nft", displayOnly: true, name: { en: "Seoul Auction Blue NFT",          ko: "서울옥션블루 NFT 작가 공모전" },              thumb: "posters/서울옥션블루-nft-작가-공모전-포스터.jpg" },
+  { id: "poster-ars-electronica-garden", displayOnly: true, name: { en: "Ars Electronica Garden Seoul",    ko: "아르스 일렉트로니카 가든 서울 페스티벌" },    thumb: "posters/아르스-일렉트로니카-가든-서울-페스티벌-전시-포스터.jpg" },
+  { id: "poster-anthropocene-tomorrow",  displayOnly: true, name: { en: "Anthropocene: Tomorrow",          ko: "인류세: 내일" },                            thumb: "posters/인류세의-내일-포스터.jpg" },
+];
+
 /* Combined lookup so openProject() can resolve any id from either section. */
-const ALL_PROJECTS = [...PROJECTS, ...PROJECTS_SECONDARY, ...PROJECTS_DIGITALART];
+const ALL_PROJECTS = [...PROJECTS, ...PROJECTS_SECONDARY, ...PROJECTS_DIGITALART, ...PROJECTS_DIGITALART2];
 
 /* ================================================
    VARIANT SYSTEM — controls project order AND
@@ -722,16 +737,18 @@ const VARIANTS = {
     label1: { en: 'Selected Work · 2026',              ko: '주요 작업 · 2026' },
     label2: { en: 'Selected Projects',                  ko: '다른 작업' },
     label3: { en: 'Digital Art Exhibition',  ko: '디지털 아트 전시' },
+    // Per-slide auto-scroll speed (px/frame). Higher = faster, negative = right-to-left.
+    speeds: { grid1: 0.35, grid2: 0.45, grid3: 0.3 },
     overrides: {
       en: {
-        siteTitle:    'Doyeon Kim <em>—</em> 3D Artist',
+        siteTitle:    'Doyeon Kim <em>•</em> 3D Artist',
         siteTagline:  '3D Worlds · Props · Environments',
-        aboutHeading: 'Doyeon Kim <em>—</em> 3D Artist',
+        aboutHeading: 'Doyeon Kim <em>•</em> 3D Artist',
       },
       ko: {
-        siteTitle:    '김도연 <em>—</em> 3D 아티스트',
+        siteTitle:    '김도연 <em>•</em> 3D 아티스트',
         siteTagline:  '3D 월드 · 프롭 · 환경',
-        aboutHeading: '김도연 <em>—</em> 3D 아티스트',
+        aboutHeading: '김도연 <em>•</em> 3D 아티스트',
       },
     },
   },
@@ -739,36 +756,40 @@ const VARIANTS = {
     row1: ['secret-garden', 'japanese-izakaya', 'cyberpunk-seoul', 'sienar-chall-utilipede', 'vintage-telephone', 'espresso-machine'],
     row2: ['wizard-of-oz-sphere', 'fortnite-concert-snoopdogg-icespice', 'la-2028-olympics', 'welcome-to-oko', 'fallout-vault-33', 'gap-cross-reality-retail'],
     label1: { en: '3D · Environments & Animation · 2026', ko: '3D · 환경 & 애니메이션 · 2026' },
-    label2: { en: 'Selected Projects',                    ko: '다른 작업' },
+    label2: { en: 'Selected Projects',                    ko: '개인 작업' },
+    // Per-slide auto-scroll speed (px/frame). Higher = faster, negative = right-to-left.
+    speeds: { grid1: 0.4, grid2: 0.55 },
     overrides: {
       en: {
-        siteTitle:    'Doyeon Kim <em>—</em> 3D Artist',
+        siteTitle:    'Doyeon Kim <em>•</em> 3D Artist',
         siteTagline:  '3D Environments · VFX · Virtual Production',
-        aboutHeading: 'Doyeon Kim <em>—</em> 3D Artist',
+        aboutHeading: 'Doyeon Kim <em>•</em> 3D Artist',
       },
       ko: {
-        siteTitle:    '김도연 <em>—</em> 3D 아티스트',
+        siteTitle:    '김도연 <em>•</em> 3D 아티스트',
         siteTagline:  '3D 환경 · VFX · 버추얼 프로덕션',
-        aboutHeading: '김도연 <em>—</em> 3D 아티스트',
+        aboutHeading: '김도연 <em>•</em> 3D 아티스트',
       },
     },
   },
   lbe: {
     row1: ['wizard-of-oz-sphere', 'la-2028-olympics', 'welcome-to-oko', 'fallout-vault-33', 'fortnite-concert-snoopdogg-icespice', 'gap-cross-reality-retail'],
     row2: ['secret-garden', 'japanese-izakaya', 'cyberpunk-seoul', 'sienar-chall-utilipede', 'vintage-telephone', 'espresso-machine'],
-    label1: { en: 'Featured Project Contributions',       ko: '주요 작업' },
-    label2: { en: 'Selected Work · 2026',                 ko: '주요 참여 프로젝트' },
+    label1: { en: 'Featured Project Contributions',       ko: '주요 참여 프로젝트' },
+    label2: { en: 'Selected Work · 2026',                 ko: '주요 작업' },
+    // Per-slide auto-scroll speed (px/frame). Higher = faster, negative = right-to-left.
+    speeds: { grid1: 0.5, grid2: 0.3 },
     overrides: {
       en: {
-        siteTitle:    'Doyeon Kim <em>—</em> 3D Spatial Designer',
+        siteTitle:    'Doyeon Kim <em>•</em> 3D Spatial Designer',
         siteTagline:  '3D Content · 3D Architecture · Immersive Entertainment',
-        aboutHeading: 'Doyeon Kim <em>—</em> 3D Spatial Designer',
+        aboutHeading: 'Doyeon Kim <em>•</em> 3D Spatial Designer',
         aboutIntro:   '5-year designer who has contributed to 3D content production across games, virtual production, and e-commerce at Magnopus, founded by Oscar-winning VFX artist Ben Grossmann. I have worked on projects spanning the Las Vegas Sphere, Fortnite concerts, and the LA 2028 Olympics Experience Center — from 3D modelling to large-scale spatial design — pushing the boundaries of immersive entertainment.',
       },
       ko: {
-        siteTitle:    '김도연 <em>—</em> 3D 공간 디자이너',
+        siteTitle:    '김도연 <em>•</em> 3D 공간 디자이너',
         siteTagline:  '3D 콘텐츠 · 공간 디자인 · 이머시브 엔터테인먼트',
-        aboutHeading: '김도연 <em>—</em> 3D 공간 디자이너',
+        aboutHeading: '김도연 <em>•</em> 3D 공간 디자이너',
         aboutIntro:   '5년 차 디자이너로서, 오스카 시각효과상 수상자 Ben Grossmann이 설립한 Magnopus에서 게임, 버추얼 프로덕션, 이커머스 등 다양한 분야의 3D 콘텐츠 제작에 참여했습니다. 또한 라스베이거스 스피어, Fortnite 콘서트, 2028 LA 올림픽 체험 센터 등 다양한 프로젝트에서 3D 모델링부터 대규모 공간 제작까지 수행하며, 이머시브 엔터테인먼트의 경계를 확장하는 작업에 기여했습니다.',
       },
     },
@@ -777,17 +798,19 @@ const VARIANTS = {
     row1: ['cyberpunk-seoul', 'sienar-chall-utilipede', 'japanese-izakaya', 'secret-garden', 'vintage-telephone', 'espresso-machine'],
     row2: ['fallout-vault-33', 'fortnite-concert-snoopdogg-icespice', 'wizard-of-oz-sphere', 'la-2028-olympics', 'welcome-to-oko', 'gap-cross-reality-retail'],
     label1: { en: 'Game Environment Art · 2026',          ko: '게임 환경 아트 · 2026' },
-    label2: { en: 'Selected Projects',                    ko: '다른 작업' },
+    label2: { en: 'Featured Project Contributions',       ko: '주요 참여 프로젝트' },
+    // Per-slide auto-scroll speed (px/frame). Higher = faster, negative = right-to-left.
+    speeds: { grid1: 0.7, grid2: 0.35, grid3: 0.25, posters: 0.45 },
     overrides: {
       en: {
-        siteTitle:    'Doyeon Kim <em>—</em> Environment Artist',
+        siteTitle:    'Doyeon Kim <em>•</em> Environment Artist',
         siteTagline:  'Game Environments · Props · Real-Time Art',
-        aboutHeading: 'Doyeon Kim <em>—</em> Environment Artist',
+        aboutHeading: 'Doyeon Kim <em>•</em> Environment Artist',
       },
       ko: {
-        siteTitle:    '김도연 <em>—</em> 배경 아티스트',
+        siteTitle:    '김도연 <em>•</em> 배경 아티스트',
         siteTagline:  '게임 환경 · 프롭 · 리얼타임 아트',
-        aboutHeading: '김도연 <em>—</em> 배경 아티스트',
+        aboutHeading: '김도연 <em>•</em> 배경 아티스트',
       },
     },
   },
@@ -795,17 +818,17 @@ const VARIANTS = {
     row1: ['fallout-vault-33', 'welcome-to-oko', 'fortnite-concert-snoopdogg-icespice', 'wizard-of-oz-sphere', 'la-2028-olympics', 'gap-cross-reality-retail'],
     row2: ['japanese-izakaya', 'sienar-chall-utilipede', 'cyberpunk-seoul', 'secret-garden', 'vintage-telephone', 'espresso-machine'],
     label1: { en: 'Environment Design · 2026',            ko: '환경 디자인 · 2026' },
-    label2: { en: 'Selected Projects',                    ko: '다른 작업' },
+    label2: { en: 'Selected Projects',                    ko: '개인 작업' },
     overrides: {
       en: {
-        siteTitle:    'Doyeon Kim <em>—</em> 3D Environment Designer',
+        siteTitle:    'Doyeon Kim <em>•</em> 3D Environment Designer',
         siteTagline:  'Environments · Worldbuilding · Real-Time Spaces',
-        aboutHeading: 'Doyeon Kim <em>—</em> 3D Environment Designer',
+        aboutHeading: 'Doyeon Kim <em>•</em> 3D Environment Designer',
       },
       ko: {
-        siteTitle:    '김도연 <em>—</em> 3D 배경 디자이너',
+        siteTitle:    '김도연 <em>•</em> 3D 배경 디자이너',
         siteTagline:  '환경 · 월드빌딩 · 리얼타임 공간',
-        aboutHeading: '김도연 <em>—</em> 3D 배경 디자이너',
+        aboutHeading: '김도연 <em>•</em> 3D 배경 디자이너',
       },
     },
   },
@@ -813,40 +836,49 @@ const VARIANTS = {
     row1: ['sienar-chall-utilipede', 'cyberpunk-seoul', 'japanese-izakaya', 'secret-garden', 'vintage-telephone', 'espresso-machine'],
     row2: ['fallout-vault-33', 'fortnite-concert-snoopdogg-icespice', 'wizard-of-oz-sphere', 'la-2028-olympics', 'welcome-to-oko', 'gap-cross-reality-retail'],
     label1: { en: 'Game Art · 2026',                     ko: '게임 아트 · 2026' },
-    label2: { en: 'Selected Projects',                    ko: '다른 작업' },
+    label2: { en: 'Selected Projects',                   ko: '개인 작업' },
     overrides: {
       en: {
-        siteTitle:    'Doyeon Kim <em>—</em> 3D Modeler',
+        siteTitle:    'Doyeon Kim <em>•</em> 3D Modeler',
         siteTagline:  'Realistic · Organic · Hard Surface · Game-Ready Assets',
-        aboutHeading: 'Doyeon Kim <em>—</em> 3D Modeler',
+        aboutHeading: 'Doyeon Kim <em>•</em> 3D Modeler',
         aboutIntro:   'I am a 3D modeler specialising in environment art, props, and real-time workflows — from ZBrush and Maya to Unreal Engine. My work spans game-ready assets, full environments, and immersive spatial experiences, always with an eye for grounded, detail-driven design. I am currently based in Korea, working across personal projects, studio collaborations, and teaching 3D production.',    
       },
       ko: {
-        siteTitle:    '김도연 <em>—</em> 3D 모델러',
+        siteTitle:    '김도연 <em>•</em> 3D 모델러',
         siteTagline:  '리얼리스틱 · 오가닉 · 하드서페이스 · 게임 레디 에셋',
-        aboutHeading: '김도연 <em>—</em> 3D 모델러',
+        aboutHeading: '김도연 <em>•</em> 3D 모델러',
         aboutIntro:   '5년 차 3D 모델러로서, 오스카 시각효과상 수상자 Ben Grossmann이 설립한 Magnopus에서 게임, 버추얼 프로덕션, 이커머스 등 다양한 분야의 3D 콘텐츠 제작에 참여했습니다. 또한 라스베이거스 스피어, Fortnite 콘서트, 2028 LA 올림픽 체험 센터 등 다양한 프로젝트에서 3D 모델링부터 대규모 공간 제작까지 수행하며, 이머시브 엔터테인먼트의 경계를 확장하는 작업에 기여했습니다. ZBrush·Maya·Blender·Unreal Engine·Substance 3D를 사용하며 현재 개인 프로젝트, 스튜디오 협업, 강의를 병행하고 있습니다.',
       },
     },
   },
   digitalart: {
+    // rowN renders into #project-grid-N (== DOM position N, top to bottom).
     row1: ['wizard-of-oz-sphere', 'la-2028-olympics', 'welcome-to-oko', 'fallout-vault-33', 'fortnite-concert-snoopdogg-icespice', 'gap-cross-reality-retail'],
-    row2: ['legacy-vr', 'when-we-become-you-and-i-again', 'k-town-2023', 'mumbling-after-silence', 'spectra-studio-showcase-fall-2022'],        
-    row3: ['secret-garden', 'japanese-izakaya', 'cyberpunk-seoul', 'sienar-chall-utilipede', 'vintage-telephone', 'espresso-machine'],
+    row2: ['poster-disorient-ringularity', 'poster-love-machine', 'poster-mumbling-after-silence', 'poster-texture-2023', 'poster-when-we-become', 'poster-seoul-auction-blue-nft', 'poster-ars-electronica-garden', 'poster-anthropocene-tomorrow'],
+    row3: ['legacy-vr', 'when-we-become-you-and-i-again', 'k-town-2023', 'mumbling-after-silence', 'spectra-studio-showcase-fall-2022'],
+    row4: ['secret-garden', 'japanese-izakaya', 'cyberpunk-seoul', 'sienar-chall-utilipede', 'vintage-telephone', 'espresso-machine'],
+    // labelN shows above #project-grid-N (rendering.js assigns by DOM position).
     label1: { en: 'Featured Project Contributions',       ko: '주요 작업' },
-    label2: { en: 'Digital Art Exhibition',  ko: '디지털 아트 전시' },    
-    label3: { en: 'Selected Work · 2026',                 ko: '주요 참여 프로젝트' },
+    label2: { en: 'Exhibition Posters',                   ko: '전시 포스터' },
+    label3: { en: 'Digital Art Exhibition',               ko: '디지털 아트 전시' },
+    label4: { en: 'Selected Work · 2026',                 ko: '주요 참여 프로젝트' },
+    // Per-slide auto-scroll speed (px/frame). Higher = faster, negative = right-to-left.
+    speeds: { grid1: 2, grid2: 1, grid3: 2, grid4: 1 },
+    // Per-row card height (any CSS length). Unset rows fall back to the
+    // .project-card default (min(55vh, 480px)). Here grid2 (posters) and grid4 are halved.
+    heights: { grid2: 'min(27.5vh, 240px)', grid4: 'min(27.5vh, 240px)' },
     overrides: {
       en: {
-        siteTitle:    'Doyeon Kim <em>—</em> Digital Artist',
+        siteTitle:    'Doyeon Kim <em>•</em> Digital Artist',
         siteTagline:  'Media Art · 3D · Immersive Worlds',
-        aboutHeading: 'Doyeon Kim <em>—</em> Digital Artist',
+        aboutHeading: 'Doyeon Kim <em>•</em> Digital Artist',
         // aboutIntro: '…optional separate About blurb for this audience…',
       },
       ko: {
-        siteTitle:    '김도연 <em>—</em> 디지털 아티스트',
+        siteTitle:    '김도연 <em>•</em> 디지털 아티스트',
         siteTagline:  '미디어 아트 · 3D · 이머시브 월드',
-        aboutHeading: '김도연 <em>—</em> 디지털 아티스트',
+        aboutHeading: '김도연 <em>•</em> 디지털 아티스트',
         // aboutIntro: '…',
       },
     },

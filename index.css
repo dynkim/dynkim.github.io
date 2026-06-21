@@ -277,8 +277,7 @@ html[lang="ko"] .resume-cta {
   align-items: center;
   gap: 16px;
 }
-.section-label + .section-label,
-.scroll-hint + .section-label {
+.section-label + .section-label {
   margin-top: 32px;
 }
 .section-label::after {
@@ -289,24 +288,21 @@ html[lang="ko"] .resume-cta {
 }
 
 .project-grid {
-  padding: 0 0 16px;
+  padding: 0 32px 16px;
   display: flex;
   gap: 0;
   overflow-x: auto;
   overflow-y: hidden;
   scroll-behavior: smooth;
-  scrollbar-width: thin;
-  scrollbar-color: var(--text-faint) transparent;
+  scrollbar-width: none;            /* Firefox: hide scrollbar */
+  -ms-overflow-style: none;         /* old Edge/IE: hide scrollbar */
   cursor: grab;
   user-select: none;
   margin-bottom: 32px;
 }
 .project-grid.dragging { cursor: grabbing; scroll-behavior: auto; }
 .project-grid.dragging .project-card { pointer-events: none; }
-.project-grid::-webkit-scrollbar { height: 8px; }
-.project-grid::-webkit-scrollbar-track { background: var(--bg-elevated); }
-.project-grid::-webkit-scrollbar-thumb { background: var(--text-dim); border-radius: 4px; }
-.project-grid::-webkit-scrollbar-thumb:hover { background: var(--text); }
+.project-grid::-webkit-scrollbar { display: none; }  /* WebKit: hide scrollbar */
 
 .project-card {
   cursor: pointer;
@@ -315,12 +311,19 @@ html[lang="ko"] .resume-cta {
   position: relative;
   overflow: hidden;
   flex-shrink: 0;
-  height: min(75vh, 680px);
-  aspect-ratio: 4 / 3;
+  /* Per-row height: each .project-grid can set --card-h (driven by the variant's
+     `heights` config in data.js); falls back to this default when unset. */
+  height: var(--card-h, min(55vh, 480px));
+  width: auto;               /* width follows the image's natural ratio */
+  margin-right: 28px;
+  border-radius: 12px;
 }
 
+/* Poster cards reuse .project-card but are display-only (no detail view) */
+.poster-card { cursor: default; }
+
 .project-thumb {
-  width: 100%;
+  width: auto;
   height: 100%;
   background: var(--bg-elevated);
   overflow: hidden;
@@ -328,7 +331,7 @@ html[lang="ko"] .resume-cta {
 }
 .project-thumb img,
 .project-thumb video {
-  width: 100%;
+  width: auto;          /* keep the image's natural ratio at this height */
   height: 100%;
   object-fit: cover;
   transition: transform 0.6s ease, filter 0.4s ease;
@@ -803,24 +806,6 @@ html[lang="en"] .gallery-text p:first-child::first-letter {
   border-bottom-color: var(--accent);
 }
 
-.scroll-hint {
-  padding: 0 var(--page-padding) 64px;
-  font-family: var(--font-mono);
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 0.2em;
-  color: var(--text-faint);
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-.scroll-hint .line {
-  flex: 1;
-  max-width: 80px;
-  height: 1px;
-  background: var(--text-faint);
-}
-
 /* =========================================
     ABOUT PAGE
     ========================================= */
@@ -995,7 +980,6 @@ html[lang="ko"] .project-description {
     Hangul and the wide tracking pulls syllable blocks apart. Switch to
     Pretendard with restrained letter-spacing. */
 html[lang="ko"] .section-label,
-html[lang="ko"] .scroll-hint,
 html[lang="ko"] .site-tagline,
 html[lang="ko"] .site-nav,
 html[lang="ko"] .lang-toggle,
@@ -1230,30 +1214,4 @@ html[lang="ko"] .project-specs span {
 
 @media (prefers-reduced-motion: reduce) {
   .lang-toggle { animation: none; }
-}
-
-/* ── Exhibition poster strip (display-only carousel) ── */
-.poster-strip-wrapper {
-  overflow: hidden;
-  width: 100%;
-  margin: 0 0 32px;
-}
-
-.poster-strip {
-  display: flex;
-  gap: 16px;
-  overflow-x: auto;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-  padding: 0 24px;
-}
-.poster-strip::-webkit-scrollbar { display: none; }
-.poster-strip img {
-  height: var(--poster-h, 260px);
-  width: auto;
-  flex: 0 0 auto;
-  border-radius: 4px;
-  display: block;
-  user-select: none;
-  -webkit-user-drag: none;
 }
