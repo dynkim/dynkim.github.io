@@ -853,16 +853,21 @@ const VARIANTS = {
     },
   },
   digitalart: {
+    // rowN renders into #project-grid-N (== DOM position N, top to bottom).
     row1: ['wizard-of-oz-sphere', 'la-2028-olympics', 'welcome-to-oko', 'fallout-vault-33', 'fortnite-concert-snoopdogg-icespice', 'gap-cross-reality-retail'],
-    row2: ['legacy-vr', 'when-we-become-you-and-i-again', 'k-town-2023', 'mumbling-after-silence', 'spectra-studio-showcase-fall-2022'],
-    row3: ['secret-garden', 'japanese-izakaya', 'cyberpunk-seoul', 'sienar-chall-utilipede', 'vintage-telephone', 'espresso-machine'],
-    row4: ['poster-disorient-ringularity', 'poster-love-machine', 'poster-mumbling-after-silence', 'poster-texture-2023', 'poster-when-we-become', 'poster-seoul-auction-blue-nft', 'poster-ars-electronica-garden', 'poster-anthropocene-tomorrow'],
+    row2: ['poster-disorient-ringularity', 'poster-love-machine', 'poster-mumbling-after-silence', 'poster-texture-2023', 'poster-when-we-become', 'poster-seoul-auction-blue-nft', 'poster-ars-electronica-garden', 'poster-anthropocene-tomorrow'],
+    row3: ['legacy-vr', 'when-we-become-you-and-i-again', 'k-town-2023', 'mumbling-after-silence', 'spectra-studio-showcase-fall-2022'],
+    row4: ['secret-garden', 'japanese-izakaya', 'cyberpunk-seoul', 'sienar-chall-utilipede', 'vintage-telephone', 'espresso-machine'],
+    // labelN shows above #project-grid-N (rendering.js assigns by DOM position).
     label1: { en: 'Featured Project Contributions',       ko: '주요 작업' },
-    label2: { en: 'Digital Art Exhibition',  ko: '디지털 아트 전시' },
-    label3: { en: 'Selected Work · 2026',                 ko: '주요 참여 프로젝트' },
-    label4: { en: 'Exhibition Posters',                   ko: '전시 포스터' },
+    label2: { en: 'Exhibition Posters',                   ko: '전시 포스터' },
+    label3: { en: 'Digital Art Exhibition',               ko: '디지털 아트 전시' },
+    label4: { en: 'Selected Work · 2026',                 ko: '주요 참여 프로젝트' },
     // Per-slide auto-scroll speed (px/frame). Higher = faster, negative = right-to-left.
-    speeds: { grid1: 1.3, grid2: 1.6, grid3: 0.4, grid4: 0.45 },
+    speeds: { grid1: 2, grid2: 1, grid3: 2, grid4: 1 },
+    // Per-row card height (any CSS length). Unset rows fall back to the
+    // .project-card default (min(55vh, 480px)). Here grid2 (posters) and grid4 are halved.
+    heights: { grid2: 'min(27.5vh, 240px)', grid4: 'min(27.5vh, 240px)' },
     overrides: {
       en: {
         siteTitle:    'Doyeon Kim <em>—</em> Digital Artist',

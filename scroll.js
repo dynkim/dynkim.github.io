@@ -61,7 +61,7 @@ function attachHorizontalScroll(el) {
 function setupHorizontalScroll() {
   // Home grids keep horizontal scroll behaviors.
   // Project galleries now stack vertically, so they use normal page scroll.
-  const grid  = document.getElementById('project-grid');
+  const grid  = document.getElementById('project-grid-1');
   const grid2 = document.getElementById('project-grid-2');
   const grid3 = document.getElementById('project-grid-3');
   const grid4 = document.getElementById('project-grid-4');
@@ -108,7 +108,7 @@ function setupScrollArrows(scrollEl, leftBtn, rightBtn) {
   scrollEl.addEventListener('scroll', update, { passive: true });
   window.addEventListener('resize', update);
 
-  const stepFor = () => Math.round(scrollEl.clientWidth * 0.8);
+  const stepFor = () => Math.round(scrollEl.clientWidth * 0.6);
   // Pause the auto-scroll loop around a click so it doesn't overwrite the
   // smooth scrollBy on the next frame; resume() re-arms after resumeDelay and
   // picks up from the new position. Re-arms on each click so rapid clicks work.
@@ -137,9 +137,9 @@ function setupScrollArrows(scrollEl, leftBtn, rightBtn) {
 let galleryArrows = null;
 function setupAllScrollArrows() {
   setupScrollArrows(
-    document.getElementById('project-grid'),
-    document.getElementById('grid-arrow-left'),
-    document.getElementById('grid-arrow-right')
+    document.getElementById('project-grid-1'),
+    document.getElementById('grid1-arrow-left'),
+    document.getElementById('grid1-arrow-right')
   );
   setupScrollArrows(
     document.getElementById('project-grid-2'),
@@ -171,20 +171,49 @@ function setupAutoScroll(grid, { speed = 0.35, resumeDelay = 500 } = {}) {
 
   grid.style.scrollBehavior = 'auto';
 
-  // Remove stale clones
+  // Remove stale clones, keep just the originals.
   grid.querySelectorAll('[data-clone]').forEach(n => n.remove());
 
   const originals = Array.from(grid.children);
-  console.log('[autoScroll] grid:', grid.id, 'originals:', originals.length, 'scrollWidth:', grid.scrollWidth);
   if (!originals.length) return;
 
-  originals.forEach(node => {
-    const clone = node.cloneNode(true);
-    clone.setAttribute('aria-hidden', 'true');
-    clone.dataset.clone = '1';
-    grid.appendChild(clone);
+  // Append one full copy of the originals (a "set").
+  const appendSet = () => {
+    originals.forEach(node => {
+      const clone = node.cloneNode(true);
+      clone.setAttribute('aria-hidden', 'true');
+      clone.dataset.clone = '1';
+      grid.appendChild(clone);
+    });
+  };
+
+  // `unit` = width of one set = the seamless repeat period. We wrap by this,
+  // NOT scrollWidth/2: if a single set is narrower than the viewport, the wrap
+  // point would sit past the clamped max scrollLeft and the strip would freeze
+  // at the end before snapping back. Measuring the real unit + cloning enough
+  // sets so (scrollWidth - clientWidth) >= unit keeps the wrap reachable.
+  let unit = 0;
+  const measure = () => {
+    const firstClone = grid.querySelector('[data-clone]');
+    if (!firstClone) return;
+    unit = firstClone.offsetLeft - originals[0].offsetLeft;
+    // Add sets until there's at least a full viewport of content beyond one unit.
+    let guard = 0;
+    while (unit > 0 && grid.scrollWidth - grid.clientWidth < unit && guard < 16) {
+      appendSet();
+      guard++;
+    }
+    grid.querySelectorAll('.project-card').forEach(applyLogoColorFromThumb);
+  };
+
+  appendSet();
+  measure();
+  // Lazy thumbnails/posters report ~0 width until they load; re-measure then,
+  // and on resize, so `unit` reflects real layout.
+  grid.querySelectorAll('img').forEach(img => {
+    if (!img.complete) img.addEventListener('load', measure, { once: true });
   });
-  grid.querySelectorAll('.project-card').forEach(applyLogoColorFromThumb);
+  window.addEventListener('resize', measure);
 
   let paused = false;
   let resumeTimer = null;
@@ -198,11 +227,10 @@ function setupAutoScroll(grid, { speed = 0.35, resumeDelay = 500 } = {}) {
     if (paused || grid.classList.contains('dragging')) {
       // User is in control — keep our accumulator in sync with reality.
       pos = grid.scrollLeft;
-    } else {
-      const half = grid.scrollWidth / 2;
+    } else if (unit > 0) {
       pos += speed;
-      if (pos >= half) pos -= half;
-      if (pos < 0)     pos += half;
+      if (pos >= unit) pos -= unit;
+      if (pos < 0)     pos += unit;
       grid.scrollLeft = pos;
     }
     raf = requestAnimationFrame(tick);
@@ -234,6 +262,7 @@ function setupAutoScroll(grid, { speed = 0.35, resumeDelay = 500 } = {}) {
     clearTimeout(resumeTimer);
     grid.removeEventListener('pointerenter', pause);
     grid.removeEventListener('pointerleave', resume);
+    window.removeEventListener('resize', measure);
     grid.querySelectorAll('[data-clone]').forEach(n => n.remove());
     delete grid._autoScrollStop;
     delete grid._autoScrollPause;

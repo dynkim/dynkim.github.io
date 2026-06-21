@@ -53,21 +53,35 @@ function renderHome() {
   const row1 = variant.row1.map(id => ALL_PROJECTS.find(p => p.id === id)).filter(Boolean);
   const row2 = variant.row2.map(id => ALL_PROJECTS.find(p => p.id === id)).filter(Boolean);
   const row3 = (variant.row3 || []).map(id => ALL_PROJECTS.find(p => p.id === id)).filter(Boolean);
-  // row4 = display-only posters; keep curated order (no variant sort).
   const row4 = (variant.row4 || []).map(id => ALL_PROJECTS.find(p => p.id === id)).filter(Boolean);
-  renderProjectsInto(document.getElementById('project-grid'),   sortVariantProjects(row1));
+  // Grid id number == row number == DOM position. Any row may hold display-only
+  // posters; that's per-project (displayOnly flag), not per-row.
+  renderProjectsInto(document.getElementById('project-grid-1'), sortVariantProjects(row1));
   renderProjectsInto(document.getElementById('project-grid-2'), sortVariantProjects(row2));
   renderProjectsInto(document.getElementById('project-grid-3'), sortVariantProjects(row3));
-  renderProjectsInto(document.getElementById('project-grid-4'), row4);
-    // Update section labels to match this variant + current language
-  const l1 = document.querySelector('[data-i18n="selectedWork"]');
-  const l2 = document.querySelector('[data-i18n="selectedProjects"]');
-  const l3 = document.querySelector('[data-i18n="digitalArtExhibition"]');
-  const l4 = document.querySelector('[data-i18n="exhibitionPosters"]');
-  if (l1) l1.textContent = variant.label1[currentLang] || variant.label1.en;
-  if (l2) l2.textContent = variant.label2[currentLang] || variant.label2.en;
-  if (l3 && variant.label3) l3.textContent = variant.label3[currentLang] || variant.label3.en;
-  if (l4 && variant.label4) l4.textContent = variant.label4[currentLang] || variant.label4.en;
+  renderProjectsInto(document.getElementById('project-grid-4'), sortVariantProjects(row4));
+
+  // Per-row card height: set --card-h on each grid (cards inherit it). Unset
+  // rows clear the override and fall back to the CSS default.
+  const heights = variant.heights || {};
+  const setCardHeight = (id, val) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    if (val) el.style.setProperty('--card-h', val);
+    else     el.style.removeProperty('--card-h');
+  };
+  setCardHeight('project-grid-1', heights.grid1);
+  setCardHeight('project-grid-2', heights.grid2);
+  setCardHeight('project-grid-3', heights.grid3);
+  setCardHeight('project-grid-4', heights.grid4);
+  // Section labels by DOM position: the Nth .section-label in the home view
+  // shows variant.label{N}. Keeps label N aligned with #project-grid-N / rowN
+  // regardless of each page's data-i18n keys.
+  const variantLabels = [variant.label1, variant.label2, variant.label3, variant.label4];
+  document.querySelectorAll('#view-home .section-label').forEach((el, i) => {
+    const lab = variantLabels[i];
+    if (lab) el.textContent = lab[currentLang] || lab.en;
+  });
 // Kick off after the browser has had one frame to measure the grid.
 // speed = px per frame (~60fps). Higher = faster. Negative = right-to-left.
 // Per-variant overrides live in VARIANTS[...].speeds; anything unset falls
@@ -75,7 +89,7 @@ function renderHome() {
 const DEFAULT_SCROLL_SPEEDS = { grid1: 0.35, grid2: 0.35, grid3: 0.25, grid4: 0.45 };
 const speeds = { ...DEFAULT_SCROLL_SPEEDS, ...(variant.speeds || {}) };
 setTimeout(() => {
-  setupAutoScroll(document.getElementById('project-grid'),   { speed: speeds.grid1 });
+  setupAutoScroll(document.getElementById('project-grid-1'), { speed: speeds.grid1 });
   setupAutoScroll(document.getElementById('project-grid-2'), { speed: speeds.grid2 });
   setupAutoScroll(document.getElementById('project-grid-3'), { speed: speeds.grid3 });
   setupAutoScroll(document.getElementById('project-grid-4'), { speed: speeds.grid4 });
