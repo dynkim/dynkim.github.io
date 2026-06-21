@@ -344,6 +344,15 @@ html[lang="ko"] .resume-cta {
   filter: saturate(1);
 }
 
+/* Square thumbnails: card width follows a 1:1 ratio at full card height, and the
+   media is cropped (object-fit: cover) and centered on the subject. */
+.project-thumb.square { aspect-ratio: 1 / 1; }
+.project-thumb.square img,
+.project-thumb.square video {
+  width: 100%;
+  object-position: center;
+}
+
 /* Meta now sits as an overlay so thumbnails stay edge-to-edge */
 .project-meta {
   position: absolute;
@@ -396,6 +405,14 @@ html[lang="ko"] .resume-cta {
 .project-logo-right {
   left: auto;
   right: clamp(16px, 2vw, 28px);
+}
+
+/* digitalart variant only: shrink the Unreal / Star Wars fan-art logos on the
+   fourth-row (Technical Projects) thumbnail cards. transform keeps the top-left
+   anchor and overrides any inline --logo-scale. */
+body[data-variant="digitalart"] #project-grid-4 .project-logo {
+  transform: scale(0.5);
+  transform-origin: top left;
 }
 
 /* =========================================
@@ -625,6 +642,32 @@ html[lang="ko"] .gallery-split-text {
   object-fit: cover;
 }
 
+/* Side-by-side row of embeds (e.g. map + Instagram). Equal columns at a
+   shared height so disparate iframes line up; stacks on narrow screens. */
+.gallery-row {
+  display: flex;
+  gap: 12px;
+  width: 100%;
+  max-width: 1200px;
+  margin: 24px auto 8px;
+  align-items: stretch;
+}
+.gallery-row > .gallery-embed {
+  flex: 1 1 0;
+  min-width: 0;
+  max-width: none;
+  margin: 0;
+  height: 720px;
+}
+.gallery-row > .gallery-embed iframe {
+  height: 100% !important;
+  aspect-ratio: auto !important;
+}
+@media (max-width: 720px) {
+  .gallery-row { flex-direction: column; }
+  .gallery-row > .gallery-embed { height: 600px; }
+}
+
 /* Text blocks interleaved with images in a project gallery */
 .gallery-text {
   max-width: 64ch;
@@ -804,6 +847,92 @@ html[lang="en"] .gallery-text p:first-child::first-letter {
 .gallery-embed-fallback a:hover {
   color: var(--accent);
   border-bottom-color: var(--accent);
+}
+
+/* Article card — in-page preview of an external article (press/features).
+    News sites block iframing, so we surface source/date, headline, and a
+    short excerpt, then link out to the original. */
+.gallery-article {
+  max-width: 760px;
+  margin: 32px auto;
+  display: flex;
+  gap: clamp(16px, 2.5vw, 32px);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.gallery-article-thumb {
+  flex: 0 0 38%;
+  display: block;
+  overflow: hidden;
+}
+.gallery-article-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.4s ease;
+}
+.gallery-article-thumb:hover img { transform: scale(1.04); }
+.gallery-article-body {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: clamp(20px, 3vw, 36px) clamp(20px, 3vw, 36px);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.gallery-article-meta {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--text-dim);
+  margin-bottom: 0.9em;
+}
+.gallery-article-title {
+  font-family: var(--font-display);
+  font-size: clamp(20px, 2vw, 28px);
+  line-height: 1.25;
+  color: var(--text);
+  margin: 0 0 0.6em;
+  font-weight: 500;
+}
+.gallery-article-excerpt {
+  color: var(--text);
+  font-size: clamp(14.5px, 1vw, 16px);
+  line-height: 1.6;
+}
+.gallery-article-excerpt p { margin: 0 0 0.8em; }
+.gallery-article-cta {
+  margin-top: auto;
+  padding-top: 1em;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: clamp(16px, 1.3vw, 20px);
+  color: var(--accent);
+  text-decoration: none;
+  border-bottom: 1px solid var(--accent);
+  padding-bottom: 0.15em;
+  transition: opacity 0.2s ease;
+}
+.gallery-article-cta:hover { opacity: 0.7; }
+.gallery-article-cta .arrow { display: inline-block; transition: transform 0.2s ease; }
+.gallery-article-cta:hover .arrow { transform: translate(2px, -2px); }
+@media (max-width: 640px) {
+  .gallery-article { flex-direction: column; }
+  .gallery-article-thumb { flex-basis: auto; aspect-ratio: 16/9; }
+}
+html[lang="ko"] .gallery-article-title,
+html[lang="ko"] .gallery-article-cta {
+  font-family: var(--font-display-ko);
+  font-style: normal;
+  font-weight: 600;
+  letter-spacing: -0.02em;
 }
 
 /* =========================================

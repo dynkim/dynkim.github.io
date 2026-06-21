@@ -538,6 +538,8 @@ const PROJECTS_DIGITALART = [
       ko: ["VR 경험", "미디어 아트", "Love Machine — 단체전", "Broad Art Center, LA"]
     },
     thumb: "legacy1.jpg",
+    thumbVideo: "legacy5.MP4",
+    thumbSquare: true,
 images: [
         {
         summary: true,
@@ -589,6 +591,7 @@ images: [
       ko: ["프로젝션 맵핑", "미디어 아트", "설치"]
     },
     thumb: "youandme2.jpg",
+    thumbVideo: "youandme8.mp4",
     images: [
       { src: "youandme1.jpg", caption: { en: "", ko: "" } },
       { text: {
@@ -606,6 +609,19 @@ images: [
         ko: "약 10분간 반복되는 긴 루프 영상은 끊임없이 밀려오는 파도로 비유되는 이민의 역사를 시청각적으로 드러내며, 동시에 새로운 뿌리를 내리기 위해 떠나온 이들을 잔잔히 기념하는 장소 특정적 성격을 취한다."
       } },
       { vimeo: "807471214" },
+      { article: {
+          url: "https://dailybruin.com/2023/04/04/graduate-student-doyeon-kim-conveys-theme-of-identity-through-3d-simulations",
+          source: "Daily Bruin",
+          author: "Christine Kao",
+          date: { en: "April 4, 2023", ko: "2023년 4월 4일" },
+          thumb: "youandme-dailybruin.png",
+          // Title kept in English in both languages (original headline).
+          title: "Graduate student Doyeon Kim conveys theme of identity through 3D simulations",
+          excerpt: {
+            en: "A Daily Bruin feature on Doyeon Kim's graduate work, exploring how she uses 3D simulation and immersive media to examine immigration, language, and identity.",
+            ko: "이민, 언어, 정체성을 3D 시뮬레이션과 이머시브 미디어로 탐구하는 김도연의 대학원 작업을 다룬 Daily Bruin 기사."
+          }
+        } },
     ]
   },
   {
@@ -626,6 +642,7 @@ images: [
     },
     thumb: "ktown1.jpg",
     images: [
+      { video: "ktown5.mp4" },
       { src: "ktown1.jpg", caption: { en: "", ko: "" } },
       { text: {
         en: "K-Town began from conversations with first-generation immigrants the artist met at Korean markets, restaurants, and laundromats in LA Koreatown.",
@@ -640,6 +657,11 @@ images: [
       { text: {
         en: "At the same time, it reveals their solid, existential place and value in LA society in a monumental form, drawing empathy for a journey of making meaning through adaptation, compromise, and painful history.",
         ko: "동시에 이들이 LA 사회에서 차지하는 단단하고 실존적인 위치와 가치를 기념비적 형태로 드러내며, 현지 적응과 타협, 그리고 아픈 역사를 딛고 존재의 의미를 만들어가는 여정에 대한 공감을 이끌어내고자 했다."
+      } },
+      { vimeo: "840554999" },
+      { text: {
+        en: "The storefronts that appear in K-Town 2023 stand in for the identities of the Korean small-business owners the artist met in LA Koreatown. As first-generation immigrants, they recount in their own voices the journeys that brought them here and the daily life of running their own businesses. Their spoken accounts are placed alongside the miniaturized storefronts, so that personal memory and reconstructed space speak to one another.",
+        ko: "K-Town 2023에서 등장하는 스토어프론트(Storefronts)는 LA 코리아타운에서 만난 한인 자영업자들의 정체성을 대변한다. 이들은 이민 1세대로, 이곳에 오기까지의 여정과 자영업을 꾸리며 살아온 일상을 직접 자신의 목소리로 들려준다. 이들의 구술은 축소된 스토어프론트와 병치되어, 개인의 기억과 재현된 공간이 서로 말을 건네도록 한다."
       } },
     ]
   },
@@ -684,8 +706,8 @@ images: [
     tag: { en: "Group Exhibition", ko: "단체전" },
     wip: false,
     description: {
-      en: "TBD",
-      ko: "TBD"
+      en: "Spectra Studio is a Los Angeles multidisciplinary collective merging art and technology across media art, installation, projection, robotics, and light and sound. Our work was screened at the Spectra Studio Showcase in December 2022.",
+      ko: "Spectra Studio는 미디어 아트, 인스톨레이션, 프로젝션, 로보틱스, 빛과 소리를 아우르며 예술과 기술을 결합하는 로스앤젤레스 기반의 다학제 컬렉티브입니다. 우리의 작업은 2022년 12월 Spectra Studio 쇼케이스에서 상영되었습니다."
     },
     year: "2022",
     software: "TBD",
@@ -695,10 +717,22 @@ images: [
       ko: ["단체전", "미디어 아트"]
     },
     thumb: "spectra1.jpg",
+    thumbVideo: "spectra4.MP4",
     images: [
-      { src: "spectra1.jpg", caption: { en: "", ko: "" } },
-      { text: { en: "TBD", ko: "TBD" } },
-      { src: "spectra2.jpg", caption: { en: "", ko: "" } },
+      { video: "spectra4.MP4", caption: { en: "", ko: "" } },
+      { pair: [
+        { src: "spectra1.jpg", caption: { en: "", ko: "" } },
+        { src: "spectra2.jpg", caption: { en: "", ko: "" } },
+      ] },
+      { text: {
+        en: "Spectra Studio is a multidisciplinary collective based in Los Angeles that merges art with technology — drawing on media art, computer science, and mechanical engineering. The collective works across installation, projection, sculpture, robotics, and light and sound to evoke emotion and reflect on how we relate to the physical, the digital, and the unknown. Our work was screened as part of the Spectra Studio Showcase in December 2022.",
+        ko: "Spectra Studio는 로스앤젤레스를 기반으로 활동하는 다학제 컬렉티브로, 미디어 아트·컴퓨터 과학·기계 공학을 바탕으로 예술과 기술을 결합합니다. 인스톨레이션, 프로젝션, 조각, 로보틱스, 빛과 소리를 아우르는 작업을 통해 감정을 불러일으키고, 우리가 물리적인 것·디지털·미지의 것과 맺는 관계를 성찰합니다. 우리의 작업은 2022년 12월 Spectra Studio 쇼케이스에서 상영되었습니다."
+      } },
+      { src: "spectra3.jpg", caption: { en: "", ko: "" } },
+      { row: [
+        { map: "1846 Sichel St, Los Angeles, CA 90031", zoom: 18, satellite: true },
+        { instagram: "CmGS33AL5rb" },
+      ] },
     ]
   },
 ];
@@ -716,6 +750,8 @@ const PROJECTS_DIGITALART2 = [
   { id: "poster-seoul-auction-blue-nft", displayOnly: true, name: { en: "Seoul Auction Blue NFT",          ko: "서울옥션블루 NFT 작가 공모전" },              thumb: "posters/서울옥션블루-nft-작가-공모전-포스터.jpg" },
   { id: "poster-ars-electronica-garden", displayOnly: true, name: { en: "Ars Electronica Garden Seoul",    ko: "아르스 일렉트로니카 가든 서울 페스티벌" },    thumb: "posters/아르스-일렉트로니카-가든-서울-페스티벌-전시-포스터.jpg" },
   { id: "poster-anthropocene-tomorrow",  displayOnly: true, name: { en: "Anthropocene: Tomorrow",          ko: "인류세: 내일" },                            thumb: "posters/인류세의-내일-포스터.jpg" },
+  { id: "poster-disorient-ergo-sphere",  displayOnly: true, name: { en: "Disorient: Ergo Sphere",          ko: "디스오리엔트: 에르고 스피어" },              thumb: "posters/disorient_Ergo-Sphere_포스터.jpg" },
+  { id: "poster-hertzherz",              displayOnly: true, name: { en: "HertzHerz",                       ko: "헤르츠헤르츠" },                            thumbVideo: "posters/HertzHerz영상.mp4" },
 ];
 
 /* Combined lookup so openProject() can resolve any id from either section. */
@@ -856,14 +892,14 @@ const VARIANTS = {
   digitalart: {
     // rowN renders into #project-grid-N (== DOM position N, top to bottom).
     row1: ['wizard-of-oz-sphere', 'la-2028-olympics', 'welcome-to-oko', 'fallout-vault-33', 'fortnite-concert-snoopdogg-icespice', 'gap-cross-reality-retail'],
-    row2: ['poster-disorient-ringularity', 'poster-love-machine', 'poster-mumbling-after-silence', 'poster-texture-2023', 'poster-when-we-become', 'poster-seoul-auction-blue-nft', 'poster-ars-electronica-garden', 'poster-anthropocene-tomorrow'],
-    row3: ['legacy-vr', 'when-we-become-you-and-i-again', 'k-town-2023', 'mumbling-after-silence', 'spectra-studio-showcase-fall-2022'],
+    row2: ['poster-disorient-ringularity', 'poster-disorient-ergo-sphere', 'poster-hertzherz', 'poster-love-machine', 'poster-mumbling-after-silence', 'poster-texture-2023', 'poster-when-we-become', 'poster-seoul-auction-blue-nft', 'poster-ars-electronica-garden', 'poster-anthropocene-tomorrow'],
+    row3: ['legacy-vr', 'k-town-2023', 'when-we-become-you-and-i-again', 'mumbling-after-silence', 'spectra-studio-showcase-fall-2022'],
     row4: ['secret-garden', 'japanese-izakaya', 'cyberpunk-seoul', 'sienar-chall-utilipede', 'vintage-telephone', 'espresso-machine'],
     // labelN shows above #project-grid-N (rendering.js assigns by DOM position).
-    label1: { en: 'Featured Project Contributions',       ko: '주요 작업' },
+    label1: { en: 'Professional Projects',                ko: '프로페셔널 프로젝트' },
     label2: { en: 'Exhibition Posters',                   ko: '전시 포스터' },
     label3: { en: 'Digital Art Exhibition',               ko: '디지털 아트 전시' },
-    label4: { en: 'Selected Work · 2026',                 ko: '주요 참여 프로젝트' },
+    label4: { en: 'Technical Projects',                   ko: '테크니컬 프로젝트' },
     // Per-slide auto-scroll speed (px/frame). Higher = faster, negative = right-to-left.
     speeds: { grid1: 2, grid2: 1, grid3: 2, grid4: 1 },
     // Per-row card height (any CSS length). Unset rows fall back to the

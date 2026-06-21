@@ -29,8 +29,8 @@ function applyVariantResume() {
       ko: 'PDF/김도연 - 이력서 3D 모델러.pdf',
     },
     digitalart: {
-      en: 'PDF/your-digital-art-resume.pdf',
-      ko: 'PDF/your-digital-art-resume.pdf',
+      en: 'PDF/김도연 CV_포트폴리오.pdf',
+      ko: 'PDF/김도연 CV_포트폴리오.pdf',
     },
   };
   const variantFiles = files[variant] || {};

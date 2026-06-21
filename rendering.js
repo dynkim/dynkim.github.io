@@ -6,19 +6,21 @@ function renderProjectsInto(grid, list) {
   grid.innerHTML = list.map(p => {
     const name = t(p.name);
     const tag = t(p.tag);
-    // A thumb with a slash carries its own path (e.g. posters/foo.jpg);
-    // otherwise it defaults to the images/ folder.
-    const thumbSrc = p.thumb && p.thumb.includes('/') ? p.thumb : `images/${p.thumb}`;
+    // A thumb/thumbVideo with a slash carries its own path (e.g. posters/foo.jpg);
+    // otherwise it defaults to the images/ (or videos/) folder.
+    const thumbSrc = p.thumb ? (p.thumb.includes('/') ? p.thumb : `images/${p.thumb}`) : '';
+    const videoSrc = p.thumbVideo && p.thumbVideo.includes('/') ? p.thumbVideo : `videos/${p.thumbVideo}`;
     const media = p.thumbVideo
-      ? `<video src="videos/${p.thumbVideo}" poster="${thumbSrc}" autoplay muted loop playsinline preload="metadata"></video>`
+      ? `<video src="${videoSrc}" poster="${thumbSrc}" autoplay muted loop playsinline preload="metadata"></video>`
       : `<img src="${thumbSrc}" alt="${name}" loading="lazy" />`;
 
     // Display-only cards (e.g. exhibition posters): no detail view, so render a
     // plain div with just the image — no onclick, no meta overlay, no logo.
+    const thumbClass = p.thumbSquare ? 'project-thumb square' : 'project-thumb';
     if (p.displayOnly) {
       return `
       <div class="project-card poster-card">
-        <div class="project-thumb">${media}</div>
+        <div class="${thumbClass}">${media}</div>
       </div>`;
     }
 
@@ -32,7 +34,7 @@ function renderProjectsInto(grid, list) {
       : '';      
       return `
       <button class="project-card" onclick="openProject('${p.id}')" aria-label="Open ${name}">
-        <div class="project-thumb">${media}</div>
+        <div class="${thumbClass}">${media}</div>
         ${logo}
         ${logoRight}
         <div class="project-meta">
@@ -49,7 +51,11 @@ function sortVariantProjects(projects) {
 }
 
 function renderHome() {
-  const variant = VARIANTS[detectVariant()];
+  const variantName = detectVariant();
+  // Expose the active variant on <body> so variant-specific CSS can target it
+  // (e.g. shrinking the fourth-row logos only on the digitalart page).
+  document.body.dataset.variant = variantName;
+  const variant = VARIANTS[variantName];
   const row1 = variant.row1.map(id => ALL_PROJECTS.find(p => p.id === id)).filter(Boolean);
   const row2 = variant.row2.map(id => ALL_PROJECTS.find(p => p.id === id)).filter(Boolean);
   const row3 = (variant.row3 || []).map(id => ALL_PROJECTS.find(p => p.id === id)).filter(Boolean);
@@ -128,7 +134,7 @@ function openProject(id, push = true) {
   `;
 
   const gallery = document.getElementById('gallery');
-  gallery.innerHTML = p.images.map(item => {
+  const renderGalleryItem = item => {
 
     // ── TEXT / SUMMARY BLOCK ──────────────────────────────────────────────
     if (item.text != null || item.koBullets) {
@@ -195,12 +201,74 @@ function openProject(id, push = true) {
       return `<div class="gallery-cta"><a href="${safeUrl}" target="_blank" rel="noopener noreferrer">${label} <span class="arrow">→</span></a></div>`;
     }
 
+    // ── ARTICLE CARD ──────────────────────────────────────────────────────
+    // In-page preview of an external article (press, feature, etc.). Sites
+    // like news outlets block iframing (X-Frame-Options), so instead of an
+    // embed we show source/date, headline, and a short excerpt, then link out.
+    if (item.article) {
+      const a = item.article;
+      const safeUrl = a.url.replace(/"/g, '&quot;');
+      const source = t(a.source) || '';
+      const author = t(a.author) || '';
+      const date = t(a.date) || '';
+      const meta = [source, author ? `By ${author}` : '', date].filter(Boolean).join(' · ');
+      const title = t(a.title) || '';
+      const excerptText = t(a.excerpt);
+      const paras = (Array.isArray(excerptText) ? excerptText : [excerptText]).filter(Boolean);
+      const excerpt = paras.map(para => `<p>${para}</p>`).join('');
+      const cta = t(a.cta) || ui('articleCta');
+      const thumb = a.thumb
+        ? `<a class="gallery-article-thumb" href="${safeUrl}" target="_blank" rel="noopener noreferrer" tabindex="-1" aria-hidden="true"><img src="images/${a.thumb}" alt="" loading="lazy" /></a>`
+        : '';
+      return `
+        <div class="gallery-article">
+          ${thumb}
+          <div class="gallery-article-body">
+            ${meta ? `<div class="gallery-article-meta">${meta}</div>` : ''}
+            ${title ? `<h3 class="gallery-article-title">${title}</h3>` : ''}
+            ${excerpt ? `<div class="gallery-article-excerpt">${excerpt}</div>` : ''}
+            <a class="gallery-article-cta" href="${safeUrl}" target="_blank" rel="noopener noreferrer">${cta} <span class="arrow">↗</span></a>
+          </div>
+        </div>
+      `;
+    }
+
     if (item.vimeo) {
       const aspect = item.aspect || '16/9';
       const src = `https://player.vimeo.com/video/${item.vimeo}?title=0&byline=0&portrait=0&dnt=1`;
+      // aspect-ratio sits on the iframe itself (in normal flow) so it gives the
+      // .gallery-embed wrapper real height. Relying on an absolutely-positioned
+      // child + aspect-ratio on the wrapper collapses to 0px inside the flex
+      // column .gallery layout.
       return `
-        <div class="gallery-embed" style="aspect-ratio: ${aspect}">
-          <iframe src="${src}" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen style="position:absolute;top:0;left:0;width:100%;height:100%;"></iframe>
+        <div class="gallery-embed" style="max-width:none;width:100%;margin:0;">
+          <iframe src="${src}" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen style="display:block;width:100%;aspect-ratio:${aspect};border:0;"></iframe>
+        </div>
+      `;
+    }
+
+    if (item.instagram) {
+      // Real Instagram post embed via their /embed iframe. Instagram doesn't
+      // auto-resize without their embed.js, so we give the iframe a fixed
+      // height sized for a single post (header + media + caption chrome).
+      const src = `https://www.instagram.com/p/${item.instagram}/embed`;
+      return `
+        <div class="gallery-embed gallery-embed-instagram" style="max-width:540px;width:100%;margin:0 auto;">
+          <iframe src="${src}" frameborder="0" scrolling="no" allowtransparency="true" allow="encrypted-media" style="display:block;width:100%;height:720px;border:0;background:#fff;border-radius:4px;"></iframe>
+        </div>
+      `;
+    }
+
+    if (item.map) {
+      // No-API-key Google Maps embed: searches the given query and pins the
+      // top result. `item.map` is a plain place/address string; `item.zoom`
+      // (1–20, higher = closer) forces a street-level view.
+      const q = encodeURIComponent(item.map);
+      const z = item.zoom ? `&z=${item.zoom}` : '';
+      const t = item.satellite ? '&t=k' : '';
+      return `
+        <div class="gallery-embed gallery-embed-map" style="max-width:none;width:100%;margin:0;">
+          <iframe src="https://www.google.com/maps?q=${q}${z}${t}&output=embed" frameborder="0" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen style="display:block;width:100%;aspect-ratio:16/9;border:0;"></iframe>
         </div>
       `;
     }
@@ -229,8 +297,14 @@ function openProject(id, push = true) {
     if (item.pair) {
       return `<div class="gallery-pair">${item.pair.map(renderMediaItem).join('')}</div>`;
     }
+    // Side-by-side row of arbitrary gallery items (embeds, media, etc.) —
+    // recurses into renderGalleryItem so any item type can be a column.
+    if (item.row) {
+      return `<div class="gallery-row">${item.row.map(renderGalleryItem).join('')}</div>`;
+    }
     return renderMediaItem(item);
-  }).join('');
+  };
+  gallery.innerHTML = p.images.map(renderGalleryItem).join('');
 
   document.getElementById('view-home').classList.remove('active');
   document.getElementById('view-project').classList.add('active');
