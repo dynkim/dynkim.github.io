@@ -916,7 +916,7 @@ const VARIANTS = {
         siteTitle:    '김도연 <em>•</em> 디지털 아티스트',
         siteTagline:  '미디어 아트 · 3D · 이머시브 월드',
         aboutHeading: '김도연 <em>•</em> 디지털 아티스트',
-        // aboutIntro: '…',
+        aboutIntro:   '3D 아티스트로서, 오스카 시각효과상 수상자 Ben Grossmann이 설립한 Magnopus에서 게임, 버추얼 프로덕션, 이커머스 등 다양한 분야의 3D 콘텐츠 제작에 참여했습니다. 또한 라스베이거스 스피어, Fortnite 콘서트, 2028 LA 올림픽 체험 센터 등 다양한 프로젝트에서 3D 모델링부터 대규모 공간 제작까지 수행하며, 이머시브 엔터테인먼트의 경계를 확장하는 작업에 기여했습니다. ZBrush·Maya·Blender·Unreal Engine·Substance 3D를 사용하며 현재 개인 프로젝트, 스튜디오 협업, 강의를 병행하고 있습니다.',
       },
     },
   },
