@@ -72,8 +72,14 @@ const UI_STRINGS = {
 let currentLang = 'ko';  // default to Korean, will switch to English if browser lang is different or user toggles
 try {
   const saved = localStorage.getItem('lang');
+  // The 3dart variant defaults to English (detectVariant isn't defined yet at
+  // this point, so sniff the path/hash directly).
+  const loc = (window.location.pathname + window.location.hash).toLowerCase();
+  const is3dart = loc.includes('3dart');
   if (saved === 'en' || saved === 'ko') {
     currentLang = saved;          // respect an explicit past choice
+  } else if (is3dart) {
+    currentLang = 'en';           // 3dart variant default
   } else {
     const browser = (navigator.language || navigator.userLanguage || '').toLowerCase();
     if (browser.startsWith('ko')) currentLang = 'ko';

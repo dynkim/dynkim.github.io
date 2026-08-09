@@ -33,8 +33,8 @@ function applyVariantResume() {
       ko: 'PDF/김도연 CV_포트폴리오.pdf',
     },
     '3dart': {
-      en: 'PDF/Doyeon_Kim_3D_Artist_Resume.pdf',
-      ko: 'PDF/김도연 CV_포트폴리오.pdf',
+      en: 'PDF/DOYEON_KIM_3D_Artist_Resume_2026.pdf',
+      ko: 'PDF/DOYEON_KIM_3D_Artist_Resume_2026.pdf',
     },
   };
   const variantFiles = files[variant] || {};

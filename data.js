@@ -1051,32 +1051,32 @@ const VARIANTS = {
     },
   },
   '3dart': {
-    // Copied from digitalart — same project rows/labels/speeds/heights.
-    // Only the job-position overrides differ (tuned to the WB Games
-    // "Creative Services Designer, Playables" role: playable ads, real-time
-    // game-ready 3D, level design, asset optimization).
+    // Row order (top → bottom): Professional Projects, Technical Portfolio,
+    // Exhibition Posters, Digital Art Exhibition.
     row1: ['wizard-of-oz-sphere', 'la-2028-olympics', 'welcome-to-oko', 'fallout-vault-33', 'fortnite-concert-snoopdogg-icespice', 'gap-cross-reality-retail'],
-    row2: ['poster-disorient-ringularity', 'poster-disorient-ergo-sphere', 'poster-hertzherz', 'poster-love-machine', 'poster-mumbling-after-silence', 'poster-texture-2023', 'poster-when-we-become', 'poster-seoul-auction-blue-nft', 'poster-ars-electronica-garden', 'poster-anthropocene-tomorrow'],
-    row3: ['legacy-vr', 'k-town-2023', 'when-we-become-you-and-i-again', 'mumbling-after-silence', 'spectra-studio-showcase-fall-2022'],
-    row4: ['secret-garden', 'japanese-izakaya', 'cyberpunk-seoul', 'sienar-chall-utilipede', 'vintage-telephone', 'espresso-machine'],
+    row2: ['secret-garden', 'japanese-izakaya', 'cyberpunk-seoul', 'sienar-chall-utilipede', 'vintage-telephone', 'espresso-machine'],
+    row3: ['poster-disorient-ringularity', 'poster-disorient-ergo-sphere', 'poster-hertzherz', 'poster-love-machine', 'poster-mumbling-after-silence', 'poster-texture-2023', 'poster-when-we-become', 'poster-seoul-auction-blue-nft', 'poster-ars-electronica-garden', 'poster-anthropocene-tomorrow'],
+    row4: ['legacy-vr', 'k-town-2023', 'when-we-become-you-and-i-again', 'mumbling-after-silence', 'spectra-studio-showcase-fall-2022'],
     label1: { en: 'Professional Projects',                ko: '프로페셔널 프로젝트' },
-    label2: { en: 'Exhibition Posters',                   ko: '전시 포스터' },
-    label3: { en: 'Digital Art Exhibition',               ko: '디지털 아트 전시' },
-    label4: { en: 'Technical Projects',                   ko: '테크니컬 프로젝트' },
+    label2: { en: 'Technical Portfolio',                  ko: '테크니컬 포트폴리오' },
+    label3: { en: 'Exhibition Posters',                   ko: '전시 포스터' },
+    label4: { en: 'Digital Art Exhibition',               ko: '디지털 아트 전시' },
     speeds: { grid1: 2, grid2: 1, grid3: 2, grid4: 1 },
-    heights: { grid2: 'min(27.5vh, 240px)', grid4: 'min(27.5vh, 240px)' },
+    // grid1 (professional) + grid2 (technical portfolio) use the full default
+    // card height; grid3 (posters) + grid4 (digital art exhibition) are halved.
+    heights: { grid3: 'min(27.5vh, 240px)', grid4: 'min(27.5vh, 240px)' },
     overrides: {
       en: {
         siteTitle:    'Doyeon Kim <em>•</em> 3D Artist',
         siteTagline:  'Playable Ads · Real-Time 3D · Game-Ready Assets',
         aboutHeading: 'Doyeon Kim <em>•</em> 3D Artist',
-        aboutIntro:   'I am a 3D artist focused on real-time, game-ready content — from 3D modeling, rigging, and topology cleanup to asset optimization and level design across Unity, Unreal Engine, and HTML5. I have contributed to 3D production across games, virtual production, and e-commerce at Magnopus, founded by Oscar-winning VFX artist Ben Grossmann, on projects spanning the Las Vegas Sphere, Fortnite concerts, and the LA 2028 Olympics Experience Center. I work in Blender · Maya · ZBrush · Substance 3D · Unreal Engine, building playable ads and mini-game experiences with an eye for performant, action-oriented design.',
+        aboutIntro:   '3D Artist with 5 years of experience creating performance-optimized 3D environments and assets for playable ads, immersive experiences, and games. Focused on engaging people in virtual experiences with expertise in 3D modeling, ZBrush, Substance 3D, Unreal Engine, and mobile platforms. Recent work includes The Wizard of Oz at Sphere, the World of Fallout Sizzle, and the Samsung Galaxy Online Experience Zone — projects that immersed audiences and drove user acquisition.',
       },
       ko: {
         siteTitle:    '김도연 <em>•</em> 3D 아티스트',
         siteTagline:  '플레이어블 광고 · 리얼타임 3D · 게임 레디 에셋',
         aboutHeading: '김도연 <em>•</em> 3D 아티스트',
-        aboutIntro:   '리얼타임·게임 레디 콘텐츠에 집중하는 3D 아티스트로서, 3D 모델링·리깅·토폴로지 정리부터 에셋 최적화와 레벨 디자인까지 Unity·Unreal Engine·HTML5 환경에서 작업합니다. 오스카 시각효과상 수상자 Ben Grossmann이 설립한 Magnopus에서 게임, 버추얼 프로덕션, 이커머스 등 다양한 분야의 3D 제작에 참여했으며, 라스베이거스 스피어, Fortnite 콘서트, 2028 LA 올림픽 체험 센터 프로젝트에 기여했습니다. Blender·Maya·ZBrush·Substance 3D·Unreal Engine을 사용하며, 플레이어블 광고와 미니게임 경험을 성능과 액션 중심의 디자인으로 구현합니다.',
+        aboutIntro:   '플레이어블 광고, 이머시브 경험, 게임을 위한 성능 최적화 3D 환경과 에셋을 제작해 온 5년 차 3D 아티스트입니다. 3D 모델링, ZBrush, Substance 3D, Unreal Engine, 그리고 모바일 플랫폼에 대한 전문성을 바탕으로 사람들을 가상 경험에 몰입시키는 데 집중합니다. 최근 작업으로는 Sphere의 The Wizard of Oz, World of Fallout Sizzle, Samsung Galaxy 온라인 체험존 등이 있으며, 관객을 몰입시키고 유저 확보(UA)를 이끈 프로젝트들입니다.',
       },
     },
   },
