@@ -1103,6 +1103,7 @@ function detectVariant() {
     const saved = sessionStorage.getItem('variant');
     if (saved && VARIANTS[saved]) return saved;
   } catch (e) {}
-  return 'default';
+  // 3dart is the site's root page, so it's the fallback for any unmatched path.
+  return '3dart';
 
 };
