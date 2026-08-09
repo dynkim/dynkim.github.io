@@ -415,10 +415,10 @@ body[data-variant="digitalart"] #project-grid-4 .project-logo {
   transform-origin: top left;
 }
 
-/* 3dart variant only: shrink the Unreal / Star Wars fan-art logos on the
-   Technical Portfolio row (grid-2 in this variant) to half size. */
+/* 3dart variant only: the Unreal / Star Wars fan-art logos on the Technical
+   Portfolio row (grid-2 in this variant) render at their natural inline size. */
 body[data-variant="3dart"] #project-grid-2 .project-logo {
-  transform: scale(0.5);
+  transform: scale(1);
   transform-origin: top left;
 }
 
