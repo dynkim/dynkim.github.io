@@ -1050,6 +1050,36 @@ const VARIANTS = {
       },
     },
   },
+  '3dart': {
+    // Copied from digitalart — same project rows/labels/speeds/heights.
+    // Only the job-position overrides differ (tuned to the WB Games
+    // "Creative Services Designer, Playables" role: playable ads, real-time
+    // game-ready 3D, level design, asset optimization).
+    row1: ['wizard-of-oz-sphere', 'la-2028-olympics', 'welcome-to-oko', 'fallout-vault-33', 'fortnite-concert-snoopdogg-icespice', 'gap-cross-reality-retail'],
+    row2: ['poster-disorient-ringularity', 'poster-disorient-ergo-sphere', 'poster-hertzherz', 'poster-love-machine', 'poster-mumbling-after-silence', 'poster-texture-2023', 'poster-when-we-become', 'poster-seoul-auction-blue-nft', 'poster-ars-electronica-garden', 'poster-anthropocene-tomorrow'],
+    row3: ['legacy-vr', 'k-town-2023', 'when-we-become-you-and-i-again', 'mumbling-after-silence', 'spectra-studio-showcase-fall-2022'],
+    row4: ['secret-garden', 'japanese-izakaya', 'cyberpunk-seoul', 'sienar-chall-utilipede', 'vintage-telephone', 'espresso-machine'],
+    label1: { en: 'Professional Projects',                ko: '프로페셔널 프로젝트' },
+    label2: { en: 'Exhibition Posters',                   ko: '전시 포스터' },
+    label3: { en: 'Digital Art Exhibition',               ko: '디지털 아트 전시' },
+    label4: { en: 'Technical Projects',                   ko: '테크니컬 프로젝트' },
+    speeds: { grid1: 2, grid2: 1, grid3: 2, grid4: 1 },
+    heights: { grid2: 'min(27.5vh, 240px)', grid4: 'min(27.5vh, 240px)' },
+    overrides: {
+      en: {
+        siteTitle:    'Doyeon Kim <em>•</em> 3D Artist',
+        siteTagline:  'Playable Ads · Real-Time 3D · Game-Ready Assets',
+        aboutHeading: 'Doyeon Kim <em>•</em> 3D Artist',
+        aboutIntro:   'I am a 3D artist focused on real-time, game-ready content — from 3D modeling, rigging, and topology cleanup to asset optimization and level design across Unity, Unreal Engine, and HTML5. I have contributed to 3D production across games, virtual production, and e-commerce at Magnopus, founded by Oscar-winning VFX artist Ben Grossmann, on projects spanning the Las Vegas Sphere, Fortnite concerts, and the LA 2028 Olympics Experience Center. I work in Blender · Maya · ZBrush · Substance 3D · Unreal Engine, building playable ads and mini-game experiences with an eye for performant, action-oriented design.',
+      },
+      ko: {
+        siteTitle:    '김도연 <em>•</em> 3D 아티스트',
+        siteTagline:  '플레이어블 광고 · 리얼타임 3D · 게임 레디 에셋',
+        aboutHeading: '김도연 <em>•</em> 3D 아티스트',
+        aboutIntro:   '리얼타임·게임 레디 콘텐츠에 집중하는 3D 아티스트로서, 3D 모델링·리깅·토폴로지 정리부터 에셋 최적화와 레벨 디자인까지 Unity·Unreal Engine·HTML5 환경에서 작업합니다. 오스카 시각효과상 수상자 Ben Grossmann이 설립한 Magnopus에서 게임, 버추얼 프로덕션, 이커머스 등 다양한 분야의 3D 제작에 참여했으며, 라스베이거스 스피어, Fortnite 콘서트, 2028 LA 올림픽 체험 센터 프로젝트에 기여했습니다. Blender·Maya·ZBrush·Substance 3D·Unreal Engine을 사용하며, 플레이어블 광고와 미니게임 경험을 성능과 액션 중심의 디자인으로 구현합니다.',
+      },
+    },
+  },
 };
 
 function detectVariant() {
@@ -1064,6 +1094,7 @@ function detectVariant() {
   else if (host.includes('modeler3d')   || path.startsWith('/modeler3d')   || hash === 'modeler3d')   variant = 'modeler3d';
   else if (host.includes('game')        || path.startsWith('/game')        || hash === 'game')        variant = 'game';
   else if (host.includes('digitalart')  || path.startsWith('/digitalart')  || hash === 'digitalart')  variant = 'digitalart';
+  else if (host.includes('3dart')       || path.startsWith('/3dart')       || hash === '3dart')       variant = '3dart';
   if (variant) {
     try { sessionStorage.setItem('variant', variant); } catch (e) {}
     return variant;

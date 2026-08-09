@@ -1,0 +1,297 @@
+diff --git a/3dart/index.html b/3dart/index.html
+new file mode 100644
+index 0000000..4044258
+--- /dev/null
++++ b/3dart/index.html
+@@ -0,0 +1,227 @@
++<!DOCTYPE html>
++<html lang="en">
++<head>
++  <base href="/">
++  <meta charset="UTF-8" />
++  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
++  <title>Doyeon Kim — 3D Art</title>
++
++  <!-- Typography: Instrument Serif for English titles, IBM Plex Sans/Mono for UI,
++       Pretendard for Korean (the de-facto modern Korean web sans). -->
++  <link rel="preconnect" href="https://fonts.googleapis.com">
++  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
++  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=IBM+Plex+Sans:wght@300;400;500&family=IBM+Plex+Mono:wght@300;400&display=swap" rel="stylesheet">
++  <link rel="stylesheet" href="index.css" />
++  <link rel="icon" type="image/png" href="/images/favicon.png" />
++  <link rel="apple-touch-icon" href="/images/apple-touch-icon.png" />
++</head>
++<body>
++
++<!-- ========================================
++     HOME VIEW
++     ======================================== -->
++<div id="view-home" class="view active">
++
++  <header class="site-header">
++    <div class="identity">
++      <div class="avatar">
++        <img src="images/profile.jpg" alt="Doyeon Kim portrait" />
++      </div>
++      <div>
++        <h1 class="site-title" data-i18n-html="siteTitle">Doyeon Kim <em>—</em> 3D Artist</h1>
++        <div class="site-tagline" data-i18n="siteTagline">Playable Ads · Real-Time 3D · Game-Ready Assets</div>
++      </div>
++    </div>
++    <nav class="site-nav">
++      <a class="nav-link" href="#about" onclick="event.preventDefault(); goAbout();" data-i18n="navAbout">About</a>
++      <a class="nav-link" href="#contact" onclick="event.preventDefault(); goContact();" data-i18n="navContact">Contact</a>
++      <span class="nav-divider" aria-hidden="true"></span>
++      <a class="resume-btn" href="PDF/김도연-공간디자이너.pdf" download="PDF/김도연-공간디자이너.pdf" data-i18n-href="resumeBtn">
++        <svg viewBox="0 0 24 24"><path d="M12 4v12M8 14l4 4 4-4"/><path d="M4 20h16"/></svg>
++        <span data-i18n="resumeBtn">Resume</span>
++      </a>
++      <button class="lang-toggle" onclick="toggleLang()" aria-label="Toggle language">
++        <span data-lang="en">EN</span><span class="sep">/</span><span data-lang="ko">KO</span>
++      </button>
++    </nav>
++  </header>
++
++
++  <div class="section-label" data-i18n="selectedProjects">Selected Projects</div>
++
++  <div class="scroll-wrapper">
++    <main class="project-grid" id="project-grid-1">
++      <!-- Projects populated by JS from the data array below -->
++    </main>
++    <button class="scroll-arrow scroll-arrow-left" id="grid1-arrow-left" aria-label="Scroll left">
++      <svg viewBox="0 0 24 24"><polyline points="15 6 9 12 15 18"></polyline></svg>
++    </button>
++    <button class="scroll-arrow scroll-arrow-right" id="grid1-arrow-right" aria-label="Scroll right">
++      <svg viewBox="0 0 24 24"><polyline points="9 6 15 12 9 18"></polyline></svg>
++    </button>
++  </div>
++
++  <div class="section-label" data-i18n="exhibitionPosters">Exhibition Posters</div>
++
++  <div class="scroll-wrapper">
++    <main class="project-grid" id="project-grid-2">
++      <!-- Poster cards populated by JS (display-only project-card structure) -->
++    </main>
++    <button class="scroll-arrow scroll-arrow-left" id="grid2-arrow-left" aria-label="Scroll left">
++      <svg viewBox="0 0 24 24"><polyline points="15 6 9 12 15 18"></polyline></svg>
++    </button>
++    <button class="scroll-arrow scroll-arrow-right" id="grid2-arrow-right" aria-label="Scroll right">
++      <svg viewBox="0 0 24 24"><polyline points="9 6 15 12 9 18"></polyline></svg>
++    </button>
++  </div>
++
++  <div class="section-label" data-i18n="selectedWork">Selected Work · 2026</div>
++
++  <div class="scroll-wrapper">
++    <main class="project-grid" id="project-grid-3">
++      <!-- Secondary projects populated by JS -->
++    </main>
++    <button class="scroll-arrow scroll-arrow-left" id="grid3-arrow-left" aria-label="Scroll left">
++      <svg viewBox="0 0 24 24"><polyline points="15 6 9 12 15 18"></polyline></svg>
++    </button>
++    <button class="scroll-arrow scroll-arrow-right" id="grid3-arrow-right" aria-label="Scroll right">
++      <svg viewBox="0 0 24 24"><polyline points="9 6 15 12 9 18"></polyline></svg>
++    </button>
++  </div>
++
++  <div class="section-label" data-i18n="digitalArtExhibition">Digital Art Exhibition</div>
++
++<div class="scroll-wrapper">
++  <main class="project-grid" id="project-grid-4">
++    <!-- Digital art exhibition projects populated by JS -->
++  </main>
++  <button class="scroll-arrow scroll-arrow-left" id="grid4-arrow-left" aria-label="Scroll left">
++    <svg viewBox="0 0 24 24"><polyline points="15 6 9 12 15 18"></polyline></svg>
++  </button>
++  <button class="scroll-arrow scroll-arrow-right" id="grid4-arrow-right" aria-label="Scroll right">
++    <svg viewBox="0 0 24 24"><polyline points="9 6 15 12 9 18"></polyline></svg>
++  </button>
++</div>
++
++
++  <footer>
++    <div>© 2026 Doyeon Kim</div>
++    <div><a href="mailto:doyeangkim@gmail.com" style="transition: color 0.2s;" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color=''">doyeangkim@gmail.com</a></div>
++  </footer>
++</div>
++
++
++<!-- ========================================
++     PROJECT DETAIL VIEW
++     ======================================== -->
++<div id="view-project" class="view">
++
++  <header class="project-header">
++    <button class="back-btn" onclick="goHome()">
++      <span class="arrow">←</span> <span data-i18n="navBackToWork">Back to work</span>
++    </button>
++  </header>
++
++  <div class="project-header" style="padding-top: 0;">
++    <div class="project-title-block">
++      <h2 class="project-title" id="detail-title">Project Title</h2>
++      <p class="project-description" id="detail-description">Description.</p>
++    </div>
++    <div class="project-specs" id="detail-specs"></div>
++  </div>
++
++  <div class="gallery-wrapper">
++    <div class="gallery" id="gallery">
++      <!-- Images populated by JS -->
++    </div>
++  </div>
++
++  <footer>
++    <div>© 2026 Doyeon Kim</div>
++    <button class="back-btn" onclick="goHome()">
++      <span data-i18n="navAllProjects">All projects</span> <span class="arrow" style="transform: rotate(180deg)">←</span>
++    </button>
++  </footer>
++</div>
++
++
++<!-- ========================================
++     ABOUT VIEW
++     ======================================== -->
++<div id="view-about" class="view">
++
++  <header class="project-header">
++    <button class="back-btn" onclick="goHome()">
++      <span class="arrow">←</span> <span data-i18n="navBackToWork">Back to work</span>
++    </button>
++  </header>
++
++  <main class="about-page">
++    <div class="about-label" data-i18n="navAbout">About</div>
++    <h2 class="about-heading" data-i18n-html="aboutHeading">Doyeon Kim <em>—</em> 3D Artist</h2>
++    <div class="about-avatar">
++      <img src="images/profile.jpg" alt="Doyeon Kim portrait" />
++    </div>
++    <p class="about-intro" data-i18n="aboutIntro">Hi, thanks for visiting my website! I'm a 3D artist and college lecturer who loves blending technical workflows with a dash of creative storytelling. This is a collection of my past, recent, and ongoing projects, ranging from single assets to full environments. Whether I'm sculpting in ZBrush or modeling in Maya, I focus on crafting diverse subjects—from peaceful gardens to space colonies—with an eye for realistic and grounded design. I'm always looking for ways to make digital worlds feel inviting, so I hope you enjoy seeing how it all comes together!</p>
++
++    <a class="resume-cta" href="PDF/김도연-공간디자이너.pdf" download="PDF/김도연-공간디자이너.pdf">
++      <svg viewBox="0 0 24 24"><path d="M12 4v12M8 14l4 4 4-4"/><path d="M4 20h16"/></svg>
++      <span data-i18n="resumeDownload">Download Resume</span>
++    </a>
++  </main>
++
++  <footer>
++    <div>© 2026 Doyeon Kim</div>
++    <button class="back-btn" onclick="goHome()">
++      <span data-i18n="navAllProjects">All projects</span> <span class="arrow" style="transform: rotate(180deg)">←</span>
++    </button>
++  </footer>
++</div>
++
++
++<!-- ========================================
++     CONTACT VIEW
++     ======================================== -->
++<div id="view-contact" class="view">
++
++  <header class="project-header">
++    <button class="back-btn" onclick="goHome()">
++      <span class="arrow">←</span> <span data-i18n="navBackToWork">Back to work</span>
++    </button>
++  </header>
++
++  <main class="about-page">
++    <div class="about-label" data-i18n="navContact">Contact</div>
++    <h2 class="about-heading" data-i18n-html="contactHeading">Let's <em>talk</em></h2>
++    <p class="about-intro" data-i18n="contactIntro" style="text-align: center; margin-bottom: 48px;">Open to freelance projects, studio roles, and collaborations. Feel free to reach out via email or LinkedIn.</p>
++
++    <div class="contact-links">
++      <a class="contact-link" href="mailto:doyeangkim@gmail.com">
++        <span class="label" data-i18n="contactEmail">Email</span>
++        <span class="value">doyeangkim@gmail.com</span>
++      </a>
++      <a class="contact-link" href="https://www.linkedin.com/in/doyeon-kim-271299210" target="_blank" rel="noopener noreferrer">
++        <span class="label" data-i18n="contactLinkedIn">LinkedIn</span>
++        <span class="value">linkedin.com/in/doyeon-kim-271299210</span>
++      </a>
++    </div>
++  </main>
++
++  <footer>
++    <div>© 2026 Doyeon Kim</div>
++    <button class="back-btn" onclick="goHome()">
++      <span data-i18n="navAllProjects">All projects</span> <span class="arrow" style="transform: rotate(180deg)">←</span>
++    </button>
++  </footer>
++</div>
++
++<script src="i18n.js"></script>
++<script src="data.js"></script>
++<script src="rendering.js"></script>
++<script src="navigation.js"></script>
++<script src="scroll.js"></script>
++<script src="routing.js"></script>
++<script src="main.js"></script>
++
++</body>
++</html>
+diff --git a/data.js b/data.js
+index 6157294..8042449 100644
+--- a/data.js
++++ b/data.js
+@@ -1050,6 +1050,36 @@ const VARIANTS = {
+       },
+     },
+   },
++  '3dart': {
++    // Copied from digitalart — same project rows/labels/speeds/heights.
++    // Only the job-position overrides differ (tuned to the WB Games
++    // "Creative Services Designer, Playables" role: playable ads, real-time
++    // game-ready 3D, level design, asset optimization).
++    row1: ['wizard-of-oz-sphere', 'la-2028-olympics', 'welcome-to-oko', 'fallout-vault-33', 'fortnite-concert-snoopdogg-icespice', 'gap-cross-reality-retail'],
++    row2: ['poster-disorient-ringularity', 'poster-disorient-ergo-sphere', 'poster-hertzherz', 'poster-love-machine', 'poster-mumbling-after-silence', 'poster-texture-2023', 'poster-when-we-become', 'poster-seoul-auction-blue-nft', 'poster-ars-electronica-garden', 'poster-anthropocene-tomorrow'],
++    row3: ['legacy-vr', 'k-town-2023', 'when-we-become-you-and-i-again', 'mumbling-after-silence', 'spectra-studio-showcase-fall-2022'],
++    row4: ['secret-garden', 'japanese-izakaya', 'cyberpunk-seoul', 'sienar-chall-utilipede', 'vintage-telephone', 'espresso-machine'],
++    label1: { en: 'Professional Projects',                ko: '프로페셔널 프로젝트' },
++    label2: { en: 'Exhibition Posters',                   ko: '전시 포스터' },
++    label3: { en: 'Digital Art Exhibition',               ko: '디지털 아트 전시' },
++    label4: { en: 'Technical Projects',                   ko: '테크니컬 프로젝트' },
++    speeds: { grid1: 2, grid2: 1, grid3: 2, grid4: 1 },
++    heights: { grid2: 'min(27.5vh, 240px)', grid4: 'min(27.5vh, 240px)' },
++    overrides: {
++      en: {
++        siteTitle:    'Doyeon Kim <em>•</em> 3D Artist',
++        siteTagline:  'Playable Ads · Real-Time 3D · Game-Ready Assets',
++        aboutHeading: 'Doyeon Kim <em>•</em> 3D Artist',
++        aboutIntro:   'I am a 3D artist focused on real-time, game-ready content — from 3D modeling, rigging, and topology cleanup to asset optimization and level design across Unity, Unreal Engine, and HTML5. I have contributed to 3D production across games, virtual production, and e-commerce at Magnopus, founded by Oscar-winning VFX artist Ben Grossmann, on projects spanning the Las Vegas Sphere, Fortnite concerts, and the LA 2028 Olympics Experience Center. I work in Blender · Maya · ZBrush · Substance 3D · Unreal Engine, building playable ads and mini-game experiences with an eye for performant, action-oriented design.',
++      },
++      ko: {
++        siteTitle:    '김도연 <em>•</em> 3D 아티스트',
++        siteTagline:  '플레이어블 광고 · 리얼타임 3D · 게임 레디 에셋',
++        aboutHeading: '김도연 <em>•</em> 3D 아티스트',
++        aboutIntro:   '리얼타임·게임 레디 콘텐츠에 집중하는 3D 아티스트로서, 3D 모델링·리깅·토폴로지 정리부터 에셋 최적화와 레벨 디자인까지 Unity·Unreal Engine·HTML5 환경에서 작업합니다. 오스카 시각효과상 수상자 Ben Grossmann이 설립한 Magnopus에서 게임, 버추얼 프로덕션, 이커머스 등 다양한 분야의 3D 제작에 참여했으며, 라스베이거스 스피어, Fortnite 콘서트, 2028 LA 올림픽 체험 센터 프로젝트에 기여했습니다. Blender·Maya·ZBrush·Substance 3D·Unreal Engine을 사용하며, 플레이어블 광고와 미니게임 경험을 성능과 액션 중심의 디자인으로 구현합니다.',
++      },
++    },
++  },
+ };
+ 
+ function detectVariant() {
+@@ -1064,6 +1094,7 @@ function detectVariant() {
+   else if (host.includes('modeler3d')   || path.startsWith('/modeler3d')   || hash === 'modeler3d')   variant = 'modeler3d';
+   else if (host.includes('game')        || path.startsWith('/game')        || hash === 'game')        variant = 'game';
+   else if (host.includes('digitalart')  || path.startsWith('/digitalart')  || hash === 'digitalart')  variant = 'digitalart';
++  else if (host.includes('3dart')       || path.startsWith('/3dart')       || hash === '3dart')       variant = '3dart';
+   if (variant) {
+     try { sessionStorage.setItem('variant', variant); } catch (e) {}
+     return variant;
+diff --git a/main.js b/main.js
+index f03e844..9078cd9 100644
+--- a/main.js
++++ b/main.js
+@@ -32,6 +32,10 @@ function applyVariantResume() {
+       en: 'PDF/Doyeon_Kim_3D_Artist_Resume.pdf',
+       ko: 'PDF/김도연 CV_포트폴리오.pdf',
+     },
++    '3dart': {
++      en: 'PDF/Doyeon_Kim_3D_Artist_Resume.pdf',
++      ko: 'PDF/김도연 CV_포트폴리오.pdf',
++    },
+   };
+   const variantFiles = files[variant] || {};
+   const file = variantFiles[currentLang] || DEFAULT_RESUME;

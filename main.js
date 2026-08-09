@@ -32,6 +32,10 @@ function applyVariantResume() {
       en: 'PDF/Doyeon_Kim_3D_Artist_Resume.pdf',
       ko: 'PDF/김도연 CV_포트폴리오.pdf',
     },
+    '3dart': {
+      en: 'PDF/Doyeon_Kim_3D_Artist_Resume.pdf',
+      ko: 'PDF/김도연 CV_포트폴리오.pdf',
+    },
   };
   const variantFiles = files[variant] || {};
   const file = variantFiles[currentLang] || DEFAULT_RESUME;
