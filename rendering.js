@@ -1,6 +1,22 @@
 /* ================================================
    RENDER HOME GRID
    ================================================ */
+
+// Thumbnail videos load/play only while near the viewport. Without this every
+// card — originals plus auto-scroll clones — decodes at once on first paint.
+let _videoObserver;
+function observeLazyVideos(root = document) {
+  if (!_videoObserver) {
+    _videoObserver = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) e.target.play().catch(() => {});
+        else e.target.pause();
+      });
+    }, { rootMargin: '150px' });
+  }
+  root.querySelectorAll('video.lazy-video').forEach(v => _videoObserver.observe(v));
+}
+
 function renderProjectsInto(grid, list) {
   if (!grid) return;
   grid.innerHTML = list.map(p => {
@@ -11,8 +27,8 @@ function renderProjectsInto(grid, list) {
     const thumbSrc = p.thumb ? (p.thumb.includes('/') ? p.thumb : `images/${p.thumb}`) : '';
     const videoSrc = p.thumbVideo && p.thumbVideo.includes('/') ? p.thumbVideo : `videos/${p.thumbVideo}`;
     const media = p.thumbVideo
-      ? `<video src="${videoSrc}" poster="${thumbSrc}" autoplay muted loop playsinline preload="metadata"></video>`
-      : `<img src="${thumbSrc}" alt="${name}" loading="lazy" />`;
+      ? `<video class="lazy-video" src="${videoSrc}" poster="${thumbSrc}" muted loop playsinline preload="none"></video>`
+      : `<img src="${thumbSrc}" alt="${name}" loading="lazy" decoding="async" />`;
 
     // Display-only cards (e.g. exhibition posters): no detail view, so render a
     // plain div with just the image — no onclick, no meta overlay, no logo.
@@ -94,13 +110,18 @@ function renderHome() {
 // back to these defaults.
 const DEFAULT_SCROLL_SPEEDS = { grid1: 0.35, grid2: 0.35, grid3: 0.25, grid4: 0.45 };
 const speeds = { ...DEFAULT_SCROLL_SPEEDS, ...(variant.speeds || {}) };
-setTimeout(() => {
+// Cloning + measuring the grids is layout-heavy, so hold it until the browser
+// is idle (or 1.5s in) instead of racing the first paint.
+const startAutoScroll = () => {
   setupAutoScroll(document.getElementById('project-grid-1'), { speed: speeds.grid1 });
   setupAutoScroll(document.getElementById('project-grid-2'), { speed: speeds.grid2 });
   setupAutoScroll(document.getElementById('project-grid-3'), { speed: speeds.grid3 });
   setupAutoScroll(document.getElementById('project-grid-4'), { speed: speeds.grid4 });
-    },
-  100);
+};
+if ('requestIdleCallback' in window) requestIdleCallback(startAutoScroll, { timeout: 2000 });
+else setTimeout(startAutoScroll, 1500);
+
+  observeLazyVideos();
 }
 
 /* ================================================
@@ -313,33 +334,42 @@ function openProject(id, push = true) {
   if (push) history.pushState({ view: 'project', id }, '', `#${id}`);
 }
 
+// Brightness per thumbnail URL. Clone cards reuse the cached value, so the
+// canvas sampling (drawImage + getImageData) runs once per image, not once per
+// card instance.
+const _logoBrightnessCache = {};
 function applyLogoColorFromThumb(card) {
   const thumb = card.querySelector('.project-thumb img');
   const logo  = card.querySelector('.project-logo');
   if (!thumb || !logo) return;
   if (logo.dataset.forceWhite) return;
 
+  const applyFilter = (brightness) => {
+    // Perceived brightness (ITU-R BT.601)
+    if      (brightness > 220) logo.style.filter = 'brightness(0) drop-shadow(0 2px 8px rgba(255,255,255,0.3))';
+    else if (brightness > 160) logo.style.filter = 'brightness(0) invert(0.45) drop-shadow(0 2px 8px rgba(0,0,0,0.4))';
+    else                       logo.style.filter = 'brightness(0) invert(1) drop-shadow(0 2px 8px rgba(0,0,0,0.5))';
+  };
+
+  const key = thumb.currentSrc || thumb.src;
+  if (key && key in _logoBrightnessCache) { applyFilter(_logoBrightnessCache[key]); return; }
+
   const sample = () => {
     const canvas = document.createElement('canvas');
-    canvas.width  = 1;
-    canvas.height = 1;
+    canvas.width = 1; canvas.height = 1;
     const ctx = canvas.getContext('2d');
     try {
       ctx.drawImage(thumb, 0, 0, thumb.naturalWidth, thumb.naturalHeight, 0, 0, 1, 1);
       const [r, g, b] = ctx.getImageData(0, 0, 1, 1).data;
-      // Perceived brightness (ITU-R BT.601)
       const brightness = (r * 299 + g * 587 + b * 114) / 1000;
-      if      (brightness > 220) logo.style.filter = 'brightness(0) drop-shadow(0 2px 8px rgba(255,255,255,0.3))';
-      else if (brightness > 160) logo.style.filter = 'brightness(0) invert(0.45) drop-shadow(0 2px 8px rgba(0,0,0,0.4))';
-      else                       logo.style.filter = 'brightness(0) invert(1) drop-shadow(0 2px 8px rgba(0,0,0,0.5))';  
+      const k = thumb.currentSrc || thumb.src;
+      if (k) _logoBrightnessCache[k] = brightness;
+      applyFilter(brightness);
     } catch (e) {
       // Cross-origin fallback — keep CSS default
     }
   };
 
-  if (thumb.complete && thumb.naturalWidth) {
-    sample();
-  } else {
-    thumb.addEventListener('load', sample, { once: true });
-  }
+  if (thumb.complete && thumb.naturalWidth) sample();
+  else thumb.addEventListener('load', sample, { once: true });
 }

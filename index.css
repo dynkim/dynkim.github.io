@@ -425,7 +425,12 @@ body[data-variant="3dart"] #project-grid-2 .project-logo {
 /* =========================================
     SCROLL ARROWS — overlay buttons on horizontal galleries
     ========================================= */
-.scroll-wrapper { position: relative; }
+.scroll-wrapper {
+  position: relative;
+  /* Skip rendering rows that are still below the fold on first paint. */
+  content-visibility: auto;
+  contain-intrinsic-size: 1px 400px;
+}
 
 .scroll-arrow {
   position: absolute;

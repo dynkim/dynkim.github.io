@@ -208,12 +208,31 @@ function setupAutoScroll(grid, { speed = 0.35, resumeDelay = 500 } = {}) {
 
   appendSet();
   measure();
+  // Clones are fresh nodes; the observer only knows the originals so far.
+  if (typeof observeLazyVideos === 'function') observeLazyVideos(grid);
   // Lazy thumbnails/posters report ~0 width until they load; re-measure then,
-  // and on resize, so `unit` reflects real layout.
+  // and on resize, so `unit` reflects real layout. Debounced through rAF so a
+  // burst of image loads triggers one forced reflow, not one per image.
+  let _measureRAF;
+  const scheduleMeasure = () => {
+    cancelAnimationFrame(_measureRAF);
+    _measureRAF = requestAnimationFrame(measure);
+  };
   grid.querySelectorAll('img').forEach(img => {
-    if (!img.complete) img.addEventListener('load', measure, { once: true });
+    if (!img.complete) img.addEventListener('load', scheduleMeasure, { once: true });
   });
-  window.addEventListener('resize', measure);
+  window.addEventListener('resize', scheduleMeasure);
+
+  // `content-visibility: auto` on .scroll-wrapper skips layout while a row is
+  // off-screen, so offsetLeft (and therefore `unit`) reads 0 there. Re-measure
+  // once the row is actually rendered.
+  let visObserver = null;
+  if ('IntersectionObserver' in window) {
+    visObserver = new IntersectionObserver((entries) => {
+      if (entries.some(e => e.isIntersecting)) scheduleMeasure();
+    }, { rootMargin: '200px' });
+    visObserver.observe(grid);
+  }
 
   let paused = false;
   let resumeTimer = null;
@@ -259,10 +278,12 @@ function setupAutoScroll(grid, { speed = 0.35, resumeDelay = 500 } = {}) {
 
   grid._autoScrollStop = () => {
     cancelAnimationFrame(raf);
+    cancelAnimationFrame(_measureRAF);
     clearTimeout(resumeTimer);
     grid.removeEventListener('pointerenter', pause);
     grid.removeEventListener('pointerleave', resume);
-    window.removeEventListener('resize', measure);
+    window.removeEventListener('resize', scheduleMeasure);
+    if (visObserver) visObserver.disconnect();
     grid.querySelectorAll('[data-clone]').forEach(n => n.remove());
     delete grid._autoScrollStop;
     delete grid._autoScrollPause;
